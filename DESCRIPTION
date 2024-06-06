@@ -3,7 +3,7 @@ Title: Interactive tourrs using python
 Version: 0.0.0.9000
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-3354-4579"))
 Description: This package extentds the functionaly of the tourr package by an interactive graphical user interface.
 License: MIT + file LICENSE
 Encoding: UTF-8
