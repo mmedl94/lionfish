@@ -1,3 +1,12 @@
+#' Initialize anaconda environement used for python backend
+#'
+#' @param env_name A string that defines the name of the anaconda environment reticulate uses
+#'
+#' @return -
+#' @export
+#'
+#' @examples init_env(env_name="r-pytourr")
+#'
 init_env <- function(env_name="r-pytourr"){
   # Check if python is available
   reticulate::py_available(initialize = FALSE)

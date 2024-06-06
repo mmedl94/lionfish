@@ -1,5 +1,25 @@
-# Modify render_proj() so that the half_range is calculated by max(sqrt(rowSums(data^2))) or can be provided as arg
-
+#' Modification of the render_proj() function of tourr so that the half_range is calculated by
+#' max(sqrt(rowSums(data^2))) or can be provided as arg
+#'
+#' @param data matrix, or data frame containing numeric columns,
+#'   should be standardised to have mean 0, sd 1
+#' @param prj projection matrix
+#' @param axis_labels of the axes to be displayed
+#' @param obs_labels labels of the observations to be available for interactive mouseover
+#' @param limits value setting the lower and upper limits of
+#'   projected data, default 1
+#' @param position position of the axes: center (default),
+#'   bottomleft or off
+#'
+#' @return list containing projected data, circle and segments for axes
+#' @export
+#'
+#' @examples
+#' data(flea)
+#' flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+#' prj <- basis_random(ncol(flea[,1:6]), 2)
+#' p <- render_proj(flea_std, prj)
+#'
 render_proj_inter <- function(data, prj, half_range=NULL, axis_labels=NULL, obs_labels=NULL, limits=1, position="center"){
   # Check dimensions ok
   try(if (ncol(data) != nrow(prj))
