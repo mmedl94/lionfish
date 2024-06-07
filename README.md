@@ -14,7 +14,7 @@ You can install the development version of pytourr from github with:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("mmedl94/pytourr/")
+remotes::install_github("mmedl94/pytourr")
 ```
 
 ## Example
