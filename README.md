@@ -1,4 +1,4 @@
-pytourr: extension of the tourr package tour for interactive displays
+pytourr: extension of the tourr package tour for interactive display
 ================
 
 # pytourr
