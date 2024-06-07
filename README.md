@@ -1,8 +1,6 @@
 pytourr: extension of the tourr package tour for interactive display
 ================
 
-# pytourr
-
 This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package.
 For a general overview of the tourr package please refer to the 
 [tourr documentation](https://ggobi.github.io/tourr/). pytourr adds interactive displays
