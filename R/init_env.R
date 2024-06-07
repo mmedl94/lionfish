@@ -8,6 +8,7 @@
 #' @examples init_env(env_name="r-pytourr")
 #'
 init_env <- function(env_name="r-pytourr"){
+
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
   # check if python environment exists and create new one if not
