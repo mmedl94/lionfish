@@ -52,22 +52,31 @@ class LassoSelect:
                 collection_subplot.set_facecolors(self.fc)
             elif plot_dict["type"] == "hist":
                 # Unpack histogram
-                bins = plot_dict["bins"]
-                patches = plot_dict["ax"].patches
                 selected_obs = plot_dict["data"][self.ind]
-                old_fc = list(patches[0].get_facecolor())
-                old_fc[-1] = 1
-                new_fc = old_fc.copy()
-                new_fc[-1] = self.alpha_other
-                for i in range(len(bins) - 1):
-                    if np.any((selected_obs >= bins[i]) & (selected_obs <= bins[i + 1])):
-                        patches[i].set_facecolor(old_fc)
-                    else:
-                        patches[i].set_facecolor(new_fc)
+                other_obs = np.delete(plot_dict["data"], self.ind)
+
+                fc_sel = plot_dict["fc"]
+                fc_not_sel = fc_sel.copy()
+                fc_not_sel[-1] = self.alpha_other
+                color_map = [plot_dict["fc"], fc_not_sel]
+                # Get x and y_lims of old plot
+                x_lims = plot_dict["ax"].get_xlim()
+                y_lims = plot_dict["ax"].get_ylim()
+                title = plot_dict["ax"].get_title()
+                x_label = plot_dict["ax"].get_xlabel()
+
+                plot_dict["ax"].clear()
+                plot_dict["ax"].hist(
+                    [selected_obs, other_obs],
+                    stacked=True,
+                    color=color_map)
                 if plot_dict["vlines"] is not False:
                     plot_dict["vlines"].remove()
-                y_lims = plot_dict["ax"].get_ylim()
+
                 plot_dict["ax"].set_ylim(y_lims)
+                plot_dict["ax"].set_xlim(x_lims)
+                plot_dict["ax"].set_title(title)
+                plot_dict["ax"].set_xlabel(x_label)
 
                 if selected_obs.shape[0] != 0:
                     vlines = plot_dict["ax"].vlines([selected_obs.min(), selected_obs.max()],
@@ -91,7 +100,6 @@ class SpanSelect:
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
         self.ax = plot_dicts[subplot_idx]["ax"]
-        self.bins = plot_dicts[subplot_idx]["bins"]
         self.data = plot_dicts[subplot_idx]["data"]
         self.canvas = self.ax.figure.canvas
         self.collection = self.ax.collections
@@ -119,7 +127,9 @@ class SpanSelect:
         self.span = SpanSelector(
             self.ax,
             onselect=partial(self.onselect, last_selection=last_selection),
-            direction="horizontal")
+            direction="horizontal",
+            props=dict(facecolor="red", alpha=0.3))
+        plot_dicts[subplot_idx]["selector"] = self.span
         self.ind = []
 
     # onselect governs what happens with selected data points
@@ -132,12 +142,6 @@ class SpanSelect:
         last_selection[0] = self.ind
         # get the selected observations via indices
         selected_obs = self.data[self.ind]
-        # recolor hist
-        for i in range(len(self.bins) - 1):
-            if np.any((selected_obs >= self.bins[i]) & (selected_obs <= self.bins[i + 1])):
-                self.patches[i].set_facecolor(self.old_fc)
-            else:
-                self.patches[i].set_facecolor(self.new_fc)
 
         if self.plot_dicts[self.subplot_idx]["vlines"] is not False:
             self.plot_dicts[self.subplot_idx]["vlines"].remove()
@@ -165,25 +169,31 @@ class SpanSelect:
             # update colors and vlines of histograms
             elif plot_dict["type"] == "hist":
                 # Unpack histogram
-                bins = plot_dict["bins"]
-                patches = plot_dict["ax"].patches
                 selected_obs = plot_dict["data"][self.ind]
-                old_fc = list(patches[0].get_facecolor())
-                old_fc[-1] = 1
-                new_fc = old_fc.copy()
-                new_fc[-1] = self.alpha_other
-                for i in range(len(bins) - 1):
-                    if np.any((selected_obs >= bins[i]) & (selected_obs <= bins[i + 1])):
-                        patches[i].set_facecolor(old_fc)
-                    else:
-                        patches[i].set_facecolor(new_fc)
+                other_obs = np.delete(plot_dict["data"], self.ind)
 
-                # check if we have previous vlines
+                fc_sel = plot_dict["fc"]
+                fc_not_sel = fc_sel.copy()
+                fc_not_sel[-1] = self.alpha_other
+                color_map = [plot_dict["fc"], fc_not_sel]
+                # Get x and y_lims of old plot
+                x_lims = plot_dict["ax"].get_xlim()
+                y_lims = plot_dict["ax"].get_ylim()
+                title = plot_dict["ax"].get_title()
+                x_label = plot_dict["ax"].get_xlabel()
+
+                plot_dict["ax"].clear()
+                plot_dict["ax"].hist(
+                    [selected_obs, other_obs],
+                    stacked=True,
+                    color=color_map)
                 if plot_dict["vlines"] is not False:
                     plot_dict["vlines"].remove()
 
-                y_lims = plot_dict["ax"].get_ylim()
                 plot_dict["ax"].set_ylim(y_lims)
+                plot_dict["ax"].set_xlim(x_lims)
+                plot_dict["ax"].set_title(title)
+                plot_dict["ax"].set_xlabel(x_label)
 
                 # Redraw vlines if there are selected points
                 if selected_obs.shape[0] != 0:
@@ -193,6 +203,14 @@ class SpanSelect:
                     plot_dict["vlines"] = vlines
                 else:
                     plot_dict["vlines"] = False
+
+                # re-initialize the span selector. It has been cleared
+                plot_dict["selector"] = SpanSelector(
+                    plot_dict["ax"],
+                    onselect=partial(
+                        self.onselect, last_selection=last_selection),
+                    direction="horizontal",
+                    props=dict(facecolor="red", alpha=0.3))
 
     # governs what happens when disconnected (after pressing "enter")
     def disconnect(self):

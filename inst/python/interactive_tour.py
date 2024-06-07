@@ -157,36 +157,38 @@ class InteractiveTourInterface(tk.Frame):
 
                     x = np.matmul(data, plot_object["obj"][:, 0, frame])
                     x = x/half_range
-
                     axs[subplot_idx].clear()
-                    hist = axs[subplot_idx].hist(x)
-                    axs[subplot_idx].set_box_aspect(aspect=1)
 
                     # check if there are preselected points and update plot
                     if self.last_selection[0] is not False:
                         # recolor preselected points
                         selected_obs = x[self.last_selection[0]]
-                        bin_edges = hist[1]
-                        fc_sel = list(hist[2][0].get_facecolor())
+                        other_obs = np.delete(x, self.last_selection[0])
+                        fc_sel = plot_dicts[subplot_idx]["fc"]
                         fc_sel[-1] = 1
                         fc_not_sel = fc_sel.copy()
                         fc_not_sel[-1] = alpha_other
-                        for bin in range(len(bin_edges) - 1):
-                            # Check if any data point falls within the current bin
-                            if np.any((selected_obs >= bin_edges[bin]) & (selected_obs <= bin_edges[bin + 1])):
-                                hist[2][bin].set_facecolor(fc_sel)
-                            else:
-                                hist[2][bin].set_facecolor(fc_not_sel)
-                        vlines = [selected_obs.min(), selected_obs.max()]
+                        color_map = [fc_sel, fc_not_sel]
+                        hist = axs[subplot_idx].hist(
+                            [selected_obs, other_obs],
+                            stacked=True,
+                            color=color_map)
+                        if selected_obs.shape[0] != 0:
+                            vlines = [selected_obs.min(), selected_obs.max()]
+                        else:
+                            vlines = False
                     else:
+                        hist = axs[subplot_idx].hist(x)
+                        axs[subplot_idx].set_box_aspect(aspect=1)
                         vlines = False
+                        fc_sel = list(hist[2][0].get_facecolor())
 
                     plot_dict = {"type": "hist",
                                  "subtype": "1d_tour",
                                  "ax": axs[subplot_idx],
                                  "data": x,
-                                 "bins": hist[1],
-                                 "vlines": vlines}
+                                 "vlines": vlines,
+                                 "fc": fc_sel}
                     plot_dicts[subplot_idx] = plot_dict
                     # start area selector
                     selector = SpanSelect(
@@ -251,10 +253,31 @@ class InteractiveTourInterface(tk.Frame):
                 elif plot_object["type"] == "hist":
                     if plot_object["obj"] in col_names:
                         col_index = col_names.index(plot_object["obj"])
+                        x = data[:, col_index]
                         # clear old histogram
                         axs[subplot_idx].clear()
-                        # Make new histogram
-                        hist = axs[subplot_idx].hist(data[:, col_index])
+
+                        if self.last_selection[0] is not False:
+                            # recolor preselected points
+                            selected_obs = x[self.last_selection][0]
+                            other_obs = np.delete(
+                                x, self.last_selection)
+                            print(selected_obs.shape, other_obs.shape)
+                            fc_sel = plot_dicts[subplot_idx]["fc"]
+                            fc_sel[-1] = 1
+                            fc_not_sel = fc_sel.copy()
+                            fc_not_sel[-1] = alpha_other
+
+                            color_map = [fc_sel, fc_not_sel]
+                            hist = axs[subplot_idx].hist(
+                                [selected_obs, other_obs],
+                                stacked=True,
+                                color=color_map)
+                        else:
+                            hist = axs[subplot_idx].hist(x)
+                            axs[subplot_idx].set_box_aspect(aspect=1)
+                            vlines = False
+                            fc_sel = list(hist[2][0].get_facecolor())
 
                         axs[subplot_idx].set_box_aspect(aspect=1)
                         hist_variable_name = plot_object["obj"]
@@ -262,30 +285,12 @@ class InteractiveTourInterface(tk.Frame):
                         axs[subplot_idx].set_title(
                             f"Histogram of variable {hist_variable_name}")
 
-                        if self.last_selection[0] is not False:
-                            # recolor preselected points
-                            selected_obs = data[self.last_selection, col_index]
-                            bin_edges = hist[1]
-                            fc_sel = list(hist[2][0].get_facecolor())
-                            fc_sel[-1] = 1
-                            fc_not_sel = fc_sel.copy()
-                            fc_not_sel[-1] = alpha_other
-                            for bin in range(len(bin_edges) - 1):
-                                # Check if any data point falls within the current bin
-                                if np.any((selected_obs >= bin_edges[bin]) & (selected_obs <= bin_edges[bin + 1])):
-                                    hist[2][bin].set_facecolor(fc_sel)
-                                else:
-                                    hist[2][bin].set_facecolor(fc_not_sel)
-                            vlines = plot_dicts[subplot_idx]["vlines"]
-                        else:
-                            vlines = False
-
                         plot_dict = {"type": "hist",
                                      "subtype": "hist",
                                      "ax": axs[subplot_idx],
-                                     "data": data[:, col_index],
-                                     "bins": hist[1],
-                                     "vlines": vlines}
+                                     "data": x,
+                                     "vlines": vlines,
+                                     "fc": fc_sel}
                         plot_dicts[subplot_idx] = plot_dict
                         # start area selector
                         selector = SpanSelect(
