@@ -18,20 +18,20 @@ class LassoSelect:
         self.alpha_other = alpha_other
         self.last_selection = last_selection
 
-        # Get coordinates and number of data points
-        self.xys = self.collection.get_offsets()
-
         # Get color of data points in RGB and construct data frame describing coloration
         self.fc = self.collection.get_facecolors()
+
+        plot_dicts[subplot_idx]["ax"].collections[0]
         if len(self.fc) == 0:
             raise ValueError('Collection must have a facecolor')
         elif len(self.fc) == 1:
-            self.fc = np.tile(self.fc, (len(self.xys), 1))
+            self.fc = np.tile(self.fc, (len(self.collection.get_offsets()), 1))
 
         # initialize lasso selector
         self.lasso = LassoSelector(
             plot_dicts[subplot_idx]["ax"],
-            onselect=partial(self.onselect, last_selection))
+            onselect=partial(self.onselect, last_selection),
+            button=1)
         self.ind = []
 
     # onselect governs what happens with selected data points
@@ -39,7 +39,8 @@ class LassoSelect:
     # saves indices of selected data points
     def onselect(self, last_selection, verts):
         path = Path(verts)
-        self.ind = np.nonzero(path.contains_points(self.xys))[0]
+        xys = self.collection.get_offsets()
+        self.ind = np.nonzero(path.contains_points(xys))[0]
         last_selection[0] = self.ind
         self.fc[:, -1] = self.alpha_other
         self.fc[self.ind, -1] = 1
@@ -213,6 +214,92 @@ class SpanSelect:
                     props=dict(facecolor="red", alpha=0.3))
 
     # governs what happens when disconnected (after pressing "enter")
+
     def disconnect(self):
         self.span.disconnect_events()
         self.canvas.draw_idle()
+
+
+def gram_schmidt(v1, v2):
+    return v2-np.multiply((np.dot(v2, v1)/np.dot(v1, v1)), v1)
+
+
+class DraggableAnnotation:
+    def __init__(self, data, proj, ax, scat, half_range, labels):
+        self.data = data
+        self.proj = proj
+        self.proj.setflags(write=True)
+        self.press = None
+        self.ax = ax
+        self.scat = scat
+        self.half_range = half_range
+
+        self.arrs = []
+        self.labels = []
+
+        for axis_id in range(proj.shape[0]):
+            arr = self.ax.arrow(0, 0,
+                                proj[axis_id, 0],
+                                proj[axis_id, 1],
+                                head_width=0.05,
+                                length_includes_head=True)
+
+            label = self.ax.text(proj[axis_id, 0],
+                                 proj[axis_id, 1],
+                                 labels[axis_id])
+
+            self.cidpress = arr.figure.canvas.mpl_connect(
+                "button_press_event", self.on_press)
+            self.cidrelease = arr.figure.canvas.mpl_connect(
+                "button_release_event", self.on_release)
+            self.cidmotion = arr.figure.canvas.mpl_connect(
+                "motion_notify_event", self.on_motion)
+
+            self.arrs.append(arr)
+            self.labels.append(label)
+
+    def on_press(self, event):
+        """Check whether mouse is over us; if so, store some data."""
+        # Iterate through projection axes
+        for axis_id, arr in enumerate(self.arrs):
+            if event.inaxes == arr.axes and event.button == 3:
+                contains, attrd = arr.contains(event)
+                if contains:
+                    self.press = axis_id
+
+    def on_motion(self, event):
+        """Move the rectangle if the mouse is over us."""
+        if self.press is None:
+            return
+        axis_id = self.press
+        if event.xdata and event.ydata is not False:
+            # Update projections
+            self.proj[axis_id] = [event.xdata, event.ydata]
+
+            # Orthonormalize
+            self.proj[:, 0] = self.proj[:, 0]/np.linalg.norm(self.proj[:, 0])
+            self.proj[:, 1] = gram_schmidt(self.proj[:, 0], self.proj[:, 1])
+            self.proj[:, 1] = self.proj[:, 1]/np.linalg.norm(self.proj[:, 1])
+
+            for axis_id in range(self.proj.shape[0]):
+                self.arrs[axis_id].remove()
+                self.arrs[axis_id] = self.ax.arrow(0, 0,
+                                                   self.proj[axis_id, 0],
+                                                   self.proj[axis_id, 1],
+                                                   head_width=0.05,
+                                                   length_includes_head=True)
+
+                # Update labels
+                self.labels[axis_id].set_x(self.proj[axis_id, 0])
+                self.labels[axis_id].set_y(self.proj[axis_id, 1])
+
+            # Update scattplot locations
+            new_data = np.matmul(self.data, self.proj)/self.half_range
+            self.scat.set_offsets(new_data)
+
+            # redraw
+            self.arrs[axis_id].figure.canvas.draw()
+
+    def on_release(self, event):
+        """Clear button press information."""
+        self.press = None

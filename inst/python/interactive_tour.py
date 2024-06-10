@@ -5,7 +5,7 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 
-from pytour_selectors import LassoSelect, SpanSelect
+from pytour_selectors import LassoSelect, SpanSelect, DraggableAnnotation
 
 
 class InteractiveTourInterface(tk.Frame):
@@ -94,11 +94,11 @@ class InteractiveTourInterface(tk.Frame):
                     if frame >= plot_object["obj"].shape[-1]-1:
                         frame = plot_object["obj"].shape[-1]-1
                     # get tour data
+                    proj = np.copy(plot_object["obj"][:, :, frame])
                     plot_data = r.render_proj_inter(
-                        data, plot_object["obj"][:, :, frame], limits=limits, half_range=half_range)
+                        data, proj, limits=limits, half_range=half_range)
                     # Unpack tour data
                     data_prj = plot_data["data_prj"]
-                    axes_prj = plot_data["axes"]
                     circle_prj = plot_data["circle"]
                     x = data_prj.iloc[:, 0]
                     y = data_prj.iloc[:, 1]
@@ -133,19 +133,16 @@ class InteractiveTourInterface(tk.Frame):
                         last_selection=self.last_selection)
                     selectors.append(selector)
 
-                    # plot axes and circle
-                    for arrow in range(axes_prj.shape[0]):
-                        axs[subplot_idx].arrow(axes_prj.iloc[arrow, 0],
-                                               axes_prj.iloc[arrow, 1],
-                                               axes_prj.iloc[arrow, 2],
-                                               axes_prj.iloc[arrow, 3])
+                    draggable_proj_axs = DraggableAnnotation(
+                        data,
+                        proj,
+                        axs[subplot_idx],
+                        scat,
+                        half_range,
+                        col_names)
 
-                        axs[subplot_idx].text(axes_prj.iloc[arrow, 2],
-                                              axes_prj.iloc[arrow, 3],
-                                              col_names[arrow])
-
-                        axs[subplot_idx].plot(circle_prj.iloc[:, 0],
-                                              circle_prj.iloc[:, 1])
+                    axs[subplot_idx].plot(circle_prj.iloc[:, 0],
+                                          circle_prj.iloc[:, 1], color="red")
                     n_frames = plot_object["obj"].shape[-1]-1
                     axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
                                                f"\nPress right key for next frame" +
@@ -262,7 +259,6 @@ class InteractiveTourInterface(tk.Frame):
                             selected_obs = x[self.last_selection][0]
                             other_obs = np.delete(
                                 x, self.last_selection)
-                            print(selected_obs.shape, other_obs.shape)
                             fc_sel = plot_dicts[subplot_idx]["fc"]
                             fc_sel[-1] = 1
                             fc_not_sel = fc_sel.copy()
