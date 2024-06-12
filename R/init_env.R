@@ -1,4 +1,4 @@
-#' Initialize anaconda environement used for python backend
+#' Initialize anaconda environment used for python backend
 #'
 #' @param env_name A string that defines the name of the anaconda environment reticulate uses
 #'
@@ -7,23 +7,55 @@
 #'
 #' @examples init_env(env_name="r-pytourr")
 #'
-init_env <- function(env_name="r-pytourr"){
+init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env"){
 
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
-  # check if python environment exists and create new one if not
-  if (env_name %in% reticulate::conda_list()$name==FALSE){
-    reticulate::conda_create(env_name)
-  }
-  # initialize python environment
-  reticulate::use_condaenv(env_name)
 
-  # check if required packages are installed and install them if not
-  package_names <- reticulate::py_list_packages(envname = env_name)
-  required_packages <- c("pandas", "numpy", "matplotlib")
-  for (package in required_packages){
-    if (package %in% package_names$package==FALSE){reticulate::conda_install(env_name, package)}
+  if (virtual_env == "anaconda"){
+    # check if python environment exists and create new one if not
+    if (env_name %in% reticulate::conda_list()$name==FALSE){
+      reticulate::conda_create(env_name)
+    }
+    # initialize python environment
+    reticulate::use_condaenv(env_name)
+
+    # check if required packages are installed and install them if not
+    package_names <- reticulate::py_list_packages(envname = env_name)
+    required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter")
+    for (package in required_packages){
+      if (package %in% package_names$package==FALSE){
+        if (package == "customtkinter"){
+          reticulate::conda_install(env_name, package, pip=TRUE)
+        } else {
+          reticulate::conda_install(env_name, package)
+        }
+      }
+    }
+  } else if (virtual_env == "virtual_env"){
+    if (env_name %in% reticulate::virtualenv_list()==FALSE){
+      py_version <- unlist(virtualenv_starter(all=TRUE)$version[1])
+      py_version = paste(py_version, collapse = ".")
+      reticulate::install_python(version = py_version)
+      reticulate::virtualenv_create(env_name)
+    }
+    # initialize python environment
+    reticulate::use_virtualenv(env_name)
+
+    # check if required packages are installed and install them if not
+    package_names <- reticulate::py_list_packages(envname = env_name)
+    required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter")
+    for (package in required_packages){
+      if (package %in% package_names$package==FALSE){
+        if (package == "customtkinter"){
+          reticulate::virtualenv_install(env_name, package)
+        } else {
+          reticulate::virtualenv_install(env_name, package)
+        }
+      }
+    }
   }
+
   base::cat(base::sprintf('Python environment "%s" successfully loaded', env_name), "\n")
 
   # Check accessibility of python functions

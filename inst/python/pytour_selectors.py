@@ -6,6 +6,7 @@ from functools import partial
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector, SpanSelector
 
+from helpers import gram_schmidt
 # Helper class that manages the lasso selection
 
 
@@ -86,6 +87,14 @@ class LassoSelect:
                     plot_dict["vlines"] = vlines
                 else:
                     plot_dict["vlines"] = False
+
+                # re-initialize the span selector. It has been cleared
+                plot_dict["selector"] = SpanSelector(
+                    plot_dict["ax"],
+                    onselect=partial(
+                        self.onselect, last_selection=last_selection),
+                    direction="horizontal",
+                    props=dict(facecolor="red", alpha=0.3))
 
         self.canvas.draw_idle()
 
@@ -220,13 +229,10 @@ class SpanSelect:
         self.canvas.draw_idle()
 
 
-def gram_schmidt(v1, v2):
-    return v2-np.multiply((np.dot(v2, v1)/np.dot(v1, v1)), v1)
-
-
 class DraggableAnnotation:
-    def __init__(self, data, proj, ax, scat, half_range, labels):
+    def __init__(self, data, proj, ax, scat, half_range, feature_selection, labels):
         self.data = data
+        self.feature_selection = feature_selection
         self.proj = proj
         self.proj.setflags(write=True)
         self.press = None
@@ -237,24 +243,29 @@ class DraggableAnnotation:
         self.arrs = []
         self.labels = []
 
-        for axis_id in range(proj.shape[0]):
-            arr = self.ax.arrow(0, 0,
-                                proj[axis_id, 0],
-                                proj[axis_id, 1],
-                                head_width=0.05,
-                                length_includes_head=True)
+        # Receive full projection
 
-            label = self.ax.text(proj[axis_id, 0],
-                                 proj[axis_id, 1],
-                                 labels[axis_id])
+        for axis_id, feature_bool in enumerate(self.feature_selection):
+            if feature_bool == True:
+                arr = self.ax.arrow(0, 0,
+                                    proj[axis_id, 0],
+                                    proj[axis_id, 1],
+                                    head_width=0.06,
+                                    length_includes_head=True)
 
-            self.cidpress = arr.figure.canvas.mpl_connect(
-                "button_press_event", self.on_press)
-            self.cidrelease = arr.figure.canvas.mpl_connect(
-                "button_release_event", self.on_release)
-            self.cidmotion = arr.figure.canvas.mpl_connect(
-                "motion_notify_event", self.on_motion)
+                label = self.ax.text(proj[axis_id, 0],
+                                     proj[axis_id, 1],
+                                     labels[axis_id])
 
+                self.cidpress = arr.figure.canvas.mpl_connect(
+                    "button_press_event", self.on_press)
+                self.cidrelease = arr.figure.canvas.mpl_connect(
+                    "button_release_event", self.on_release)
+                self.cidmotion = arr.figure.canvas.mpl_connect(
+                    "motion_notify_event", self.on_motion)
+            else:
+                arr = None
+                label = None
             self.arrs.append(arr)
             self.labels.append(label)
 
@@ -262,10 +273,11 @@ class DraggableAnnotation:
         """Check whether mouse is over us; if so, store some data."""
         # Iterate through projection axes
         for axis_id, arr in enumerate(self.arrs):
-            if event.inaxes == arr.axes and event.button == 3:
-                contains, attrd = arr.contains(event)
-                if contains:
-                    self.press = axis_id
+            if arr is not None:
+                if event.inaxes == arr.axes and event.button == 3:
+                    contains, attrd = arr.contains(event)
+                    if contains:
+                        self.press = axis_id
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
@@ -281,24 +293,26 @@ class DraggableAnnotation:
             self.proj[:, 1] = gram_schmidt(self.proj[:, 0], self.proj[:, 1])
             self.proj[:, 1] = self.proj[:, 1]/np.linalg.norm(self.proj[:, 1])
 
-            for axis_id in range(self.proj.shape[0]):
-                self.arrs[axis_id].remove()
-                self.arrs[axis_id] = self.ax.arrow(0, 0,
-                                                   self.proj[axis_id, 0],
-                                                   self.proj[axis_id, 1],
-                                                   head_width=0.05,
-                                                   length_includes_head=True)
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    self.arrs[axis_id].remove()
+                    self.arrs[axis_id] = self.ax.arrow(0, 0,
+                                                       self.proj[axis_id, 0],
+                                                       self.proj[axis_id, 1],
+                                                       head_width=0.06,
+                                                       length_includes_head=True)
 
-                # Update labels
-                self.labels[axis_id].set_x(self.proj[axis_id, 0])
-                self.labels[axis_id].set_y(self.proj[axis_id, 1])
+                    # Update labels
+                    self.labels[axis_id].set_x(self.proj[axis_id, 0])
+                    self.labels[axis_id].set_y(self.proj[axis_id, 1])
 
             # Update scattplot locations
-            new_data = np.matmul(self.data, self.proj)/self.half_range
+            new_data = np.matmul(self.data[:, self.feature_selection],
+                                 self.proj[self.feature_selection])/self.half_range
             self.scat.set_offsets(new_data)
 
             # redraw
-            self.arrs[axis_id].figure.canvas.draw()
+            self.ax.figure.canvas.draw()
 
     def on_release(self, event):
         """Clear button press information."""
