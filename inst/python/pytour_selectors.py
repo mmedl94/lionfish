@@ -5,6 +5,7 @@ from functools import partial
 
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector, SpanSelector
+from matplotlib.patches import Rectangle
 
 from helpers import gram_schmidt
 # Helper class that manages the lasso selection
@@ -42,7 +43,7 @@ class LassoSelect:
         path = Path(verts)
         xys = self.collection.get_offsets()
         self.ind = np.nonzero(path.contains_points(xys))[0]
-        last_selection[0] = self.ind
+        last_selection[0] = list(self.ind)
         self.fc[:, -1] = self.alpha_other
         self.fc[self.ind, -1] = 1
         self.collection.set_facecolors(self.fc)
@@ -71,6 +72,7 @@ class LassoSelect:
                 plot_dict["ax"].hist(
                     [selected_obs, other_obs],
                     stacked=True,
+                    picker=True,
                     color=color_map)
                 if plot_dict["vlines"] is not False:
                     plot_dict["vlines"].remove()
@@ -88,14 +90,6 @@ class LassoSelect:
                 else:
                     plot_dict["vlines"] = False
 
-                # re-initialize the span selector. It has been cleared
-                plot_dict["selector"] = SpanSelector(
-                    plot_dict["ax"],
-                    onselect=partial(
-                        self.onselect, last_selection=last_selection),
-                    direction="horizontal",
-                    props=dict(facecolor="red", alpha=0.3))
-
         self.canvas.draw_idle()
 
     # governs what happens when disconnected (after pressing "enter")
@@ -104,7 +98,7 @@ class LassoSelect:
         self.canvas.draw_idle()
 
 
-class SpanSelect:
+class BarSelect:
     def __init__(self, plot_dicts, subplot_idx, alpha_other=0.3, last_selection=False):
         # initialize parameters
         self.plot_dicts = plot_dicts
@@ -133,54 +127,49 @@ class SpanSelect:
                                                                self.y_lims[0],
                                                                self.y_lims[1], color="red")
 
-        # initialize lasso selector
-        self.span = SpanSelector(
-            self.ax,
-            onselect=partial(self.onselect, last_selection=last_selection),
-            direction="horizontal",
-            props=dict(facecolor="red", alpha=0.3))
-        plot_dicts[subplot_idx]["selector"] = self.span
+        self.connection = self.ax.figure.canvas.mpl_connect('pick_event', partial(
+            self.onselect, self.last_selection))
         self.ind = []
 
     # onselect governs what happens with selected data points
     # changes alpha of selected data points
     # saves indices of selected data points
-    def onselect(self, min_select, max_select, last_selection):
-        # save selection as shared last_selection object
-        self.ind = np.where(np.logical_and(
-            self.data >= min_select, self.data <= max_select))[0]
-        last_selection[0] = self.ind
-        # get the selected observations via indices
-        selected_obs = self.data[self.ind]
+    def onselect(self, last_selection, event):
+        if event.artist.axes != self.ax:
+            return
 
-        if self.plot_dicts[self.subplot_idx]["vlines"] is not False:
-            self.plot_dicts[self.subplot_idx]["vlines"].remove()
-            self.plot_dicts[self.subplot_idx]["vlines"] = False
+        min_select = event.artist.get_x()
+        max_select = min_select+event.artist.get_width()
 
-        # add vlines
-        if selected_obs.shape[0] != 0:
-            self.ax.set_ylim(self.y_lims)
-            vlines = self.ax.vlines([selected_obs.min(), selected_obs.max()],
-                                    self.y_lims[0],
-                                    self.y_lims[1], color="red")
-            self.plot_dicts[self.subplot_idx]["vlines"] = vlines
-            self.canvas.draw_idle()
-
-        # define facecolors for scatterplots
-        self.fc = np.tile(self.old_fc, (self.data.shape[0], 1))
-        self.fc[:, -1] = self.alpha_other
-        self.fc[self.ind, -1] = 1
+        # Handle selection behaviour
+        print(last_selection[0])
+        if not last_selection[0]:
+            # save selection as shared last_selection object
+            last_selection[0] = np.where(np.logical_and(
+                self.data >= min_select, self.data <= max_select))[0].tolist()
+        else:
+            new_ind = np.where(np.logical_and(
+                self.data >= min_select, self.data <= max_select))[0].tolist()
+            if set(list(new_ind)).issubset(set(last_selection[0])):
+                last_selection[0] = list(
+                    set(last_selection[0])-set(list(new_ind)))
+            else:
+                last_selection[0] = last_selection[0] + list(new_ind)
+                last_selection[0] = list(set(last_selection[0]))
 
         for plot_dict in self.plot_dicts:
             # update colors of scatterplot
             if plot_dict["type"] == "scatter":
+                scatter_fc = np.tile(self.old_fc, (self.data.shape[0], 1))
+                scatter_fc[:, -1] = self.alpha_other
+                scatter_fc[last_selection[0], -1] = 1
                 collection_subplot = plot_dict["ax"].collections[0]
-                collection_subplot.set_facecolors(self.fc)
+                collection_subplot.set_facecolors(scatter_fc)
             # update colors and vlines of histograms
             elif plot_dict["type"] == "hist":
                 # Unpack histogram
-                selected_obs = plot_dict["data"][self.ind]
-                other_obs = np.delete(plot_dict["data"], self.ind)
+                selected_obs = plot_dict["data"][last_selection[0]]
+                other_obs = np.delete(plot_dict["data"], last_selection[0])
 
                 fc_sel = plot_dict["fc"]
                 fc_not_sel = fc_sel.copy()
@@ -196,6 +185,7 @@ class SpanSelect:
                 plot_dict["ax"].hist(
                     [selected_obs, other_obs],
                     stacked=True,
+                    picker=True,
                     color=color_map)
                 if plot_dict["vlines"] is not False:
                     plot_dict["vlines"].remove()
@@ -213,19 +203,10 @@ class SpanSelect:
                     plot_dict["vlines"] = vlines
                 else:
                     plot_dict["vlines"] = False
-
-                # re-initialize the span selector. It has been cleared
-                plot_dict["selector"] = SpanSelector(
-                    plot_dict["ax"],
-                    onselect=partial(
-                        self.onselect, last_selection=last_selection),
-                    direction="horizontal",
-                    props=dict(facecolor="red", alpha=0.3))
-
-    # governs what happens when disconnected (after pressing "enter")
+        self.canvas.draw_idle()
 
     def disconnect(self):
-        self.span.disconnect_events()
+        self.canvas.mpl_disconnect(self.connection)
         self.canvas.draw_idle()
 
 

@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import (
 import customtkinter as ctk
 
 from helpers import gram_schmidt
-from pytour_selectors import LassoSelect, SpanSelect, DraggableAnnotation
+from pytour_selectors import LassoSelect, DraggableAnnotation, BarSelect
 
 
 class InteractiveTourInterface(ctk.CTk):
@@ -79,6 +79,13 @@ class InteractiveTourInterface(ctk.CTk):
                     data_subset = self.data[:, self.feature_selection]
                     proj_subet = plot_dict["proj"][self.feature_selection]
 
+                    proj_subet[:, 0] = proj_subet[:, 0] / \
+                        np.linalg.norm(proj_subet[:, 0])
+                    proj_subet[:, 1] = gram_schmidt(
+                        proj_subet[:, 0], proj_subet[:, 1])
+                    proj_subet[:, 1] = proj_subet[:, 1] / \
+                        np.linalg.norm(proj_subet[:, 1])
+
                     plot_data = r.render_proj_inter(
                         data_subset, proj_subet, limits=limits, half_range=half_range)
                     # Unpack tour data
@@ -134,7 +141,6 @@ class InteractiveTourInterface(ctk.CTk):
                 if plot_dict["subtype"] == "1d_tour":
                     data_subset = self.data[:, self.feature_selection]
                     proj_subet = plot_dict["proj"][self.feature_selection]
-                    print(data_subset.shape, proj_subet[:, 0].shape)
                     x = np.matmul(data_subset, proj_subet[:, 0])
                     x = x/half_range
                     title = plot_dict["ax"].get_title()
@@ -153,13 +159,14 @@ class InteractiveTourInterface(ctk.CTk):
                         hist = plot_dict["ax"].hist(
                             [selected_obs, other_obs],
                             stacked=True,
+                            picker=True,
                             color=color_map)
                         if selected_obs.shape[0] != 0:
                             vlines = [selected_obs.min(), selected_obs.max()]
                         else:
                             vlines = False
                     else:
-                        hist = plot_dict["ax"].hist(x)
+                        hist = plot_dict["ax"].hist(x, picker=True)
                         plot_dict["ax"].set_box_aspect(aspect=1)
                         vlines = False
                         fc_sel = list(hist[2][0].get_facecolor())
@@ -169,14 +176,6 @@ class InteractiveTourInterface(ctk.CTk):
                     plot_dict["vlines"] = vlines
 
                     self.plot_dicts[subplot_idx] = plot_dict
-
-                    # start area selector
-                    selector = SpanSelect(
-                        plot_dicts=self.plot_dicts,
-                        subplot_idx=subplot_idx,
-                        alpha_other=self.alpha_other,
-                        last_selection=self.last_selection)
-                    self.selectors[subplot_idx] = selector
 
         self.feature_selection_vars = []
         self.feature_selection = []
@@ -213,7 +212,7 @@ class InteractiveTourInterface(ctk.CTk):
 
         def accept(event):
             if event.key == "right" or event.key == "left":
-                selector.disconnect()
+                self.initial_loop = False
                 fig.canvas.draw()
                 if event.key == "right":
                     self.frame += 1
@@ -222,8 +221,8 @@ class InteractiveTourInterface(ctk.CTk):
                 self.pause_var.set(1)
 
         self.plot_dicts = [i for i, _ in enumerate(plot_objects)]
-
         self.last_selection = [False]
+        self.initial_loop = True
 
         while self.frame < self.n_frames:
             self.selectors = []
@@ -233,7 +232,6 @@ class InteractiveTourInterface(ctk.CTk):
                 if plot_object["type"] == "2d_tour":
                     if frame >= plot_object["obj"].shape[-1]-1:
                         frame = plot_object["obj"].shape[-1]-1
-
                     # get tour data
                     proj = np.copy(
                         plot_object["obj"][:, :, frame])
@@ -265,6 +263,7 @@ class InteractiveTourInterface(ctk.CTk):
 
                     plot_dict = {"type": "scatter",
                                  "subtype": "2d_tour",
+                                 "subplot_idx": subplot_idx,
                                  "ax": axs[subplot_idx],
                                  "feature_selection": self.feature_selection,
                                  "proj": proj
@@ -322,32 +321,52 @@ class InteractiveTourInterface(ctk.CTk):
                         hist = axs[subplot_idx].hist(
                             [selected_obs, other_obs],
                             stacked=True,
+                            picker=True,
                             color=color_map)
-                        if selected_obs.shape[0] != 0:
-                            vlines = [selected_obs.min(), selected_obs.max()]
-                        else:
-                            vlines = False
+                        y_lims = axs[subplot_idx].get_ylim()
+                        axs[subplot_idx].set_ylim(y_lims)
+                        vlines = axs[subplot_idx].vlines([selected_obs.min(),
+                                                          selected_obs.max()],
+                                                         y_lims[0],
+                                                         y_lims[1], color="red")
                     else:
-                        hist = axs[subplot_idx].hist(x)
+                        hist = axs[subplot_idx].hist(x, picker=True)
                         axs[subplot_idx].set_box_aspect(aspect=1)
                         vlines = False
                         fc_sel = list(hist[2][0].get_facecolor())
 
-                    plot_dict = {"type": "hist",
-                                 "subtype": "1d_tour",
-                                 "ax": axs[subplot_idx],
-                                 "data": x,
-                                 "vlines": vlines,
-                                 "fc": fc_sel,
-                                 "proj": proj}
-                    self.plot_dicts[subplot_idx] = plot_dict
-                    # start area selector
-                    selector = SpanSelect(
-                        plot_dicts=self.plot_dicts,
-                        subplot_idx=subplot_idx,
-                        alpha_other=self.alpha_other,
-                        last_selection=self.last_selection)
-                    self.selectors.append(selector)
+                    if self.initial_loop is True:
+                        plot_dict = {"type": "hist",
+                                     "subtype": "1d_tour",
+                                     "subplot_idx": subplot_idx,
+                                     "ax": axs[subplot_idx],
+                                     "data": x,
+                                     "vlines": vlines,
+                                     "fc": fc_sel,
+                                     "proj": proj}
+                        self.plot_dicts[subplot_idx] = plot_dict
+                        bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                                                 subplot_idx=subplot_idx,
+                                                 alpha_other=self.alpha_other,
+                                                 last_selection=self.last_selection)
+                        self.plot_dicts[subplot_idx]["selector"] = bar_selector
+                    else:
+                        plot_dict = {"type": "hist",
+                                     "subtype": "1d_tour",
+                                     "subplot_idx": subplot_idx,
+                                     "ax": axs[subplot_idx],
+                                     "data": x,
+                                     "vlines": vlines,
+                                     "fc": fc_sel,
+                                     "proj": proj,
+                                     "selector": self.plot_dicts[subplot_idx]["selector"]}
+                        self.plot_dicts[subplot_idx] = plot_dict
+                        self.plot_dicts[subplot_idx]["selector"].disconnect()
+                        bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                                                 subplot_idx=subplot_idx,
+                                                 alpha_other=self.alpha_other,
+                                                 last_selection=self.last_selection)
+                        self.plot_dicts[subplot_idx]["selector"] = bar_selector
 
                     n_frames = plot_object["obj"].shape[-1]-1
                     axs[subplot_idx].set_xlim(-1, 1)
@@ -384,6 +403,7 @@ class InteractiveTourInterface(ctk.CTk):
 
                     plot_dict = {"type": "scatter",
                                  "subtype": "scatter",
+                                 "subplot_idx": subplot_idx,
                                  "ax": axs[subplot_idx]
                                  }
                     self.plot_dicts[subplot_idx] = plot_dict
@@ -422,9 +442,16 @@ class InteractiveTourInterface(ctk.CTk):
                             hist = axs[subplot_idx].hist(
                                 [selected_obs, other_obs],
                                 stacked=True,
+                                picker=True,
                                 color=color_map)
+                            y_lims = axs[subplot_idx].get_ylim()
+                            axs[subplot_idx].set_ylim(y_lims)
+                            vlines = axs[subplot_idx].vlines([selected_obs.min(),
+                                                              selected_obs.max()],
+                                                             y_lims[0],
+                                                             y_lims[1], color="red")
                         else:
-                            hist = axs[subplot_idx].hist(x)
+                            hist = axs[subplot_idx].hist(x, picker=True)
                             axs[subplot_idx].set_box_aspect(aspect=1)
                             vlines = False
                             fc_sel = list(hist[2][0].get_facecolor())
@@ -435,23 +462,43 @@ class InteractiveTourInterface(ctk.CTk):
                         axs[subplot_idx].set_title(
                             f"Histogram of variable {hist_variable_name}")
 
-                        plot_dict = {"type": "hist",
-                                     "subtype": "hist",
-                                     "ax": axs[subplot_idx],
-                                     "data": x,
-                                     "vlines": vlines,
-                                     "fc": fc_sel}
-                        self.plot_dicts[subplot_idx] = plot_dict
-                        # start area selector
-                        selector = SpanSelect(
-                            plot_dicts=self.plot_dicts,
-                            subplot_idx=subplot_idx,
-                            alpha_other=self.alpha_other,
-                            last_selection=self.last_selection)
-                        self.selectors.append(selector)
+                        if self.initial_loop is True:
+                            plot_dict = {"type": "hist",
+                                         "subtype": "1d_tour",
+                                         "subplot_idx": subplot_idx,
+                                         "ax": axs[subplot_idx],
+                                         "data": x,
+                                         "vlines": vlines,
+                                         "fc": fc_sel,
+                                         "proj": proj}
+                            self.plot_dicts[subplot_idx] = plot_dict
+                            bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                                                     subplot_idx=subplot_idx,
+                                                     alpha_other=self.alpha_other,
+                                                     last_selection=self.last_selection)
+                            self.plot_dicts[subplot_idx]["selector"] = bar_selector
+                        else:
+                            plot_dict = {"type": "hist",
+                                         "subtype": "1d_tour",
+                                         "subplot_idx": subplot_idx,
+                                         "ax": axs[subplot_idx],
+                                         "data": x,
+                                         "vlines": vlines,
+                                         "fc": fc_sel,
+                                         "proj": proj,
+                                         "selector": self.plot_dicts[subplot_idx]["selector"]}
+                            self.plot_dicts[subplot_idx] = plot_dict
+                            self.plot_dicts[subplot_idx]["selector"].disconnect(
+                            )
+                            bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                                                     subplot_idx=subplot_idx,
+                                                     alpha_other=self.alpha_other,
+                                                     last_selection=self.last_selection)
+                            self.plot_dicts[subplot_idx]["selector"] = bar_selector
                     else:
                         print("Column not found")
 
+            fig.canvas.draw()
             self.pause_var = tk.StringVar()
             fig.canvas.mpl_connect("key_press_event", accept)
             self.wait_variable(self.pause_var)
