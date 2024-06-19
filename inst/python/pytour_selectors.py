@@ -142,7 +142,6 @@ class BarSelect:
         max_select = min_select+event.artist.get_width()
 
         # Handle selection behaviour
-        print(last_selection[0])
         if not last_selection[0]:
             # save selection as shared last_selection object
             last_selection[0] = np.where(np.logical_and(
@@ -225,17 +224,23 @@ class DraggableAnnotation:
         self.labels = []
 
         # Receive full projection
+        self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+            np.linalg.norm(self.proj[self.feature_selection, 0])
+        self.proj[self.feature_selection, 1] = gram_schmidt(
+            self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
+        self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
+            np.linalg.norm(self.proj[self.feature_selection, 1])
 
         for axis_id, feature_bool in enumerate(self.feature_selection):
             if feature_bool == True:
                 arr = self.ax.arrow(0, 0,
-                                    proj[axis_id, 0],
-                                    proj[axis_id, 1],
+                                    self.proj[axis_id, 0]*2/3,
+                                    self.proj[axis_id, 1]*2/3,
                                     head_width=0.06,
                                     length_includes_head=True)
 
-                label = self.ax.text(proj[axis_id, 0],
-                                     proj[axis_id, 1],
+                label = self.ax.text(self.proj[axis_id, 0]*2/3,
+                                     self.proj[axis_id, 1]*2/3,
                                      labels[axis_id])
 
                 self.cidpress = arr.figure.canvas.mpl_connect(
@@ -267,25 +272,29 @@ class DraggableAnnotation:
         axis_id = self.press
         if event.xdata and event.ydata is not False:
             # Update projections
-            self.proj[axis_id] = [event.xdata, event.ydata]
-
+            self.proj[axis_id] = [event.xdata/(2/3), event.ydata/(2/3)]
             # Orthonormalize
-            self.proj[:, 0] = self.proj[:, 0]/np.linalg.norm(self.proj[:, 0])
-            self.proj[:, 1] = gram_schmidt(self.proj[:, 0], self.proj[:, 1])
-            self.proj[:, 1] = self.proj[:, 1]/np.linalg.norm(self.proj[:, 1])
+            self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+                np.linalg.norm(self.proj[self.feature_selection, 0])
+            self.proj[self.feature_selection, 1] = gram_schmidt(
+                self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
+            self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
+                np.linalg.norm(self.proj[self.feature_selection, 1])
 
             for axis_id, feature_bool in enumerate(self.feature_selection):
                 if feature_bool == True:
                     self.arrs[axis_id].remove()
                     self.arrs[axis_id] = self.ax.arrow(0, 0,
-                                                       self.proj[axis_id, 0],
-                                                       self.proj[axis_id, 1],
+                                                       self.proj[axis_id,
+                                                                 0]*2/3,
+                                                       self.proj[axis_id,
+                                                                 1]*2/3,
                                                        head_width=0.06,
                                                        length_includes_head=True)
 
                     # Update labels
-                    self.labels[axis_id].set_x(self.proj[axis_id, 0])
-                    self.labels[axis_id].set_y(self.proj[axis_id, 1])
+                    self.labels[axis_id].set_x(self.proj[axis_id, 0]*2/3)
+                    self.labels[axis_id].set_y(self.proj[axis_id, 1]*2/3)
 
             # Update scattplot locations
             new_data = np.matmul(self.data[:, self.feature_selection],

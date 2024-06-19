@@ -89,10 +89,14 @@ class InteractiveTourInterface(ctk.CTk):
                     plot_data = r.render_proj_inter(
                         data_subset, proj_subet, limits=limits, half_range=half_range)
                     # Unpack tour data
-                    data_prj = plot_data["data_prj"]
+
+                    data_prj = np.matmul(self.data[:, self.feature_selection],
+                                         proj_subet)/half_range
                     circle_prj = plot_data["circle"]
-                    x = data_prj.iloc[:, 0]
-                    y = data_prj.iloc[:, 1]
+                    # x = data_prj.iloc[:, 0]
+                    # y = data_prj.iloc[:, 1]
+                    x = data_prj[:, 0]
+                    y = data_prj[:, 1]
 
                     old_title = plot_dict["ax"].get_title()
 
@@ -141,7 +145,8 @@ class InteractiveTourInterface(ctk.CTk):
                 if plot_dict["subtype"] == "1d_tour":
                     data_subset = self.data[:, self.feature_selection]
                     proj_subet = plot_dict["proj"][self.feature_selection]
-                    x = np.matmul(data_subset, proj_subet[:, 0])
+                    proj_subet = proj_subet/np.linalg.norm(proj_subet)
+                    x = np.matmul(data_subset, proj_subet)
                     x = x/half_range
                     title = plot_dict["ax"].get_title()
                     plot_dict["ax"].clear()
@@ -236,6 +241,14 @@ class InteractiveTourInterface(ctk.CTk):
                     proj = np.copy(
                         plot_object["obj"][:, :, frame])
                     proj_subet = proj[self.feature_selection]
+
+                    proj_subet[:, 0] = proj_subet[:, 0] / \
+                        np.linalg.norm(proj_subet[:, 0])
+                    proj_subet[:, 1] = gram_schmidt(
+                        proj_subet[:, 0], proj_subet[:, 1])
+                    proj_subet[:, 1] = proj_subet[:, 1] / \
+                        np.linalg.norm(proj_subet[:, 1])
+
                     plot_data = r.render_proj_inter(
                         self.data[:, self.feature_selection], proj_subet, limits=limits, half_range=half_range)
                     # Unpack tour data
@@ -249,8 +262,8 @@ class InteractiveTourInterface(ctk.CTk):
                     # Make new scatterplot
                     scat = axs[subplot_idx].scatter(x, y)
                     scat = axs[subplot_idx].collections[0]
-                    axs[subplot_idx].set_xlim(-limits*1.1, limits*1.1)
-                    axs[subplot_idx].set_ylim(-limits*1.1, limits*1.1)
+                    axs[subplot_idx].set_xlim(-limits * 1.1, limits*1.1)
+                    axs[subplot_idx].set_ylim(-limits * 1.1, limits*1.1)
                     axs[subplot_idx].set_box_aspect(aspect=1)
 
                     # Recolor preselected points
@@ -303,6 +316,8 @@ class InteractiveTourInterface(ctk.CTk):
 
                     data_subset = self.data[:, self.feature_selection]
                     proj_subet = proj[self.feature_selection]
+                    proj_subet[:, 0] = proj_subet[:, 0] / \
+                        np.linalg.norm(proj_subet[:, 0])
                     x = np.matmul(data_subset, proj_subet[:, 0])
                     x = x/half_range
 
@@ -464,7 +479,7 @@ class InteractiveTourInterface(ctk.CTk):
 
                         if self.initial_loop is True:
                             plot_dict = {"type": "hist",
-                                         "subtype": "1d_tour",
+                                         "subtype": "hist",
                                          "subplot_idx": subplot_idx,
                                          "ax": axs[subplot_idx],
                                          "data": x,
@@ -479,7 +494,7 @@ class InteractiveTourInterface(ctk.CTk):
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                         else:
                             plot_dict = {"type": "hist",
-                                         "subtype": "1d_tour",
+                                         "subtype": "hist",
                                          "subplot_idx": subplot_idx,
                                          "ax": axs[subplot_idx],
                                          "data": x,
