@@ -93,8 +93,6 @@ class InteractiveTourInterface(ctk.CTk):
                     data_prj = np.matmul(self.data[:, self.feature_selection],
                                          proj_subet)/half_range
                     circle_prj = plot_data["circle"]
-                    # x = data_prj.iloc[:, 0]
-                    # y = data_prj.iloc[:, 1]
                     x = data_prj[:, 0]
                     y = data_prj[:, 1]
 
@@ -146,7 +144,8 @@ class InteractiveTourInterface(ctk.CTk):
                     data_subset = self.data[:, self.feature_selection]
                     proj_subet = plot_dict["proj"][self.feature_selection]
                     proj_subet = proj_subet/np.linalg.norm(proj_subet)
-                    x = np.matmul(data_subset, proj_subet)
+
+                    x = np.matmul(data_subset, proj_subet)[:, 0]
                     x = x/half_range
                     title = plot_dict["ax"].get_title()
                     plot_dict["ax"].clear()
@@ -156,6 +155,7 @@ class InteractiveTourInterface(ctk.CTk):
                         # recolor preselected points
                         selected_obs = x[self.last_selection[0]]
                         other_obs = np.delete(x, self.last_selection[0])
+
                         fc_sel = self.plot_dicts[subplot_idx]["fc"]
                         fc_sel[-1] = 1
                         fc_not_sel = fc_sel.copy()
@@ -178,9 +178,16 @@ class InteractiveTourInterface(ctk.CTk):
                     plot_dict["ax"].set_xlim(-1, 1)
                     plot_dict["ax"].set_title(title)
                     plot_dict["data"] = x
+                    if vlines != False:
+                        y_lims = plot_dict["ax"].get_ylim()
+                        plot_dict["ax"].set_ylim(y_lims)
+                        vlines = plot_dict["ax"].vlines(vlines,
+                                                        y_lims[0],
+                                                        y_lims[1], color="red")
                     plot_dict["vlines"] = vlines
 
                     self.plot_dicts[subplot_idx] = plot_dict
+                    self.plot_dicts[subplot_idx]["ax"].figure.canvas.draw_idle()
 
         self.feature_selection_vars = []
         self.feature_selection = []
