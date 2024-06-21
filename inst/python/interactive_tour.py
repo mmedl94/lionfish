@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import (
 import customtkinter as ctk
 
 from helpers import gram_schmidt
-from pytour_selectors import LassoSelect, DraggableAnnotation, BarSelect
+from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnotation2d, BarSelect
 
 
 class InteractiveTourInterface(ctk.CTk):
@@ -17,6 +17,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.title("Interactive tourr")
         self.data = data
         self.col_names = col_names
+        self.half_range = half_range
 
         if not isinstance(plot_objects, list):
             plot_objects = [plot_objects]
@@ -108,7 +109,7 @@ class InteractiveTourInterface(ctk.CTk):
                     plot_dict["ax"].set_box_aspect(aspect=1)
 
                     plot_dict["ax"].plot(circle_prj.iloc[:, 0],
-                                         circle_prj.iloc[:, 1], color="red")
+                                         circle_prj.iloc[:, 1], color="gray")
 
                     axs[subplot_idx].set_title(old_title)
 
@@ -129,7 +130,7 @@ class InteractiveTourInterface(ctk.CTk):
                         alpha_other=self.alpha_other,
                         last_selection=self.last_selection)
 
-                    plot_dict["draggable_annot"] = DraggableAnnotation(
+                    plot_dict["draggable_annot"] = DraggableAnnotation2d(
                         self.data,
                         plot_dict["proj"],
                         plot_dict["ax"],
@@ -166,25 +167,23 @@ class InteractiveTourInterface(ctk.CTk):
                             stacked=True,
                             picker=True,
                             color=color_map)
-                        if selected_obs.shape[0] != 0:
-                            vlines = [selected_obs.min(), selected_obs.max()]
-                        else:
-                            vlines = False
                     else:
                         hist = plot_dict["ax"].hist(x, picker=True)
-                        plot_dict["ax"].set_box_aspect(aspect=1)
-                        vlines = False
                         fc_sel = list(hist[2][0].get_facecolor())
+                    self.plot_dicts[subplot_idx]["arrows"].remove()
+                    draggable_arrows_1d = DraggableAnnotation1d(
+                        self.data,
+                        self.plot_dicts,
+                        subplot_idx,
+                        hist,
+                        half_range,
+                        self.feature_selection,
+                        self.last_selection,
+                        col_names)
+                    self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
                     plot_dict["ax"].set_xlim(-1, 1)
                     plot_dict["ax"].set_title(title)
-                    plot_dict["data"] = x
-                    if vlines != False:
-                        y_lims = plot_dict["ax"].get_ylim()
-                        plot_dict["ax"].set_ylim(y_lims)
-                        vlines = plot_dict["ax"].vlines(vlines,
-                                                        y_lims[0],
-                                                        y_lims[1], color="red")
-                    plot_dict["vlines"] = vlines
+                    plot_dict["data"] = self.data
 
                     self.plot_dicts[subplot_idx] = plot_dict
                     self.plot_dicts[subplot_idx]["ax"].figure.canvas.draw_idle()
@@ -298,7 +297,7 @@ class InteractiveTourInterface(ctk.CTk):
                         last_selection=self.last_selection)
                     self.selectors.append(selector)
 
-                    plot_dict["draggable_annot"] = DraggableAnnotation(
+                    plot_dict["draggable_annot"] = DraggableAnnotation2d(
                         self.data,
                         self.plot_dicts[subplot_idx]["proj"],
                         axs[subplot_idx],
@@ -308,7 +307,7 @@ class InteractiveTourInterface(ctk.CTk):
                         col_names)
 
                     axs[subplot_idx].plot(circle_prj.iloc[:, 0],
-                                          circle_prj.iloc[:, 1], color="red")
+                                          circle_prj.iloc[:, 1], color="grey")
                     n_frames = plot_object["obj"].shape[-1]-1
                     axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
                                                f"\nPress right key for next frame" +
@@ -322,10 +321,10 @@ class InteractiveTourInterface(ctk.CTk):
                         plot_object["obj"][:, :, frame])
 
                     data_subset = self.data[:, self.feature_selection]
-                    proj_subet = proj[self.feature_selection]
-                    proj_subet[:, 0] = proj_subet[:, 0] / \
-                        np.linalg.norm(proj_subet[:, 0])
-                    x = np.matmul(data_subset, proj_subet[:, 0])
+                    proj_subet = proj[self.feature_selection][:, 0]
+                    proj_subet = proj_subet / \
+                        np.linalg.norm(proj_subet)
+                    x = np.matmul(data_subset, proj_subet)
                     x = x/half_range
 
                     axs[subplot_idx].clear()
@@ -347,14 +346,8 @@ class InteractiveTourInterface(ctk.CTk):
                             color=color_map)
                         y_lims = axs[subplot_idx].get_ylim()
                         axs[subplot_idx].set_ylim(y_lims)
-                        vlines = axs[subplot_idx].vlines([selected_obs.min(),
-                                                          selected_obs.max()],
-                                                         y_lims[0],
-                                                         y_lims[1], color="red")
                     else:
                         hist = axs[subplot_idx].hist(x, picker=True)
-                        axs[subplot_idx].set_box_aspect(aspect=1)
-                        vlines = False
                         fc_sel = list(hist[2][0].get_facecolor())
 
                     if self.initial_loop is True:
@@ -362,23 +355,27 @@ class InteractiveTourInterface(ctk.CTk):
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
                                      "ax": axs[subplot_idx],
-                                     "data": x,
-                                     "vlines": vlines,
+                                     "data": self.data,
+                                     "feature_selection": self.feature_selection,
+                                     "half_range": half_range,
                                      "fc": fc_sel,
                                      "proj": proj}
                         self.plot_dicts[subplot_idx] = plot_dict
                         bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                  subplot_idx=subplot_idx,
+                                                 feature_selection=self.feature_selection,
+                                                 half_range=self.half_range,
                                                  alpha_other=self.alpha_other,
                                                  last_selection=self.last_selection)
-                        self.plot_dicts[subplot_idx]["selector"] = bar_selector
                     else:
+                        self.plot_dicts[subplot_idx]["arrows"].remove()
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
                                      "ax": axs[subplot_idx],
-                                     "data": x,
-                                     "vlines": vlines,
+                                     "data": self.data,
+                                     "feature_selection": self.feature_selection,
+                                     "half_range": half_range,
                                      "fc": fc_sel,
                                      "proj": proj,
                                      "selector": self.plot_dicts[subplot_idx]["selector"]}
@@ -386,9 +383,23 @@ class InteractiveTourInterface(ctk.CTk):
                         self.plot_dicts[subplot_idx]["selector"].disconnect()
                         bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                  subplot_idx=subplot_idx,
+                                                 feature_selection=self.feature_selection,
+                                                 half_range=self.half_range,
                                                  alpha_other=self.alpha_other,
                                                  last_selection=self.last_selection)
-                        self.plot_dicts[subplot_idx]["selector"] = bar_selector
+                    self.plot_dicts[subplot_idx]["selector"] = bar_selector
+
+                    draggable_arrows_1d = DraggableAnnotation1d(
+                        self.data,
+                        self.plot_dicts,
+                        subplot_idx,
+                        hist,
+                        half_range,
+                        self.feature_selection,
+                        self.last_selection,
+                        col_names)
+
+                    self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
 
                     n_frames = plot_object["obj"].shape[-1]-1
                     axs[subplot_idx].set_xlim(-1, 1)
@@ -468,14 +479,9 @@ class InteractiveTourInterface(ctk.CTk):
                                 color=color_map)
                             y_lims = axs[subplot_idx].get_ylim()
                             axs[subplot_idx].set_ylim(y_lims)
-                            vlines = axs[subplot_idx].vlines([selected_obs.min(),
-                                                              selected_obs.max()],
-                                                             y_lims[0],
-                                                             y_lims[1], color="red")
                         else:
                             hist = axs[subplot_idx].hist(x, picker=True)
                             axs[subplot_idx].set_box_aspect(aspect=1)
-                            vlines = False
                             fc_sel = list(hist[2][0].get_facecolor())
 
                         axs[subplot_idx].set_box_aspect(aspect=1)
@@ -489,13 +495,17 @@ class InteractiveTourInterface(ctk.CTk):
                                          "subtype": "hist",
                                          "subplot_idx": subplot_idx,
                                          "ax": axs[subplot_idx],
-                                         "data": x,
-                                         "vlines": vlines,
+                                         "data": self.data,
+                                         "hist_feature": col_index,
+                                         "feature_selection": self.feature_selection,
+                                         "half_range": half_range,
                                          "fc": fc_sel,
                                          "proj": proj}
                             self.plot_dicts[subplot_idx] = plot_dict
                             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                      subplot_idx=subplot_idx,
+                                                     feature_selection=self.feature_selection,
+                                                     half_range=self.half_range,
                                                      alpha_other=self.alpha_other,
                                                      last_selection=self.last_selection)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
@@ -504,8 +514,10 @@ class InteractiveTourInterface(ctk.CTk):
                                          "subtype": "hist",
                                          "subplot_idx": subplot_idx,
                                          "ax": axs[subplot_idx],
-                                         "data": x,
-                                         "vlines": vlines,
+                                         "data": self.data,
+                                         "hist_feature": col_index,
+                                         "feature_selection": self.feature_selection,
+                                         "half_range": half_range,
                                          "fc": fc_sel,
                                          "proj": proj,
                                          "selector": self.plot_dicts[subplot_idx]["selector"]}
@@ -514,6 +526,8 @@ class InteractiveTourInterface(ctk.CTk):
                             )
                             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                      subplot_idx=subplot_idx,
+                                                     feature_selection=self.feature_selection,
+                                                     half_range=self.half_range,
                                                      alpha_other=self.alpha_other,
                                                      last_selection=self.last_selection)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
