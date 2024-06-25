@@ -12,46 +12,62 @@ from helpers import gram_schmidt
 
 
 class LassoSelect:
-    def __init__(self, plot_dicts, subplot_idx, alpha_other=0.3, last_selection=False):
+    def __init__(self, plot_dicts, subplot_idx, colors, n_pts, alpha_other=0.3):
         # initialize arguments
+        self.n_pts = n_pts
         self.plot_dicts = plot_dicts
+        self.subplot_idx = subplot_idx
         self.canvas = plot_dicts[subplot_idx]["ax"].figure.canvas
         self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
+        self.fc = self.plot_dicts[0]["fc"]
+        self.colors = colors
         self.alpha_other = alpha_other
-        self.last_selection = last_selection
-
-        # Get color of data points in RGB and construct data frame describing coloration
-        self.fc = self.collection.get_facecolors()
-
-        if len(self.fc) == 0:
-            raise ValueError('Collection must have a facecolor')
-        elif len(self.fc) == 1:
-            self.fc = np.tile(self.fc, (len(self.collection.get_offsets()), 1))
 
         # initialize lasso selector
         self.lasso = LassoSelector(
             plot_dicts[subplot_idx]["ax"],
-            onselect=partial(self.onselect, last_selection),
+            onselect=partial(self.onselect),
             button=1)
         self.ind = []
     # onselect governs what happens with selected data points
     # changes alpha of selected data points
     # saves indices of selected data points
 
-    def onselect(self, last_selection, verts):
+    def onselect(self, verts):
         path = Path(verts)
         xys = self.collection.get_offsets()
         self.ind = np.nonzero(path.contains_points(xys))[0]
-        last_selection[0] = list(self.ind)
-        self.fc[:, -1] = self.alpha_other
-        self.fc[self.ind, -1] = 1
-        self.collection.set_facecolors(self.fc)
+
+        # Check which subset is active
+        for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
+            # If subset is active
+            if subselection_var.get() == 1:
+                # change facecolors
+                self.plot_dicts[0]["fc"][self.ind] = [self.colors[col_idx]]
+                # Change subselections
+                for idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+                    # if the looped over subset isn't the currently selected, remove
+                    # newly selected indices from old subsets
+                    if col_idx != idx:
+                        if set(self.ind) & set(subselection):
+                            updated_ind = np.setdiff1d(subselection, self.ind)
+                            self.plot_dicts[0]["subselections"][idx] = updated_ind
+
+                # get set of old selection and new selection
+                selected_set = list(set(self.ind).union(
+                    set(self.plot_dicts[0]["subselections"][col_idx])))
+                self.plot_dicts[0]["subselections"][col_idx] = np.array(
+                    selected_set)
+
+        self.collection.set_facecolors(self.plot_dicts[0]["fc"])
+
         # update other plots if applicable
         for plot_dict in self.plot_dicts:
             # check plots if they are scatterplots. if so recolor datapoints
             if plot_dict["type"] == "scatter":
                 collection_subplot = plot_dict["ax"].collections[0]
-                collection_subplot.set_facecolors(self.fc)
+                collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
+
             elif plot_dict["type"] == "hist":
                 if plot_dict["subtype"] == "1d_tour":
                     feature_selection = plot_dict["feature_selection"]
@@ -64,26 +80,25 @@ class LassoSelect:
                 else:
                     x = plot_dict["data"][:, plot_dict["hist_feature"]]
 
-                # Unpack histogram
-                selected_obs = x[last_selection[0]]
-                other_obs = np.delete(x, last_selection[0])
-
-                fc_sel = plot_dict["fc"]
-                fc_not_sel = fc_sel.copy()
-                fc_not_sel[-1] = self.alpha_other
-                color_map = [plot_dict["fc"], fc_not_sel]
                 # Get x and y_lims of old plot
                 x_lims = plot_dict["ax"].get_xlim()
                 y_lims = plot_dict["ax"].get_ylim()
                 title = plot_dict["ax"].get_title()
                 x_label = plot_dict["ax"].get_xlabel()
 
+                x_subselections = []
+                for subselection in self.plot_dicts[0]["subselections"]:
+                    if subselection.shape[0] != 0:
+                        x_subselections.append(x[subselection])
+                    else:
+                        x_subselections.append(np.array([]))
+
                 plot_dict["ax"].clear()
                 plot_dict["ax"].hist(
-                    [selected_obs, other_obs],
+                    x_subselections,
                     stacked=True,
                     picker=True,
-                    color=color_map)
+                    color=self.colors[:len(x_subselections)])
 
                 plot_dict["ax"].set_ylim(y_lims)
                 plot_dict["ax"].set_xlim(x_lims)
@@ -99,7 +114,7 @@ class LassoSelect:
 
 
 class BarSelect:
-    def __init__(self, plot_dicts, subplot_idx, feature_selection, half_range, alpha_other=0.3, last_selection=False):
+    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range, alpha_other=0.3):
         # initialize parameters
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
@@ -115,18 +130,15 @@ class BarSelect:
         self.canvas = self.ax.figure.canvas
         self.collection = self.ax.collections
         self.alpha_other = alpha_other
-        self.last_selection = last_selection
         self.patches = self.ax.patches
-        self.old_fc = list(self.ax.patches[0].get_facecolor())
-        self.old_fc[-1] = 1
-        self.new_fc = self.old_fc.copy()
-        self.new_fc[-1] = self.alpha_other
         self.y_lims = self.ax.get_ylim()
+        self.colors = colors
 
         self.connection = self.ax.figure.canvas.mpl_connect('pick_event', partial(
-            self.onselect, self.last_selection))
+            self.onselect))
         self.ind = []
 
+        # transform x if necessary and save transform. Do we need this???
         for subplot_idx, plot_dict in enumerate(self.plot_dicts):
             if not isinstance(plot_dict, int):
                 if plot_dict["subtype"] == "1d_tour":
@@ -144,7 +156,7 @@ class BarSelect:
     # changes alpha of selected data points
     # saves indices of selected data points
 
-    def onselect(self, last_selection, event):
+    def onselect(self, event):
         if event.artist.axes != self.ax:
             return
 
@@ -160,56 +172,73 @@ class BarSelect:
             x = x[:, 0]
             self.plot_dicts[self.subplot_idx]["x"] = x
 
-        # Handle selection behaviour
-        if not last_selection[0]:
-            # save selection as shared last_selection object
-            last_selection[0] = np.where(np.logical_and(
-                self.plot_dict["x"] >= min_select, self.plot_dict["x"] <= max_select))[0].tolist()
-        else:
-            # Get the new selection
-            new_ind = np.where(np.logical_and(
-                self.plot_dict["x"] >= min_select, self.plot_dict["x"] <= max_select))[0].tolist()
-            # if the new set is a subset of the last_selection, remove new indices
-            if set(list(new_ind)).issubset(set(last_selection[0])):
-                last_selection[0] = list(
-                    set(last_selection[0])-set(list(new_ind)))
-            else:
-                last_selection[0] = last_selection[0] + list(new_ind)
-                last_selection[0] = list(set(last_selection[0]))
+        new_ind = np.where(np.logical_and(
+            self.plot_dict["x"] >= min_select, self.plot_dict["x"] <= max_select))[0].tolist()
+
+        # Check which subset is active
+        for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
+            # If subset is active
+            if subselection_var.get() == 1:
+                # add new_ind to old selection
+                merged_selection = list(
+                    self.plot_dicts[0]["subselections"][col_idx]) + list(new_ind)
+                merged_selection = np.array(list(set(merged_selection)))
+                self.plot_dicts[0]["subselections"][col_idx] = merged_selection
+
+                # remove new selection from other selections
+                for idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+                    # if the looped over subset isn't the currently selected, remove
+                    # newly selected indices from old subsets
+                    if col_idx != idx:
+                        removed_selection = np.setdiff1d(
+                            subselection, new_ind)
+                        self.plot_dicts[0]["subselections"][idx] = removed_selection
+
+        for col_idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+            if subselection.shape[0] != 0:
+                self.plot_dicts[0]["fc"][subselection] = self.colors[col_idx]
 
         for plot_dict in self.plot_dicts:
             # update colors of scatterplot
             if plot_dict["type"] == "scatter":
-                scatter_fc = np.tile(self.old_fc, (self.data.shape[0], 1))
-                scatter_fc[:, -1] = self.alpha_other
-                scatter_fc[last_selection[0], -1] = 1
                 collection_subplot = plot_dict["ax"].collections[0]
-                collection_subplot.set_facecolors(scatter_fc)
+                collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
 
             # update colors of histograms
             elif plot_dict["type"] == "hist":
-                # Unpack histogram
-                selected_obs = plot_dict["x"][last_selection[0]]
-                other_obs = np.delete(plot_dict["x"], last_selection[0])
+                if plot_dict["subtype"] == "1d_tour":
+                    feature_selection = plot_dict["feature_selection"]
+                    plot_dict["proj"][feature_selection, 0] = plot_dict["proj"][feature_selection, 0] / \
+                        np.linalg.norm(
+                            plot_dict["proj"][feature_selection, 0])
+                    x = np.matmul(plot_dict["data"][:, feature_selection],
+                                  plot_dict["proj"][feature_selection])/plot_dict["half_range"]
+                    x = x[:, 0]
+                else:
+                    x = plot_dict["data"][:, plot_dict["hist_feature"]]
 
-                fc_sel = plot_dict["fc"]
-                fc_not_sel = fc_sel.copy()
-                fc_not_sel[-1] = self.alpha_other
-                color_map = [plot_dict["fc"], fc_not_sel]
                 # Get x and y_lims of old plot
+                x_lims = plot_dict["ax"].get_xlim()
                 y_lims = plot_dict["ax"].get_ylim()
                 title = plot_dict["ax"].get_title()
                 x_label = plot_dict["ax"].get_xlabel()
 
+                x_subselections = []
+                for subselection in self.plot_dicts[0]["subselections"]:
+                    if subselection.shape[0] != 0:
+                        x_subselections.append(x[subselection])
+                    else:
+                        x_subselections.append(np.array([]))
+
                 plot_dict["ax"].clear()
                 plot_dict["ax"].hist(
-                    [selected_obs, other_obs],
+                    x_subselections,
                     stacked=True,
                     picker=True,
-                    color=color_map)
-                if plot_dict["subtype"] == "1d_tour":
-                    plot_dict["ax"].set_xlim(-1, 1)
+                    color=self.colors[:len(x_subselections)])
+
                 plot_dict["ax"].set_ylim(y_lims)
+                plot_dict["ax"].set_xlim(x_lims)
                 plot_dict["ax"].set_title(title)
                 plot_dict["ax"].set_xlabel(x_label)
 
@@ -221,13 +250,12 @@ class BarSelect:
 
 
 class DraggableAnnotation1d:
-    def __init__(self, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, last_selection, labels):
+    def __init__(self, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels):
         self.data = data
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
-        self.fc_sel = plot_dicts[subplot_idx]["fc"]
         self.feature_selection = feature_selection
-        self.last_selection = last_selection
+        self.colors = colors
         self.proj = plot_dicts[subplot_idx]["proj"]
         self.proj.setflags(write=True)
         self.press = None
@@ -256,7 +284,7 @@ class DraggableAnnotation1d:
             if feature_bool == True:
                 arr = self.arrow_axs.arrow(0, axis_id/len(self.feature_selection),
                                            self.proj[axis_id, 0], 0,
-                                           head_width=0.08,
+                                           head_width=0.1,
                                            length_includes_head=True)
 
                 label = self.arrow_axs.text(self.proj[axis_id],
@@ -306,7 +334,7 @@ class DraggableAnnotation1d:
                     self.arrs[axis_id].remove()
                     self.arrs[axis_id] = self.arrow_axs.arrow(0, axis_id/len(self.feature_selection),
                                                               self.proj[axis_id, 0], 0,
-                                                              head_width=0.06,
+                                                              head_width=0.1,
                                                               length_includes_head=True)
                     # Update labels
                     self.labels[axis_id].set_x(self.proj[axis_id])
@@ -321,32 +349,26 @@ class DraggableAnnotation1d:
             x_label = self.ax.get_xlabel()
 
             self.ax.clear()
-            if self.last_selection[0] is not False:
-                selected_obs = x[self.last_selection[0]]
-                other_obs = np.delete(x, self.last_selection[0])
-
-                fc_sel = self.fc_sel
-                fc_sel[-1] = 1
-                fc_not_sel = fc_sel.copy()
-                fc_not_sel[-1] = self.alpha_other
-                color_map = [fc_sel, fc_not_sel]
-                hist = self.ax.hist(
-                    [selected_obs, other_obs],
-                    stacked=True,
-                    picker=True,
-                    color=color_map)
-                y_lims = self.ax.get_ylim()
-                self.ax.set_ylim(y_lims)
-            else:
-                hist = self.ax.hist(x, picker=True)
-                fc_sel = list(hist[2][0].get_facecolor())
+            # check if there are preselected points and update plot
+            x_subselections = []
+            for subselection in self.plot_dicts[0]["subselections"]:
+                if subselection.shape[0] != 0:
+                    x_subselections.append(x[subselection])
+                else:
+                    x_subselections.append(np.array([]))
+            self.plot_dicts[self.subplot_idx]["ax"].clear()
+            self.plot_dicts[self.subplot_idx]["ax"].hist(
+                x_subselections,
+                stacked=True,
+                picker=True,
+                color=self.colors[:len(x_subselections)])
 
             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                      subplot_idx=self.subplot_idx,
                                      feature_selection=self.feature_selection,
+                                     colors=self.colors,
                                      half_range=self.half_range,
-                                     alpha_other=self.alpha_other,
-                                     last_selection=self.last_selection)
+                                     alpha_other=self.alpha_other)
             self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
             # redraw

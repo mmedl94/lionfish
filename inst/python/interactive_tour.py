@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import tkinter as tk
 from functools import partial
 
@@ -9,15 +10,30 @@ import customtkinter as ctk
 
 from helpers import gram_schmidt
 from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnotation2d, BarSelect
+from checkbox_events import feature_checkbox_event, subselection_checkbox_event
+
+
+def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None):
+    """Launch InteractiveTourInterface object"""
+    app = InteractiveTourInterface(data,
+                                   col_names,
+                                   plot_objects,
+                                   half_range,
+                                   n_max_cols)
+    app.mainloop()
 
 
 class InteractiveTourInterface(ctk.CTk):
-    def __init__(self, data, col_names, plot_objects, half_range, n_max_cols):
+    def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
+                 n_subsets=3, preselection=False):
         super().__init__()
         self.title("Interactive tourr")
         self.data = data
         self.col_names = col_names
         self.half_range = half_range
+        self.r = r
+        self.n_subsets = n_subsets
+        self.colors = matplotlib.colormaps["tab10"].colors
 
         if not isinstance(plot_objects, list):
             plot_objects = [plot_objects]
@@ -30,14 +46,14 @@ class InteractiveTourInterface(ctk.CTk):
         else:
             print(f"Using half_range of {half_range}")
 
-        limits = 1
+        self.limits = 1
         self.alpha_other = 0.3
-        n_pts = self.data.shape[0]
+        self.n_pts = self.data.shape[0]
         # Initialize self.obs_idx with all obs
         self.obs_idx_ = np.arange(0, self.data.shape[0])
         if len(plot_objects) == 1:
-            fig, axs = plt.subplots(1, 1, figsize=(10, 10))
-            axs = [axs]
+            fig, self.axs = plt.subplots(1, 1, figsize=(10, 10))
+            self.axs = [self.axs]
         else:
             n_plots = len(plot_objects)
             if n_max_cols is None:
@@ -45,15 +61,15 @@ class InteractiveTourInterface(ctk.CTk):
             n_cols = int(min(n_max_cols, n_plots))
             n_rows = int((n_plots + n_cols - 1) // n_cols)
             if n_rows == 1:
-                fig, axs = plt.subplots(
+                fig, self.axs = plt.subplots(
                     n_rows, n_cols, figsize=(15, 15/n_cols), layout="compressed")
             else:
-                fig, axs = plt.subplots(
+                fig, self.axs = plt.subplots(
                     n_rows, n_cols, figsize=(15, 10), layout="compressed")
-            axs = axs.flatten()
-            for i in range(n_plots, len(axs)):
-                fig.delaxes(axs[i])
-            axs = axs[:n_plots]
+            self.axs = self.axs.flatten()
+            for i in range(n_plots, len(self.axs)):
+                fig.delaxes(self.axs[i])
+            self.axs = self.axs[:n_plots]
 
         canvas = FigureCanvasTkAgg(fig, self)
         canvas.draw()
@@ -63,130 +79,11 @@ class InteractiveTourInterface(ctk.CTk):
         toolbar.update()
         toolbar.grid(row=1, column=0, columnspan=2, sticky="w")
 
-        feature_selection_frame = ctk.CTkFrame(self)
+        sidebar = ctk.CTkFrame(self)
+        sidebar.grid(row=0, column=0, sticky="n")
+
+        feature_selection_frame = ctk.CTkFrame(sidebar)
         feature_selection_frame.grid(row=0, column=0, sticky="n")
-
-        def checkbox_event(feature_idx):
-            feature_selection = [state.get()
-                                 for state in self.feature_selection_vars]
-            if sum(feature_selection) <= 1:
-                self.feature_selection_vars[feature_idx].set(1)
-            self.feature_selection = [state.get()
-                                      for state in self.feature_selection_vars]
-            self.feature_selection = np.bool_(self.feature_selection)
-
-            for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-                if plot_dict["subtype"] == "2d_tour":
-                    data_subset = self.data[:, self.feature_selection]
-                    proj_subet = plot_dict["proj"][self.feature_selection]
-
-                    proj_subet[:, 0] = proj_subet[:, 0] / \
-                        np.linalg.norm(proj_subet[:, 0])
-                    proj_subet[:, 1] = gram_schmidt(
-                        proj_subet[:, 0], proj_subet[:, 1])
-                    proj_subet[:, 1] = proj_subet[:, 1] / \
-                        np.linalg.norm(proj_subet[:, 1])
-
-                    plot_data = r.render_proj_inter(
-                        data_subset, proj_subet, limits=limits, half_range=half_range)
-                    # Unpack tour data
-
-                    data_prj = np.matmul(self.data[:, self.feature_selection],
-                                         proj_subet)/half_range
-                    circle_prj = plot_data["circle"]
-                    x = data_prj[:, 0]
-                    y = data_prj[:, 1]
-
-                    old_title = plot_dict["ax"].get_title()
-
-                    # clear old scatterplot
-                    plot_dict["ax"].clear()
-                    # Make new scatterplot
-                    scat = plot_dict["ax"].scatter(x, y)
-                    scat = plot_dict["ax"].collections[0]
-                    plot_dict["ax"].set_xlim(-limits*1.1, limits*1.1)
-                    plot_dict["ax"].set_ylim(-limits*1.1, limits*1.1)
-                    plot_dict["ax"].set_box_aspect(aspect=1)
-
-                    plot_dict["ax"].plot(circle_prj.iloc[:, 0],
-                                         circle_prj.iloc[:, 1], color="gray")
-
-                    axs[subplot_idx].set_title(old_title)
-
-                    # Recolor preselected points
-                    if self.last_selection[0] is not False:
-                        fc = scat.get_facecolors()
-                        fc = np.tile(fc, (n_pts, 1))
-                        fc[:, -1] = self.alpha_other
-                        fc[self.last_selection, -1] = 1
-                        scat.set_facecolors(fc)
-
-                    self.plot_dicts[subplot_idx]["ax"] = plot_dict["ax"]
-
-                    # start Lasso selector
-                    self.selectors[subplot_idx] = LassoSelect(
-                        plot_dicts=self.plot_dicts,
-                        subplot_idx=subplot_idx,
-                        alpha_other=self.alpha_other,
-                        last_selection=self.last_selection)
-
-                    plot_dict["draggable_annot"] = DraggableAnnotation2d(
-                        self.data,
-                        plot_dict["proj"],
-                        plot_dict["ax"],
-                        scat,
-                        half_range,
-                        self.feature_selection,
-                        col_names)
-
-                    self.plot_dicts[subplot_idx]["ax"].figure.canvas.draw_idle()
-
-                if plot_dict["subtype"] == "1d_tour":
-                    data_subset = self.data[:, self.feature_selection]
-                    proj_subet = plot_dict["proj"][self.feature_selection]
-                    proj_subet = proj_subet/np.linalg.norm(proj_subet)
-
-                    x = np.matmul(data_subset, proj_subet)[:, 0]
-                    x = x/half_range
-                    title = plot_dict["ax"].get_title()
-                    plot_dict["ax"].clear()
-
-                    # check if there are preselected points and update plot
-                    if self.last_selection[0] is not False:
-                        # recolor preselected points
-                        selected_obs = x[self.last_selection[0]]
-                        other_obs = np.delete(x, self.last_selection[0])
-
-                        fc_sel = self.plot_dicts[subplot_idx]["fc"]
-                        fc_sel[-1] = 1
-                        fc_not_sel = fc_sel.copy()
-                        fc_not_sel[-1] = self.alpha_other
-                        color_map = [fc_sel, fc_not_sel]
-                        hist = plot_dict["ax"].hist(
-                            [selected_obs, other_obs],
-                            stacked=True,
-                            picker=True,
-                            color=color_map)
-                    else:
-                        hist = plot_dict["ax"].hist(x, picker=True)
-                        fc_sel = list(hist[2][0].get_facecolor())
-                    self.plot_dicts[subplot_idx]["arrows"].remove()
-                    draggable_arrows_1d = DraggableAnnotation1d(
-                        self.data,
-                        self.plot_dicts,
-                        subplot_idx,
-                        hist,
-                        half_range,
-                        self.feature_selection,
-                        self.last_selection,
-                        col_names)
-                    self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
-                    plot_dict["ax"].set_xlim(-1, 1)
-                    plot_dict["ax"].set_title(title)
-                    plot_dict["data"] = self.data
-
-                    self.plot_dicts[subplot_idx] = plot_dict
-                    self.plot_dicts[subplot_idx]["ax"].figure.canvas.draw_idle()
 
         self.feature_selection_vars = []
         self.feature_selection = []
@@ -197,12 +94,34 @@ class InteractiveTourInterface(ctk.CTk):
             checkbox = ctk.CTkCheckBox(master=feature_selection_frame,
                                        text=feature,
                                        command=partial(
-                                           checkbox_event, feature_idx),
+                                           feature_checkbox_event, self, feature_idx),
                                        variable=check_var,
                                        onvalue=1,
                                        offvalue=0)
             checkbox.grid(row=feature_idx, column=0, pady=3)
         self.feature_selection = np.bool_(self.feature_selection)
+
+        subselection_frame = ctk.CTkFrame(sidebar)
+        subselection_frame.grid(row=1, column=0, sticky="n")
+
+        self.subselection_vars = []
+        self.subselections = []
+        for subselection_idx in range(self.n_subsets):
+            if subselection_idx == 0:
+                check_var = tk.IntVar(self, 1)
+                self.subselections.append(np.arange(self.n_pts))
+            else:
+                check_var = tk.IntVar(self, 0)
+                self.subselections.append(np.array([]))
+            self.subselection_vars.append(check_var)
+            checkbox = ctk.CTkCheckBox(master=subselection_frame,
+                                       text=f"Subselection {subselection_idx+1}",
+                                       command=partial(
+                                           subselection_checkbox_event, self, subselection_idx),
+                                       variable=check_var,
+                                       onvalue=1,
+                                       offvalue=0)
+            checkbox.grid(row=subselection_idx, column=0, pady=3)
 
         # Get max number of frames
         self.n_frames = 0
@@ -232,7 +151,6 @@ class InteractiveTourInterface(ctk.CTk):
                 self.pause_var.set(1)
 
         self.plot_dicts = [i for i, _ in enumerate(plot_objects)]
-        self.last_selection = [False]
         self.initial_loop = True
 
         while self.frame < self.n_frames:
@@ -254,37 +172,43 @@ class InteractiveTourInterface(ctk.CTk):
                         proj_subet[:, 0], proj_subet[:, 1])
                     proj_subet[:, 1] = proj_subet[:, 1] / \
                         np.linalg.norm(proj_subet[:, 1])
-
-                    plot_data = r.render_proj_inter(
-                        self.data[:, self.feature_selection], proj_subet, limits=limits, half_range=half_range)
+                    plot_data = self.r.render_proj_inter(
+                        self.data[:, self.feature_selection], proj_subet,
+                        limits=self.limits, half_range=half_range)
                     # Unpack tour data
                     data_prj = plot_data["data_prj"]
                     circle_prj = plot_data["circle"]
                     x = data_prj.iloc[:, 0]
                     y = data_prj.iloc[:, 1]
 
-                    # clear old scatterplot
-                    axs[subplot_idx].clear()
-                    # Make new scatterplot
-                    scat = axs[subplot_idx].scatter(x, y)
-                    scat = axs[subplot_idx].collections[0]
-                    axs[subplot_idx].set_xlim(-limits * 1.1, limits*1.1)
-                    axs[subplot_idx].set_ylim(-limits * 1.1, limits*1.1)
-                    axs[subplot_idx].set_box_aspect(aspect=1)
+                    if self.initial_loop is True:
+                        self.fc = np.repeat(
+                            np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                        scat = self.axs[subplot_idx].scatter(x, y)
+                    else:
+                        # clear old scatterplot
+                        self.axs[subplot_idx].clear()
+                        # Make new scatterplot
+                        scat = self.axs[subplot_idx].scatter(x, y)
+                        scat = self.axs[subplot_idx].collections[0]
+                        scat.set_facecolors(
+                            self.plot_dicts[subplot_idx]["fc"])
+                        self.fc = self.plot_dicts[subplot_idx]["fc"]
 
-                    # Recolor preselected points
-                    if self.last_selection[0] is not False:
-                        fc = scat.get_facecolors()
-                        fc = np.tile(fc, (n_pts, 1))
-                        fc[:, -1] = self.alpha_other
-                        fc[self.last_selection, -1] = 1
-                        scat.set_facecolors(fc)
+                    self.axs[subplot_idx].set_xlim(-self.limits *
+                                                   1.1, self.limits*1.1)
+                    self.axs[subplot_idx].set_ylim(-self.limits *
+                                                   1.1, self.limits*1.1)
+                    self.axs[subplot_idx].set_box_aspect(aspect=1)
 
                     plot_dict = {"type": "scatter",
                                  "subtype": "2d_tour",
                                  "subplot_idx": subplot_idx,
-                                 "ax": axs[subplot_idx],
+                                 "ax": self.axs[subplot_idx],
                                  "feature_selection": self.feature_selection,
+                                 "subselection_vars": self.subselection_vars,
+                                 "subselections": self.subselections,
+                                 "fc": self.fc,
                                  "proj": proj
                                  }
                     self.plot_dicts[subplot_idx] = plot_dict
@@ -293,25 +217,26 @@ class InteractiveTourInterface(ctk.CTk):
                     selector = LassoSelect(
                         plot_dicts=self.plot_dicts,
                         subplot_idx=subplot_idx,
-                        alpha_other=self.alpha_other,
-                        last_selection=self.last_selection)
+                        colors=self.colors,
+                        n_pts=self.n_pts,
+                        alpha_other=self.alpha_other)
                     self.selectors.append(selector)
 
                     plot_dict["draggable_annot"] = DraggableAnnotation2d(
                         self.data,
                         self.plot_dicts[subplot_idx]["proj"],
-                        axs[subplot_idx],
+                        self.axs[subplot_idx],
                         scat,
                         half_range,
                         self.feature_selection,
                         col_names)
 
-                    axs[subplot_idx].plot(circle_prj.iloc[:, 0],
-                                          circle_prj.iloc[:, 1], color="grey")
+                    self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
+                                               circle_prj.iloc[:, 1], color="grey")
                     n_frames = plot_object["obj"].shape[-1]-1
-                    axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
-                                               f"\nPress right key for next frame" +
-                                               f"\nPress left key for last frame")
+                    self.axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
+                                                    f"\nPress right key for next frame" +
+                                                    f"\nPress left key for last frame")
 
                 if plot_object["type"] == "1d_tour":
                     if frame >= plot_object["obj"].shape[-1]-1:
@@ -327,66 +252,67 @@ class InteractiveTourInterface(ctk.CTk):
                     x = np.matmul(data_subset, proj_subet)
                     x = x/half_range
 
-                    axs[subplot_idx].clear()
+                    self.axs[subplot_idx].clear()
 
                     # check if there are preselected points and update plot
-                    if self.last_selection[0] is not False:
-                        # recolor preselected points
-                        selected_obs = x[self.last_selection[0]]
-                        other_obs = np.delete(x, self.last_selection[0])
-                        fc_sel = self.plot_dicts[subplot_idx]["fc"]
-                        fc_sel[-1] = 1
-                        fc_not_sel = fc_sel.copy()
-                        fc_not_sel[-1] = self.alpha_other
-                        color_map = [fc_sel, fc_not_sel]
-                        hist = axs[subplot_idx].hist(
-                            [selected_obs, other_obs],
-                            stacked=True,
-                            picker=True,
-                            color=color_map)
-                        y_lims = axs[subplot_idx].get_ylim()
-                        axs[subplot_idx].set_ylim(y_lims)
-                    else:
-                        hist = axs[subplot_idx].hist(x, picker=True)
-                        fc_sel = list(hist[2][0].get_facecolor())
+                    # recolor preselected points
+                    x_subselections = []
+                    for subselection in self.plot_dicts[0]["subselections"]:
+                        if subselection.shape[0] != 0:
+                            x_subselections.append(x[subselection])
+                        else:
+                            x_subselections.append(np.array([]))
+                    hist = self.axs[subplot_idx].hist(
+                        x_subselections,
+                        stacked=True,
+                        picker=True,
+                        color=self.colors[:len(x_subselections)])
+                    y_lims = self.axs[subplot_idx].get_ylim()
+                    self.axs[subplot_idx].set_ylim(y_lims)
 
                     if self.initial_loop is True:
+                        self.fc = np.repeat(
+                            np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
-                                     "ax": axs[subplot_idx],
+                                     "ax": self.axs[subplot_idx],
                                      "data": self.data,
                                      "feature_selection": self.feature_selection,
+                                     "subselection_vars": self.subselection_vars,
+                                     "subselections": self.subselections,
                                      "half_range": half_range,
-                                     "fc": fc_sel,
+                                     "fc": self.fc,
                                      "proj": proj}
                         self.plot_dicts[subplot_idx] = plot_dict
                         bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                  subplot_idx=subplot_idx,
                                                  feature_selection=self.feature_selection,
+                                                 colors=self.colors,
                                                  half_range=self.half_range,
-                                                 alpha_other=self.alpha_other,
-                                                 last_selection=self.last_selection)
+                                                 alpha_other=self.alpha_other)
                     else:
                         self.plot_dicts[subplot_idx]["arrows"].remove()
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
-                                     "ax": axs[subplot_idx],
+                                     "ax": self.axs[subplot_idx],
                                      "data": self.data,
                                      "feature_selection": self.feature_selection,
+                                     "subselection_vars": self.subselection_vars,
+                                     "subselections": self.subselections,
                                      "half_range": half_range,
-                                     "fc": fc_sel,
                                      "proj": proj,
+                                     "fc": self.fc,
                                      "selector": self.plot_dicts[subplot_idx]["selector"]}
                         self.plot_dicts[subplot_idx] = plot_dict
                         self.plot_dicts[subplot_idx]["selector"].disconnect()
                         bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                  subplot_idx=subplot_idx,
                                                  feature_selection=self.feature_selection,
+                                                 colors=self.colors,
                                                  half_range=self.half_range,
-                                                 alpha_other=self.alpha_other,
-                                                 last_selection=self.last_selection)
+                                                 alpha_other=self.alpha_other)
                     self.plot_dicts[subplot_idx]["selector"] = bar_selector
 
                     draggable_arrows_1d = DraggableAnnotation1d(
@@ -396,16 +322,16 @@ class InteractiveTourInterface(ctk.CTk):
                         hist,
                         half_range,
                         self.feature_selection,
-                        self.last_selection,
+                        self.colors,
                         col_names)
 
                     self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
 
                     n_frames = plot_object["obj"].shape[-1]-1
-                    axs[subplot_idx].set_xlim(-1, 1)
-                    axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
-                                               f"\nPress right key for next frame" +
-                                               f"\nPress left key for last frame")
+                    self.axs[subplot_idx].set_xlim(-1, 1)
+                    self.axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
+                                                    f"\nPress right key for next frame" +
+                                                    f"\nPress left key for last frame")
 
                 if plot_object["type"] == "scatter":
                     # get data
@@ -414,44 +340,41 @@ class InteractiveTourInterface(ctk.CTk):
                     x = self.data[:, col_index_x]
                     y = self.data[:, col_index_y]
 
-                    # clear old scatterplot
-                    axs[subplot_idx].clear()
-                    # Make new scatterplot
-                    scat = axs[subplot_idx].scatter(x, y)
-                    scat = axs[subplot_idx].collections[0]
-                    x_lims = axs[subplot_idx].get_xlim()
-                    y_lims = axs[subplot_idx].get_ylim()
+                    if self.initial_loop is True:
+                        self.fc = np.repeat(
+                            np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                        scat = self.axs[subplot_idx].scatter(x, y)
+                    else:
+                        self.axs[subplot_idx].collections[0].set_facecolors(
+                            self.plot_dicts[subplot_idx]["fc"])
 
-                    axs[subplot_idx].set_xlim(x_lims)
-                    axs[subplot_idx].set_ylim(y_lims)
-                    axs[subplot_idx].set_box_aspect(aspect=1)
+                    x_lims = self.axs[subplot_idx].get_xlim()
+                    y_lims = self.axs[subplot_idx].get_ylim()
 
-                    # Recolor preselected points
-                    if self.last_selection[0] is not False:
-                        fc = scat.get_facecolors()
-                        fc = np.tile(fc, (n_pts, 1))
-                        fc[:, -1] = self.alpha_other
-                        fc[self.last_selection, -1] = 1
-                        scat.set_facecolors(fc)
+                    self.axs[subplot_idx].set_xlim(x_lims)
+                    self.axs[subplot_idx].set_ylim(y_lims)
+                    self.axs[subplot_idx].set_box_aspect(aspect=1)
 
                     plot_dict = {"type": "scatter",
                                  "subtype": "scatter",
                                  "subplot_idx": subplot_idx,
-                                 "ax": axs[subplot_idx]
+                                 "fc": self.fc,
+                                 "ax": self.axs[subplot_idx]
                                  }
                     self.plot_dicts[subplot_idx] = plot_dict
                     # start Lasso selector
                     selector = LassoSelect(
                         plot_dicts=self.plot_dicts,
                         subplot_idx=subplot_idx,
-                        alpha_other=self.alpha_other,
-                        last_selection=self.last_selection)
+                        colors=self.colors,
+                        n_pts=self.n_pts,
+                        alpha_other=self.alpha_other)
                     self.selectors.append(selector)
                     x_name = plot_object["obj"][0]
                     y_name = plot_object["obj"][1]
-                    axs[subplot_idx].set_xlabel(x_name)
-                    axs[subplot_idx].set_ylabel(y_name)
-                    axs[subplot_idx].set_title(
+                    self.axs[subplot_idx].set_xlabel(x_name)
+                    self.axs[subplot_idx].set_ylabel(y_name)
+                    self.axs[subplot_idx].set_title(
                         f"Scatterplot of variables {x_name} and {y_name}")
 
                 elif plot_object["type"] == "hist":
@@ -459,66 +382,64 @@ class InteractiveTourInterface(ctk.CTk):
                         col_index = col_names.index(plot_object["obj"])
                         x = self.data[:, col_index]
                         # clear old histogram
-                        axs[subplot_idx].clear()
+                        self.axs[subplot_idx].clear()
 
-                        if self.last_selection[0] is not False:
-                            # recolor preselected points
-                            selected_obs = x[self.last_selection][0]
-                            other_obs = np.delete(
-                                x, self.last_selection)
-                            fc_sel = self.plot_dicts[subplot_idx]["fc"]
-                            fc_sel[-1] = 1
-                            fc_not_sel = fc_sel.copy()
-                            fc_not_sel[-1] = self.alpha_other
+                        # recolor preselected points
+                        x_subselections = []
+                        for subselection in self.plot_dicts[0]["subselections"]:
+                            if subselection.shape[0] != 0:
+                                x_subselections.append(x[subselection])
+                            else:
+                                x_subselections.append(np.array([]))
+                        hist = self.axs[subplot_idx].hist(
+                            x_subselections,
+                            stacked=True,
+                            picker=True,
+                            color=self.colors[:len(x_subselections)])
+                        y_lims = self.axs[subplot_idx].get_ylim()
+                        self.axs[subplot_idx].set_ylim(y_lims)
 
-                            color_map = [fc_sel, fc_not_sel]
-                            hist = axs[subplot_idx].hist(
-                                [selected_obs, other_obs],
-                                stacked=True,
-                                picker=True,
-                                color=color_map)
-                            y_lims = axs[subplot_idx].get_ylim()
-                            axs[subplot_idx].set_ylim(y_lims)
-                        else:
-                            hist = axs[subplot_idx].hist(x, picker=True)
-                            axs[subplot_idx].set_box_aspect(aspect=1)
-                            fc_sel = list(hist[2][0].get_facecolor())
-
-                        axs[subplot_idx].set_box_aspect(aspect=1)
+                        self.axs[subplot_idx].set_box_aspect(aspect=1)
                         hist_variable_name = plot_object["obj"]
-                        axs[subplot_idx].set_xlabel(hist_variable_name)
-                        axs[subplot_idx].set_title(
+                        self.axs[subplot_idx].set_xlabel(hist_variable_name)
+                        self.axs[subplot_idx].set_title(
                             f"Histogram of variable {hist_variable_name}")
 
                         if self.initial_loop is True:
+                            self.fc = np.repeat(
+                                np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
                             plot_dict = {"type": "hist",
                                          "subtype": "hist",
                                          "subplot_idx": subplot_idx,
-                                         "ax": axs[subplot_idx],
+                                         "ax": self.axs[subplot_idx],
                                          "data": self.data,
                                          "hist_feature": col_index,
                                          "feature_selection": self.feature_selection,
+                                         "subselection_vars": self.subselection_vars,
+                                         "subselections": self.subselections,
                                          "half_range": half_range,
-                                         "fc": fc_sel,
+                                         "fc": self.fc,
                                          "proj": proj}
                             self.plot_dicts[subplot_idx] = plot_dict
                             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                      subplot_idx=subplot_idx,
                                                      feature_selection=self.feature_selection,
+                                                     colors=self.colors,
                                                      half_range=self.half_range,
-                                                     alpha_other=self.alpha_other,
-                                                     last_selection=self.last_selection)
+                                                     alpha_other=self.alpha_other)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                         else:
                             plot_dict = {"type": "hist",
                                          "subtype": "hist",
                                          "subplot_idx": subplot_idx,
-                                         "ax": axs[subplot_idx],
+                                         "ax": self.axs[subplot_idx],
                                          "data": self.data,
                                          "hist_feature": col_index,
                                          "feature_selection": self.feature_selection,
+                                         "subselection_vars": self.subselection_vars,
+                                         "subselections": self.subselections,
                                          "half_range": half_range,
-                                         "fc": fc_sel,
+                                         "fc": self.fc,
                                          "proj": proj,
                                          "selector": self.plot_dicts[subplot_idx]["selector"]}
                             self.plot_dicts[subplot_idx] = plot_dict
@@ -527,9 +448,9 @@ class InteractiveTourInterface(ctk.CTk):
                             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                      subplot_idx=subplot_idx,
                                                      feature_selection=self.feature_selection,
+                                                     colors=self.colors,
                                                      half_range=self.half_range,
-                                                     alpha_other=self.alpha_other,
-                                                     last_selection=self.last_selection)
+                                                     alpha_other=self.alpha_other)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                     else:
                         print("Column not found")
@@ -540,13 +461,3 @@ class InteractiveTourInterface(ctk.CTk):
             self.wait_variable(self.pause_var)
 
         self.destroy()
-
-
-def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None):
-    """Launch InteractiveTourInterface object"""
-    app = InteractiveTourInterface(data,
-                                   col_names,
-                                   plot_objects,
-                                   half_range,
-                                   n_max_cols)
-    app.mainloop()
