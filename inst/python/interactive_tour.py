@@ -13,26 +13,29 @@ from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnota
 from checkbox_events import feature_checkbox_event, subselection_checkbox_event
 
 
-def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None):
+def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None, preselection=None, n_subsets=3):
     """Launch InteractiveTourInterface object"""
     app = InteractiveTourInterface(data,
                                    col_names,
                                    plot_objects,
                                    half_range,
-                                   n_max_cols)
+                                   n_max_cols,
+                                   preselection,
+                                   n_subsets)
     app.mainloop()
 
 
 class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
-                 n_subsets=3, preselection=False):
+                 preselection, n_subsets):
         super().__init__()
         self.title("Interactive tourr")
         self.data = data
         self.col_names = col_names
         self.half_range = half_range
         self.r = r
-        self.n_subsets = n_subsets
+        self.n_subsets = int(n_subsets)
+        self.preselection = np.array(preselection, dtype=int)-1
         self.colors = matplotlib.colormaps["tab10"].colors
 
         if not isinstance(plot_objects, list):
@@ -107,12 +110,27 @@ class InteractiveTourInterface(ctk.CTk):
         self.subselection_vars = []
         self.subselections = []
         for subselection_idx in range(self.n_subsets):
-            if subselection_idx == 0:
-                check_var = tk.IntVar(self, 1)
-                self.subselections.append(np.arange(self.n_pts))
+            if preselection is not None:
+                if subselection_idx == 0:
+                    check_var = tk.IntVar(self, 1)
+                    preselection_ind = np.where(
+                        self.preselection == subselection_idx)
+                    self.subselections.append(preselection_ind[0])
+                elif subselection_idx < len(set(self.preselection)):
+                    check_var = tk.IntVar(self, 0)
+                    preselection_ind = np.where(
+                        self.preselection == subselection_idx)
+                    self.subselections.append(preselection_ind[0])
+                else:
+                    check_var = tk.IntVar(self, 0)
+                    self.subselections.append(np.array([]))
             else:
-                check_var = tk.IntVar(self, 0)
-                self.subselections.append(np.array([]))
+                if subselection_idx == 0:
+                    check_var = tk.IntVar(self, 1)
+                    self.subselections.append(np.arange(self.n_pts))
+                else:
+                    check_var = tk.IntVar(self, 0)
+                    self.subselections.append(np.array([]))
             self.subselection_vars.append(check_var)
             checkbox = ctk.CTkCheckBox(master=subselection_frame,
                                        text=f"Subselection {subselection_idx+1}",
@@ -184,7 +202,11 @@ class InteractiveTourInterface(ctk.CTk):
                     if self.initial_loop is True:
                         self.fc = np.repeat(
                             np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                        for idx, subset in enumerate(self.subselections):
+                            if subset.shape[0] != 0:
+                                self.fc[subset] = self.colors[idx]
                         scat = self.axs[subplot_idx].scatter(x, y)
+                        scat.set_facecolor(self.fc)
                     else:
                         # clear old scatterplot
                         self.axs[subplot_idx].clear()
@@ -273,6 +295,9 @@ class InteractiveTourInterface(ctk.CTk):
                     if self.initial_loop is True:
                         self.fc = np.repeat(
                             np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                        for idx, subset in enumerate(self.subselections):
+                            if subset.shape[0] != 0:
+                                self.fc[subset] = self.colors[idx]
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
@@ -343,7 +368,11 @@ class InteractiveTourInterface(ctk.CTk):
                     if self.initial_loop is True:
                         self.fc = np.repeat(
                             np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                        for idx, subset in enumerate(self.subselections):
+                            if subset.shape[0] != 0:
+                                self.fc[subset] = self.colors[idx]
                         scat = self.axs[subplot_idx].scatter(x, y)
+                        scat.set_facecolor(self.fc)
                     else:
                         self.axs[subplot_idx].collections[0].set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
@@ -408,6 +437,11 @@ class InteractiveTourInterface(ctk.CTk):
                         if self.initial_loop is True:
                             self.fc = np.repeat(
                                 np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+
+                            for idx, subset in enumerate(self.subselections):
+                                if subset.shape[0] != 0:
+                                    self.fc[subset] = self.colors[idx]
+
                             plot_dict = {"type": "hist",
                                          "subtype": "hist",
                                          "subplot_idx": subplot_idx,
