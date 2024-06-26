@@ -1,19 +1,22 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib
+from checkbox_events import feature_checkbox_event, subselection_checkbox_event
+from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnotation2d, BarSelect
+from helpers import gram_schmidt
 import tkinter as tk
 from functools import partial
+from datetime import datetime
+import os
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 import customtkinter as ctk
 
-from helpers import gram_schmidt
-from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnotation2d, BarSelect
-from checkbox_events import feature_checkbox_event, subselection_checkbox_event
 
-
-def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None, preselection=None, n_subsets=3):
+def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None,
+                     preselection=None, preselection_names=None, n_subsets=3):
     """Launch InteractiveTourInterface object"""
     app = InteractiveTourInterface(data,
                                    col_names,
@@ -21,21 +24,27 @@ def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=
                                    half_range,
                                    n_max_cols,
                                    preselection,
+                                   preselection_names,
                                    n_subsets)
     app.mainloop()
 
 
 class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
-                 preselection, n_subsets):
+                 preselection, preselection_names, n_subsets):
         super().__init__()
         self.title("Interactive tourr")
         self.data = data
         self.col_names = col_names
         self.half_range = half_range
         self.r = r
-        self.n_subsets = int(n_subsets)
+        if n_subsets < len(set(preselection)):
+            self.n_subsets = len(set(preselection))
+        else:
+            self.n_subsets = int(n_subsets)
+        print(self.n_subsets)
         self.preselection = np.array(preselection, dtype=int)-1
+        self.preselection_names = preselection_names
         self.colors = matplotlib.colormaps["tab10"].colors
 
         if not isinstance(plot_objects, list):
@@ -105,10 +114,11 @@ class InteractiveTourInterface(ctk.CTk):
         self.feature_selection = np.bool_(self.feature_selection)
 
         subselection_frame = ctk.CTkFrame(sidebar)
-        subselection_frame.grid(row=1, column=0, sticky="n")
+        subselection_frame.grid(row=1, column=0)
 
         self.subselection_vars = []
         self.subselections = []
+        self.subset_names = []
         for subselection_idx in range(self.n_subsets):
             if preselection is not None:
                 if subselection_idx == 0:
@@ -131,15 +141,64 @@ class InteractiveTourInterface(ctk.CTk):
                 else:
                     check_var = tk.IntVar(self, 0)
                     self.subselections.append(np.array([]))
+
             self.subselection_vars.append(check_var)
             checkbox = ctk.CTkCheckBox(master=subselection_frame,
-                                       text=f"Subselection {subselection_idx+1}",
+                                       text="",
+                                       width=24,
                                        command=partial(
                                            subselection_checkbox_event, self, subselection_idx),
                                        variable=check_var,
                                        onvalue=1,
                                        offvalue=0)
-            checkbox.grid(row=subselection_idx, column=0, pady=3)
+            checkbox.grid(row=subselection_idx, column=0,
+                          pady=3, padx=0)
+
+            if preselection_names is None or subselection_idx+1 > len(preselection_names):
+                textvariable = tk.StringVar(
+                    self, f"Subset {subselection_idx+1}")
+            else:
+                textvariable = tk.StringVar(
+                    self, preselection_names[subselection_idx])
+            self.subset_names.append(textvariable)
+            textbox = ctk.CTkEntry(master=subselection_frame,
+                                   textvariable=textvariable)
+            textbox.grid(row=subselection_idx, column=1,
+                         pady=3, padx=0, sticky="w")
+
+        def save_event(self):
+            save_dir = ctk.filedialog.askdirectory()
+            now = datetime.now()
+            now = now.strftime("%d_%m_%Y_%H_%M")
+            if os.path.isdir(f"{save_dir}/{now}") is False:
+                os.mkdir(f"{save_dir}/{now}")
+
+            save_df = pd.DataFrame(
+                self.plot_dicts[0]["subselections"]).T
+
+            # Get subselection names
+            save_df.columns = [subset_name.get()
+                               for subset_name in self.subset_names]
+            filename = f"{save_dir}/{now}/subselections.csv"
+            save_df.to_csv(filename, index=False)
+            for idx, plot_dict in enumerate(self.plot_dicts):
+                if "proj" in plot_dict:
+                    save_df = pd.DataFrame(
+                        plot_dict["proj"][self.feature_selection])
+                    save_df["original variables"] = np.array(
+                        self.col_names)[self.feature_selection]
+                    save_df = save_df.set_index("original variables")
+                    filename = f"{save_dir}/{now}/projection_object_{idx+1}.csv"
+                    save_df.to_csv(filename)
+
+        save_button = ctk.CTkButton(master=sidebar,
+                                    width=100,
+                                    height=32,
+                                    border_width=0,
+                                    corner_radius=8,
+                                    text="Save projections \n and subsets",
+                                    command=partial(save_event, self))
+        save_button.grid(row=3, column=0, sticky="n")
 
         # Get max number of frames
         self.n_frames = 0
@@ -448,12 +507,10 @@ class InteractiveTourInterface(ctk.CTk):
                                          "ax": self.axs[subplot_idx],
                                          "data": self.data,
                                          "hist_feature": col_index,
-                                         "feature_selection": self.feature_selection,
                                          "subselection_vars": self.subselection_vars,
                                          "subselections": self.subselections,
                                          "half_range": half_range,
-                                         "fc": self.fc,
-                                         "proj": proj}
+                                         "fc": self.fc}
                             self.plot_dicts[subplot_idx] = plot_dict
                             bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                                      subplot_idx=subplot_idx,
@@ -469,12 +526,10 @@ class InteractiveTourInterface(ctk.CTk):
                                          "ax": self.axs[subplot_idx],
                                          "data": self.data,
                                          "hist_feature": col_index,
-                                         "feature_selection": self.feature_selection,
                                          "subselection_vars": self.subselection_vars,
                                          "subselections": self.subselections,
                                          "half_range": half_range,
                                          "fc": self.fc,
-                                         "proj": proj,
                                          "selector": self.plot_dicts[subplot_idx]["selector"]}
                             self.plot_dicts[subplot_idx] = plot_dict
                             self.plot_dicts[subplot_idx]["selector"].disconnect(

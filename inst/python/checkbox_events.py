@@ -92,6 +92,7 @@ def feature_checkbox_event(self, feature_idx):
                 else:
                     x_subselections.append(np.array([]))
             plot_dict["ax"].clear()
+
             hist = plot_dict["ax"].hist(
                 x_subselections,
                 stacked=True,

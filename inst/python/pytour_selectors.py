@@ -123,10 +123,10 @@ class BarSelect:
         self.half_range = half_range
         self.ax = plot_dicts[subplot_idx]["ax"]
         self.data = plot_dicts[subplot_idx]["data"]
-        self.proj = plot_dicts[subplot_idx]["proj"]
         self.subtype = plot_dicts[subplot_idx]["subtype"]
         if self.subtype == "hist":
             self.hist_feature = plot_dicts[subplot_idx]["hist_feature"]
+
         self.canvas = self.ax.figure.canvas
         self.collection = self.ax.collections
         self.alpha_other = alpha_other
