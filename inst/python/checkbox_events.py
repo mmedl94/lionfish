@@ -55,13 +55,13 @@ def feature_checkbox_event(self, feature_idx):
 
             self.plot_dicts[subplot_idx]["ax"] = plot_dict["ax"]
 
+            self.plot_dicts[subplot_idx]["selector"].disconnect()
             # start Lasso selector
-            self.selectors[subplot_idx] = LassoSelect(
+            self.plot_dicts[subplot_idx]["selector"] = LassoSelect(
                 plot_dicts=self.plot_dicts,
                 subplot_idx=subplot_idx,
                 colors=self.colors,
-                n_pts=self.n_pts,
-                alpha_other=self.alpha_other)
+                n_pts=self.n_pts)
 
             plot_dict["draggable_annot"] = DraggableAnnotation2d(
                 self.data,

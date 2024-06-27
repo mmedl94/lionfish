@@ -12,7 +12,7 @@ from helpers import gram_schmidt
 
 
 class LassoSelect:
-    def __init__(self, plot_dicts, subplot_idx, colors, n_pts, alpha_other=0.3):
+    def __init__(self, plot_dicts, subplot_idx, colors, n_pts):
         # initialize arguments
         self.n_pts = n_pts
         self.plot_dicts = plot_dicts
@@ -21,7 +21,6 @@ class LassoSelect:
         self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
         self.fc = self.plot_dicts[0]["fc"]
         self.colors = colors
-        self.alpha_other = alpha_other
 
         # initialize lasso selector
         self.lasso = LassoSelector(
@@ -114,7 +113,7 @@ class LassoSelect:
 
 
 class BarSelect:
-    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range, alpha_other=0.3):
+    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range):
         # initialize parameters
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
@@ -129,7 +128,6 @@ class BarSelect:
 
         self.canvas = self.ax.figure.canvas
         self.collection = self.ax.collections
-        self.alpha_other = alpha_other
         self.patches = self.ax.patches
         self.y_lims = self.ax.get_ylim()
         self.colors = colors
@@ -263,7 +261,6 @@ class DraggableAnnotation1d:
         self.hist = hist
         self.half_range = half_range
 
-        self.alpha_other = 0.3
         self.arrs = []
         self.labels = []
 
@@ -348,7 +345,6 @@ class DraggableAnnotation1d:
             title = self.ax.get_title()
             x_label = self.ax.get_xlabel()
 
-            self.ax.clear()
             # check if there are preselected points and update plot
             x_subselections = []
             for subselection in self.plot_dicts[0]["subselections"]:
@@ -367,8 +363,7 @@ class DraggableAnnotation1d:
                                      subplot_idx=self.subplot_idx,
                                      feature_selection=self.feature_selection,
                                      colors=self.colors,
-                                     half_range=self.half_range,
-                                     alpha_other=self.alpha_other)
+                                     half_range=self.half_range)
             self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
             # redraw

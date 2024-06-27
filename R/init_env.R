@@ -60,7 +60,7 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env"){
 
   # Check accessibility of python functions
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
-  check_dir <- base::paste(pytourr_dir,"/python/check_pytour.py", sep = "")
+  check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")
   reticulate::source_python(check_dir)
   reticulate::py$check_pytour()
 }
