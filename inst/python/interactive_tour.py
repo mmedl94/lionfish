@@ -5,6 +5,7 @@ import tkinter as tk
 from functools import partial
 from datetime import datetime
 import os
+import time
 
 import numpy as np
 import pandas as pd
@@ -33,16 +34,35 @@ class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
                  preselection, preselection_names, n_subsets):
         super().__init__()
+
+        def accept(event):
+            if event.key == "right" or event.key == "left":
+                self.initial_loop = False
+                for subplot_idx, _ in enumerate(self.plot_objects):
+                    if self.frame_vars[subplot_idx].get() != "":
+                        if event.key == "right":
+                            next_frame = int(
+                                self.frame_vars[subplot_idx].get()) + 1
+                            self.frame_vars[subplot_idx].set(str(next_frame))
+                        if event.key == "left":
+                            last_frame = int(
+                                self.frame_vars[subplot_idx].get()) - 1
+                            if last_frame < 0:
+                                last_frame = 0
+                            self.frame_vars[subplot_idx].set(str(last_frame))
+                self.pause_var.set(1)
+
         self.title("Interactive tourr")
         self.data = data
         self.col_names = col_names
         self.half_range = half_range
+        self.plot_objects = plot_objects
+        self.displayed_tour = "Original tour"
         self.r = r
         if n_subsets < len(set(preselection)):
             self.n_subsets = len(set(preselection))
         else:
             self.n_subsets = int(n_subsets)
-        print(self.n_subsets)
         self.preselection = np.array(preselection, dtype=int)-1
         self.preselection_names = preselection_names
         self.colors = matplotlib.colormaps["tab10"].colors
@@ -166,6 +186,38 @@ class InteractiveTourInterface(ctk.CTk):
             textbox.grid(row=subselection_idx, column=1,
                          pady=3, padx=0, sticky="w")
 
+        frame_selection_frame = ctk.CTkFrame(sidebar)
+        frame_selection_frame.grid(row=2, column=0)
+
+        self.frame_vars = []
+        self.frame_textboxes = []
+        for subplot_idx, plot_object in enumerate(plot_objects):
+            textvariable = tk.StringVar(self, "0")
+
+            label = ctk.CTkLabel(master=frame_selection_frame,
+                                 text=f"Plot #{subplot_idx+1}")
+            label.grid(row=subplot_idx, column=0,
+                       pady=3, padx=0, sticky="w")
+
+            textbox = ctk.CTkEntry(master=frame_selection_frame,
+                                   textvariable=textvariable,
+                                   width=40)
+            textbox.grid(row=subplot_idx, column=1,
+                         pady=3, padx=0, sticky="w")
+
+            self.frame_vars.append(textvariable)
+            self.frame_textboxes.append(textbox)
+
+        def update_frames_event(self):
+            self.initial_loop = False
+            self.pause_var.set(0)
+
+        update_frames_button = ctk.CTkButton(master=frame_selection_frame,
+                                             text="Update frames",
+                                             command=partial(update_frames_event, self))
+        update_frames_button.grid(
+            row=subplot_idx+1, column=0, columnspan=2, sticky="n")
+
         def save_event(self):
             save_dir = ctk.filedialog.askdirectory()
             now = datetime.now()
@@ -198,7 +250,38 @@ class InteractiveTourInterface(ctk.CTk):
                                     corner_radius=8,
                                     text="Save projections \n and subsets",
                                     command=partial(save_event, self))
-        save_button.grid(row=3, column=0, sticky="n")
+        save_button.grid(row=4, column=0, sticky="n")
+
+        def run_local_tour(self):
+            for idx, plot_object in enumerate(self.plot_objects):
+                if plot_object["type"] == "1d_tour" or plot_object["type"] == "2d_tour":
+                    new_proj = self.r.get_local_history(self.data[:2],
+                                                        self.plot_dicts[idx]["proj"])
+                    self.plot_objects[idx]["og_obj"] = self.plot_objects[idx]["obj"]
+                    self.plot_objects[idx]["obj"] = new_proj
+                    self.frame = 0
+                    self.displayed_tour = "Local tour"
+            self.initial_loop = False
+            self.pause_var.set(0)
+
+        local_tour_button = ctk.CTkButton(master=sidebar,
+                                          text="Run local tour",
+                                          command=partial(run_local_tour, self))
+        local_tour_button.grid(row=5, column=0, sticky="n")
+
+        def reset_original_tour(self):
+            for idx, plot_object in enumerate(self.plot_objects):
+                if plot_object["type"] == "1d_tour" or plot_object["type"] == "2d_tour":
+                    self.plot_objects[idx]["obj"] = plot_object["og_obj"]
+                    self.frame = 0
+                    self.displayed_tour = "Original tour"
+            self.initial_loop = False
+            self.pause_var.set(0)
+
+        original_tour_button = ctk.CTkButton(master=sidebar,
+                                             text="Reset original tour",
+                                             command=partial(reset_original_tour, self))
+        original_tour_button.grid(row=6, column=0, sticky="n")
 
         # Get max number of frames
         self.n_frames = 0
@@ -217,16 +300,6 @@ class InteractiveTourInterface(ctk.CTk):
             self.pause_var.set(1)
         self.protocol("WM_DELETE_WINDOW", cleanup)
 
-        def accept(event):
-            if event.key == "right" or event.key == "left":
-                self.initial_loop = False
-                fig.canvas.draw()
-                if event.key == "right":
-                    self.frame += 1
-                if event.key == "left" and self.frame > 0:
-                    self.frame -= 1
-                self.pause_var.set(1)
-
         self.plot_dicts = [i for i, _ in enumerate(plot_objects)]
         self.initial_loop = True
 
@@ -236,9 +309,12 @@ class InteractiveTourInterface(ctk.CTk):
                 frame = self.frame
 
                 if plot_object["type"] == "2d_tour":
+                    frame = int(self.frame_vars[subplot_idx].get())
+
                     if frame >= plot_object["obj"].shape[-1]-1:
                         frame = plot_object["obj"].shape[-1]-1
-                    # get tour data
+                        self.frame_vars[subplot_idx].set(str(frame))
+
                     proj = np.copy(
                         plot_object["obj"][:, :, frame])
                     proj_subet = proj[self.feature_selection]
@@ -315,13 +391,17 @@ class InteractiveTourInterface(ctk.CTk):
                     self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
                                                circle_prj.iloc[:, 1], color="grey")
                     n_frames = plot_object["obj"].shape[-1]-1
-                    self.axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
-                                                    f"\nPress right key for next frame" +
-                                                    f"\nPress left key for last frame")
+                    self.axs[subplot_idx].set_title(
+                        f"{self.displayed_tour}\n" +
+                        f"Frame {frame} out of {n_frames}\n" +
+                        f"Press right key for next frame\n" +
+                        f"Press left key for last frame")
 
                 if plot_object["type"] == "1d_tour":
+                    frame = int(self.frame_vars[subplot_idx].get())
                     if frame >= plot_object["obj"].shape[-1]-1:
                         frame = plot_object["obj"].shape[-1]-1
+                        self.frame_vars[subplot_idx].set(str(frame))
 
                     proj = np.copy(
                         plot_object["obj"][:, :, frame])
@@ -413,9 +493,11 @@ class InteractiveTourInterface(ctk.CTk):
 
                     n_frames = plot_object["obj"].shape[-1]-1
                     self.axs[subplot_idx].set_xlim(-1, 1)
-                    self.axs[subplot_idx].set_title(f"Frame {frame} out of {n_frames}" +
-                                                    f"\nPress right key for next frame" +
-                                                    f"\nPress left key for last frame")
+                    self.axs[subplot_idx].set_title(
+                        f"{self.displayed_tour}\n" +
+                        f"Frame {frame} out of {n_frames}\n" +
+                        f"Press right key for next frame\n" +
+                        f"Press left key for last frame")
 
                 if plot_object["type"] == "scatter":
                     # get data
@@ -432,6 +514,10 @@ class InteractiveTourInterface(ctk.CTk):
                                 self.fc[subset] = self.colors[idx]
                         scat = self.axs[subplot_idx].scatter(x, y)
                         scat.set_facecolor(self.fc)
+                        self.frame_vars[subplot_idx].set("")
+                        self.frame_textboxes[subplot_idx].configure(
+                            state="disabled",
+                            fg_color="grey")
                     else:
                         self.axs[subplot_idx].collections[0].set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
@@ -496,6 +582,10 @@ class InteractiveTourInterface(ctk.CTk):
                         if self.initial_loop is True:
                             self.fc = np.repeat(
                                 np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                            self.frame_vars[subplot_idx].set("")
+                            self.frame_textboxes[subplot_idx].configure(
+                                state="disabled",
+                                fg_color="grey")
 
                             for idx, subset in enumerate(self.subselections):
                                 if subset.shape[0] != 0:
@@ -548,5 +638,6 @@ class InteractiveTourInterface(ctk.CTk):
             self.pause_var = tk.StringVar()
             fig.canvas.mpl_connect("key_press_event", accept)
             self.wait_variable(self.pause_var)
+            fig.canvas.draw()
 
         self.destroy()
