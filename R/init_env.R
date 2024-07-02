@@ -60,7 +60,8 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
 
   # Check accessibility of python functions
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
-  if dir.exists(file.path(pytourr_dir, "/inst")){
+
+  if (dir.exists(file.path(pytourr_dir, "/inst"))){
     check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")
   } else {
     check_dir <- base::paste(pytourr_dir,"/python/check_pytour.py", sep = "")

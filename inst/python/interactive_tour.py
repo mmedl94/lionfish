@@ -67,6 +67,8 @@ class InteractiveTourInterface(ctk.CTk):
         if preselection is not False:
             if n_subsets < len(set(preselection)):
                 self.n_subsets = len(set(preselection))
+            else:
+                self.n_subsets = int(n_subsets)
         else:
             self.n_subsets = int(n_subsets)
         self.preselection = np.array(preselection, dtype=int)-1
