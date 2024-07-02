@@ -7,7 +7,7 @@
 #'
 #' @examples init_env(env_name="r-pytourr")
 #'
-init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env"){
+init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FALSE){
 
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
@@ -60,7 +60,11 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env"){
 
   # Check accessibility of python functions
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
-  check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")
+  if dir.exists(file.path(pytourr_dir, "/inst")){
+    check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")
+  } else {
+    check_dir <- base::paste(pytourr_dir,"/python/check_pytour.py", sep = "")
+  }
   reticulate::source_python(check_dir)
   reticulate::py$check_pytour()
 }
