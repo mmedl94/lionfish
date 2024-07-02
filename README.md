@@ -20,6 +20,7 @@ remotes::install_github("mmedl94/pytourr")
 To run an interactive tour you will first have to initialize the python backend with 
 
 ``` r
+library(pytourr)
 init_env()
 ```
 Then you can display saved tour objects, scatterplots or histograms with interactive_tour()
@@ -27,6 +28,8 @@ Then you can display saved tour objects, scatterplots or histograms with interac
 ``` r
 library(tourr)
 data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+clusters <- as.numeric(flea$species)
+flea_subspecies <- unique(flea$species)
 
 guided_tour_history <- save_history(data, 
                                     tour_path = guided_tour(holes()))
@@ -45,6 +48,9 @@ interactive_tour(data,
                  col_names,
                  list(obj1,obj2,obj3,obj4),
                  half_range,
-                 n_max_cols=2)
+                 n_max_cols=2,
+                 preselection=clusters,
+                 n_subsets = 5,
+                 preselection_names=flea_subspecies)
 
 ```
