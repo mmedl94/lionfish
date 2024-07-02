@@ -40,7 +40,7 @@
 #'                 half_range,
 #'                 n_max_cols=2)
 
-interactive_tour <- function(data, col_names, plot_objects, half_range, n_max_cols, preselection,
+interactive_tour <- function(data, col_names, plot_objects, half_range, n_max_cols, preselection=FALSE,
                              preselection_names=FALSE, n_subsets=3, local=FALSE){
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
   if (local==TRUE){

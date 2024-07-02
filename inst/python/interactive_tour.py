@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
+import matplotlib.style as mplstyle
 import customtkinter as ctk
 
 
@@ -62,8 +63,10 @@ class InteractiveTourInterface(ctk.CTk):
         self.plot_objects = plot_objects
         self.displayed_tour = "Original tour"
         self.r = r
-        if n_subsets < len(set(preselection)):
-            self.n_subsets = len(set(preselection))
+
+        if preselection is not False:
+            if n_subsets < len(set(preselection)):
+                self.n_subsets = len(set(preselection))
         else:
             self.n_subsets = int(n_subsets)
         self.preselection = np.array(preselection, dtype=int)-1
@@ -113,8 +116,8 @@ class InteractiveTourInterface(ctk.CTk):
         toolbar.update()
         toolbar.grid(row=1, column=0, columnspan=2, sticky="w")
 
-        sidebar = ctk.CTkFrame(self)
-        sidebar.grid(row=0, column=0, sticky="n")
+        sidebar = ctk.CTkScrollableFrame(self)
+        sidebar.grid(row=0, column=0, sticky="ns")
 
         feature_selection_frame = ctk.CTkFrame(sidebar)
         feature_selection_frame.grid(row=0, column=0, sticky="n")
@@ -132,7 +135,7 @@ class InteractiveTourInterface(ctk.CTk):
                                        variable=check_var,
                                        onvalue=1,
                                        offvalue=0)
-            checkbox.grid(row=feature_idx, column=0, pady=3)
+            checkbox.grid(row=feature_idx, column=0, pady=3, sticky="w")
         self.feature_selection = np.bool_(self.feature_selection)
 
         subselection_frame = ctk.CTkFrame(sidebar)
@@ -142,7 +145,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.subselections = []
         self.subset_names = []
         for subselection_idx in range(self.n_subsets):
-            if preselection is not None:
+            if preselection is not False:
                 if subselection_idx == 0:
                     check_var = tk.IntVar(self, 1)
                     preselection_ind = np.where(
@@ -176,7 +179,7 @@ class InteractiveTourInterface(ctk.CTk):
             checkbox.grid(row=subselection_idx, column=0,
                           pady=3, padx=0)
 
-            if preselection_names is None or subselection_idx+1 > len(preselection_names):
+            if preselection_names is False or subselection_idx+1 > len(preselection_names):
                 textvariable = tk.StringVar(
                     self, f"Subset {subselection_idx+1}")
             else:

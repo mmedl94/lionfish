@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tkinter as tk
 from functools import partial
+import time
 
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
@@ -277,16 +278,27 @@ class DraggableAnnotation1d:
         self.arrow_axs.set_ylim(-0.05, 1.05)
         self.arrow_axs.set_xlim(-1, 1)
 
+        true_counter = 0
         for axis_id, feature_bool in enumerate(self.feature_selection):
             if feature_bool == True:
-                arr = self.arrow_axs.arrow(0, axis_id/len(self.feature_selection),
-                                           self.proj[axis_id, 0], 0,
+                if len(self.feature_selection) < 10:
+                    x_0 = 0
+                    y_0 = axis_id/len(self.feature_selection)
+                    dx = self.proj[axis_id, 0]
+                    dy = 0
+                else:
+                    true_counter += 1
+                    x_0 = 0
+                    y_0 = true_counter/sum(self.feature_selection)
+                    dx = self.proj[axis_id, 0]
+                    dy = 0
+
+                arr = self.arrow_axs.arrow(x_0, y_0,
+                                           dx, dy,
                                            head_width=0.1,
                                            length_includes_head=True)
 
-                label = self.arrow_axs.text(self.proj[axis_id],
-                                            axis_id /
-                                            len(self.feature_selection),
+                label = self.arrow_axs.text(dx, y_0,
                                             labels[axis_id])
 
                 self.cidpress = arr.figure.canvas.mpl_connect(
@@ -297,10 +309,13 @@ class DraggableAnnotation1d:
                     "motion_notify_event", self.on_motion)
             else:
                 arr = None
-                label = self.arrow_axs.text(0,
-                                            axis_id /
-                                            len(self.feature_selection),
-                                            labels[axis_id])
+                if len(self.feature_selection) < 10:
+                    label = self.arrow_axs.text(0,
+                                                axis_id /
+                                                len(self.feature_selection),
+                                                labels[axis_id])
+                else:
+                    label = None
             self.arrs.append(arr)
             self.labels.append(label)
 
@@ -328,20 +343,16 @@ class DraggableAnnotation1d:
 
             for axis_id, feature_bool in enumerate(self.feature_selection):
                 if feature_bool == True:
-                    self.arrs[axis_id].remove()
-                    self.arrs[axis_id] = self.arrow_axs.arrow(0, axis_id/len(self.feature_selection),
-                                                              self.proj[axis_id, 0], 0,
-                                                              head_width=0.1,
-                                                              length_includes_head=True)
-                    # Update labels
-                    self.labels[axis_id].set_x(self.proj[axis_id])
+                    self.arrs[axis_id].set_data(dx=self.proj[axis_id, 0])
+                    if self.labels[axis_id] != None:
+                        # Update labels
+                        self.labels[axis_id].set_x(self.proj[axis_id])
 
-            # Update scattplot locations
             x = np.matmul(self.data[:, self.feature_selection],
                           self.proj[self.feature_selection])/self.half_range
             x = x[:, 0]
             self.plot_dicts[self.subplot_idx]["x"] = x
-            # self.scat.set_offsets(new_data)
+
             title = self.ax.get_title()
             x_label = self.ax.get_xlabel()
 
@@ -442,6 +453,7 @@ class DraggableAnnotation2d:
         if self.press is None:
             return
         axis_id = self.press
+
         if event.xdata and event.ydata is not False:
             # Update projections
             self.proj[axis_id] = [event.xdata/(2/3), event.ydata/(2/3)]
@@ -455,14 +467,12 @@ class DraggableAnnotation2d:
 
             for axis_id, feature_bool in enumerate(self.feature_selection):
                 if feature_bool == True:
-                    self.arrs[axis_id].remove()
-                    self.arrs[axis_id] = self.ax.arrow(0, 0,
-                                                       self.proj[axis_id,
-                                                                 0]*2/3,
-                                                       self.proj[axis_id,
-                                                                 1]*2/3,
-                                                       head_width=0.06,
-                                                       length_includes_head=True)
+                    self.arrs[axis_id].set_data(x=0,
+                                                y=0,
+                                                dx=self.proj[axis_id,
+                                                             0]*2/3,
+                                                dy=self.proj[axis_id,
+                                                             1]*2/3)
 
                     # Update labels
                     self.labels[axis_id].set_x(self.proj[axis_id, 0]*2/3)
@@ -474,7 +484,11 @@ class DraggableAnnotation2d:
             self.scat.set_offsets(new_data)
 
             # redraw
-            self.ax.figure.canvas.draw()
+            # self.ax.figure.canvas.draw()
+            # self.ax.draw_artist(self.scat)
+            # self.ax.figure.canvas.update()
+            self.ax.figure.canvas.draw_idle()
+            self.ax.figure.canvas.flush_events()
 
     def on_release(self, event):
         """Clear button press information."""
