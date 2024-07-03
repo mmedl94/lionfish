@@ -122,6 +122,8 @@ class InteractiveTourInterface(ctk.CTk):
         sidebar = ctk.CTkScrollableFrame(self)
         sidebar.grid(row=0, column=0, sticky="ns")
 
+        ###### Feature selections ######
+
         feature_selection_frame = ctk.CTkFrame(sidebar)
         feature_selection_frame.grid(row=0, column=0, sticky="n")
 
@@ -140,6 +142,8 @@ class InteractiveTourInterface(ctk.CTk):
                                        offvalue=0)
             checkbox.grid(row=feature_idx, column=0, pady=3, sticky="w")
         self.feature_selection = np.bool_(self.feature_selection)
+
+        ###### Subselections ######
 
         subselection_frame = ctk.CTkFrame(sidebar)
         subselection_frame.grid(row=1, column=0)
@@ -196,13 +200,25 @@ class InteractiveTourInterface(ctk.CTk):
             textbox.grid(row=subselection_idx, column=1,
                          pady=3, padx=0, sticky="w")
 
+            color_box = ctk.CTkEntry(master=subselection_frame,
+                                     placeholder_text="",
+                                     width=24,
+                                     height=24,
+                                     state="disabled",
+                                     fg_color=matplotlib.colors.rgb2hex(self.colors[subselection_idx]))
+            color_box.grid(row=subselection_idx, column=2,
+                           pady=3, padx=5, sticky="w")
+
         def reset_selection(self):
             self.subselections = self.orig_subselections.copy()
             for subplot_idx, plot_dict in enumerate(self.plot_dicts):
                 if "fc" in plot_dict:
                     self.plot_dicts[subplot_idx]["fc"] = self.original_fc.copy()
-            self.pause_var.set(0)
             self.initial_loop = False
+            for subplot_idx, _ in enumerate(self.plot_objects):
+                if "selector" in self.plot_dicts[subplot_idx]:
+                    self.plot_dicts[subplot_idx]["selector"].disconnect()
+            self.pause_var.set(0)
 
         reset_selection_button = ctk.CTkButton(master=subselection_frame,
                                                text="Reset original selection",
@@ -212,6 +228,8 @@ class InteractiveTourInterface(ctk.CTk):
 
         frame_selection_frame = ctk.CTkFrame(sidebar)
         frame_selection_frame.grid(row=2, column=0)
+
+        ###### Frame selectors ######
 
         self.frame_vars = []
         self.frame_textboxes = []
@@ -235,6 +253,9 @@ class InteractiveTourInterface(ctk.CTk):
 
         def update_frames_event(self):
             self.initial_loop = False
+            for subplot_idx, _ in enumerate(self.plot_objects):
+                if "selector" in self.plot_dicts[subplot_idx]:
+                    self.plot_dicts[subplot_idx]["selector"].disconnect()
             self.pause_var.set(0)
 
         update_frames_button = ctk.CTkButton(master=frame_selection_frame,
@@ -266,6 +287,8 @@ class InteractiveTourInterface(ctk.CTk):
                              text="seconds")
         label.grid(row=0, column=2, pady=3)
 
+        ###### Save button ######
+
         def save_event(self):
             save_dir = ctk.filedialog.askdirectory()
             now = datetime.now()
@@ -279,8 +302,8 @@ class InteractiveTourInterface(ctk.CTk):
             # Get subselection names
             save_df.columns = [subset_name.get()
                                for subset_name in self.subset_names]
-            filename = f"{save_dir}/{now}/subselections.csv"
-            save_df.to_csv(filename, index=False)
+            save_df.to_csv(f"{save_dir}/{now}/subselections.csv", index=False)
+            fig.savefig(f"{save_dir}/{now}/figure.png")
             for idx, plot_dict in enumerate(self.plot_dicts):
                 if "proj" in plot_dict:
                     save_df = pd.DataFrame(
@@ -318,6 +341,8 @@ class InteractiveTourInterface(ctk.CTk):
                                           command=partial(run_local_tour, self))
         local_tour_button.grid(row=5, column=0, pady=(3, 3), sticky="n")
 
+        ###### Reset tour button ######
+
         def reset_original_tour(self):
             for idx, plot_object in enumerate(self.plot_objects):
                 if plot_object["type"] == "1d_tour" or plot_object["type"] == "2d_tour":
@@ -349,6 +374,8 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.plot_dicts = [i for i, _ in enumerate(plot_objects)]
         self.initial_loop = True
+
+        ###### Plot loop ######
 
         while self.frame < self.n_frames:
             for subplot_idx, plot_object in enumerate(plot_objects):
@@ -777,7 +804,8 @@ class InteractiveTourInterface(ctk.CTk):
                 wait(self)
                 self.initial_loop = False
                 for subplot_idx, _ in enumerate(self.plot_objects):
-                    self.plot_dicts[subplot_idx]["selector"].disconnect()
+                    if "selector" in self.plot_dicts[subplot_idx]:
+                        self.plot_dicts[subplot_idx]["selector"].disconnect()
                     if self.frame_vars[subplot_idx].get() != "":
                         next_frame = int(
                             self.frame_vars[subplot_idx].get()) + 1

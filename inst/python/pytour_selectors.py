@@ -189,7 +189,7 @@ class BarSelect:
         self.y_lims = self.ax.get_ylim()
         self.colors = colors
 
-        self.connection = self.ax.figure.canvas.mpl_connect('pick_event', partial(
+        self.connection = self.ax.figure.canvas.mpl_connect("pick_event", partial(
             self.onselect))
         self.ind = []
 
@@ -348,7 +348,7 @@ class BarSelect:
                     np.arange(0, sum(self.feature_selection)))
                 self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
                     y_tick_labels)
-                self.plot_dicts[subplot_idx]["data"] = cat_clust_data
+                self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
         self.canvas.draw_idle()
 
