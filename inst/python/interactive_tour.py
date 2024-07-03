@@ -170,6 +170,7 @@ class InteractiveTourInterface(ctk.CTk):
                     check_var = tk.IntVar(self, 0)
                     self.subselections.append(np.array([]))
 
+            self.orig_subselections = self.subselections.copy()
             self.subselection_vars.append(check_var)
             checkbox = ctk.CTkCheckBox(master=subselection_frame,
                                        text="",
@@ -188,11 +189,26 @@ class InteractiveTourInterface(ctk.CTk):
             else:
                 textvariable = tk.StringVar(
                     self, preselection_names[subselection_idx])
+
             self.subset_names.append(textvariable)
             textbox = ctk.CTkEntry(master=subselection_frame,
                                    textvariable=textvariable)
             textbox.grid(row=subselection_idx, column=1,
                          pady=3, padx=0, sticky="w")
+
+        def reset_selection(self):
+            self.subselections = self.orig_subselections.copy()
+            for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+                if "fc" in plot_dict:
+                    self.plot_dicts[subplot_idx]["fc"] = self.original_fc.copy()
+            self.pause_var.set(0)
+            self.initial_loop = False
+
+        reset_selection_button = ctk.CTkButton(master=subselection_frame,
+                                               text="Reset original selection",
+                                               command=partial(reset_selection, self))
+        reset_selection_button.grid(
+            row=subselection_idx+1, column=0, columnspan=2, pady=3, sticky="n")
 
         frame_selection_frame = ctk.CTkFrame(sidebar)
         frame_selection_frame.grid(row=2, column=0)
@@ -375,11 +391,13 @@ class InteractiveTourInterface(ctk.CTk):
                                 self.fc[subset] = self.colors[idx]
                         scat = self.axs[subplot_idx].scatter(x, y)
                         scat.set_facecolor(self.fc)
+                        self.original_fc = self.fc.copy()
+
                     else:
                         # clear old scatterplot
                         self.axs[subplot_idx].clear()
                         # Make new scatterplot
-                        scat = self.axs[subplot_idx].scatter(x, y)
+                        self.axs[subplot_idx].scatter(x, y)
                         scat = self.axs[subplot_idx].collections[0]
                         scat.set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
@@ -718,6 +736,7 @@ class InteractiveTourInterface(ctk.CTk):
 
                     if self.initial_loop is False:
                         self.axs[subplot_idx].clear()
+                    else:
                         self.frame_vars[subplot_idx].set("")
                         self.frame_textboxes[subplot_idx].configure(
                             state="disabled",
