@@ -34,7 +34,7 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
     }
   } else if (virtual_env == "virtual_env"){
     if (env_name %in% reticulate::virtualenv_list()==FALSE){
-      py_version <- unlist(virtualenv_starter(all=TRUE)$version[1])
+      py_version <- unlist(reticulate::virtualenv_starter(all=TRUE)$version[1])
       py_version = paste(py_version, collapse = ".")
       reticulate::install_python(version = py_version)
       reticulate::virtualenv_create(env_name)
