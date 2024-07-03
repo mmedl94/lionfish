@@ -357,6 +357,7 @@ class InteractiveTourInterface(ctk.CTk):
                         proj_subet[:, 0], proj_subet[:, 1])
                     proj_subet[:, 1] = proj_subet[:, 1] / \
                         np.linalg.norm(proj_subet[:, 1])
+
                     plot_data = self.r.render_proj_inter(
                         self.data[:, self.feature_selection], proj_subet,
                         limits=self.limits, half_range=half_range)
