@@ -41,7 +41,8 @@ class InteractiveTourInterface(ctk.CTk):
                 self.initial_loop = False
 
                 for subplot_idx, _ in enumerate(self.plot_objects):
-                    self.plot_dicts[subplot_idx]["selector"].disconnect()
+                    if "selector" in self.plot_dicts[subplot_idx]:
+                        self.plot_dicts[subplot_idx]["selector"].disconnect()
 
                     if self.frame_vars[subplot_idx].get() != "":
                         if event.key == "right":
@@ -319,12 +320,9 @@ class InteractiveTourInterface(ctk.CTk):
         # Get max number of frames
         self.n_frames = 0
         for plot_object in plot_objects:
-            if plot_object["type"] == "hist":
-                pass
-            elif plot_object["type"] == "scatter":
-                pass
-            elif plot_object["obj"].shape[-1] > self.n_frames:
-                self.n_frames = plot_object["obj"].shape[-1]
+            if isinstance(plot_object["obj"], np.ndarray):
+                if plot_object["obj"].shape[-1] > self.n_frames:
+                    self.n_frames = plot_object["obj"].shape[-1]
         self.frame = 0
 
         # resolve while loop in case of window closing
@@ -339,6 +337,8 @@ class InteractiveTourInterface(ctk.CTk):
         while self.frame < self.n_frames:
             for subplot_idx, plot_object in enumerate(plot_objects):
                 frame = self.frame
+
+                ####### 2d tour #######
 
                 if plot_object["type"] == "2d_tour":
                     frame = int(self.frame_vars[subplot_idx].get())
@@ -427,6 +427,8 @@ class InteractiveTourInterface(ctk.CTk):
                         f"Frame {frame} out of {n_frames}\n" +
                         f"Press right key for next frame\n" +
                         f"Press left key for last frame")
+
+                ####### 1d tour #######
 
                 if plot_object["type"] == "1d_tour":
                     frame = int(self.frame_vars[subplot_idx].get())
@@ -526,6 +528,8 @@ class InteractiveTourInterface(ctk.CTk):
                         f"Press right key for next frame\n" +
                         f"Press left key for last frame")
 
+                ####### Scatterplot #######
+
                 if plot_object["type"] == "scatter":
                     # get data
                     col_index_x = col_names.index(plot_object["obj"][0])
@@ -576,6 +580,8 @@ class InteractiveTourInterface(ctk.CTk):
                     self.axs[subplot_idx].set_ylabel(y_name)
                     self.axs[subplot_idx].set_title(
                         f"Scatterplot of variables {x_name} and {y_name}")
+
+                ####### Histogram #######
 
                 elif plot_object["type"] == "hist":
                     if plot_object["obj"] in col_names:
@@ -657,6 +663,87 @@ class InteractiveTourInterface(ctk.CTk):
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                     else:
                         print("Column not found")
+
+                ####### categorical cluster interface #######
+
+                elif plot_object["type"] == "cat_clust_interface":
+                    self.axs[subplot_idx].set_box_aspect(aspect=1)
+
+                    # Get data
+                    # Initialize data array
+                    cat_clust_data = np.empty(
+                        (len(self.feature_selection), int(n_subsets)))
+
+                    # get ratios
+                    all_pos = np.sum(self.data, axis=0)
+                    for subset_idx, subset in enumerate(self.subselections):
+                        if subset.shape[0] != 0:
+                            all_pos_subset = np.sum(self.data[subset], axis=0)
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/all_pos
+                        else:
+                            cat_clust_data[:, subset_idx] = np.zeros(
+                                len(self.feature_selection))
+
+                    var_ids = np.repeat(np.arange(sum(self.feature_selection)),
+                                        int(n_subsets))
+                    cat_clust_data = cat_clust_data.flatten()
+
+                    # make cluster color scheme
+                    clust_colors = np.tile(self.colors,
+                                           (len(self.feature_selection), 1))
+                    clust_colors = np.concatenate((clust_colors,
+                                                  np.ones((clust_colors.shape[0], 1))),
+                                                  axis=1)
+
+                    clust_ids = np.arange(int(n_subsets))
+                    clust_ids = np.tile(clust_ids, len(self.feature_selection))
+
+                    # current cluster selection
+                    for subselection_id, subselection_var in enumerate(self.subselection_vars):
+                        if subselection_var.get() == 1:
+                            selected_cluster = subselection_id
+
+                    selected = np.where(
+                        clust_ids == selected_cluster)[0]
+                    not_selected = np.where(
+                        clust_ids != selected_cluster)[0]
+
+                    clust_colors[not_selected, -1] = 0.2
+                    clust_colors[selected, -1] = 1
+
+                    feature_selection_bool = np.repeat(
+                        self.feature_selection, n_subsets)
+
+                    if self.initial_loop is False:
+                        self.axs[subplot_idx].clear()
+                        self.frame_vars[subplot_idx].set("")
+                        self.frame_textboxes[subplot_idx].configure(
+                            state="disabled",
+                            fg_color="grey")
+
+                    scat = self.axs[subplot_idx].scatter(
+                        cat_clust_data[feature_selection_bool],
+                        var_ids,
+                        c=clust_colors[feature_selection_bool])
+
+                    y_tick_labels = np.array(col_names)[self.feature_selection]
+                    self.axs[subplot_idx].set_yticks(
+                        np.arange(0, sum(self.feature_selection)))
+                    self.axs[subplot_idx].set_yticklabels(y_tick_labels)
+
+                    plot_dict = {"type": "cat_clust_interface",
+                                 "subtype": "cat_clust_interface",
+                                 "subplot_idx": subplot_idx,
+                                 "ax": self.axs[subplot_idx],
+                                 "data": self.data,
+                                 "feature_selection": self.feature_selection,
+                                 "cat_clust_data": cat_clust_data,
+                                 "col_names": col_names,
+                                 "subselection_vars": self.subselection_vars,
+                                 "subselections": self.subselections,
+                                 "half_range": half_range}
+                    self.plot_dicts[subplot_idx] = plot_dict
 
             fig.canvas.draw()
 

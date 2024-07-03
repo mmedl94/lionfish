@@ -105,6 +105,62 @@ class LassoSelect:
                 plot_dict["ax"].set_title(title)
                 plot_dict["ax"].set_xlabel(x_label)
 
+            elif plot_dict["type"] == "cat_clust_interface":
+                cat_clust_data = np.empty(
+                    (len(plot_dict["feature_selection"]),
+                     len(plot_dict["subselection_vars"])))
+                # get ratios
+                all_pos = np.sum(plot_dict["data"], axis=0)
+                for subset_idx, subset in enumerate(plot_dict["subselections"]):
+                    if subset.shape[0] != 0:
+                        all_pos_subset = np.sum(
+                            plot_dict["data"][subset], axis=0)
+                        cat_clust_data[:,
+                                       subset_idx] = all_pos_subset/all_pos
+                    else:
+                        cat_clust_data[:, subset_idx] = np.zeros(
+                            len(plot_dict["feature_selection"]))
+                var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
+                                    len(plot_dict["subselection_vars"]))
+                cat_clust_data = cat_clust_data.flatten()
+                # make cluster color scheme
+                clust_colors = np.tile(self.colors,
+                                       (len(plot_dict["feature_selection"]), 1))
+                clust_colors = np.concatenate((clust_colors,
+                                               np.ones((clust_colors.shape[0], 1))),
+                                              axis=1)
+                clust_ids = np.arange(len(plot_dict["subselection_vars"]))
+                clust_ids = np.tile(clust_ids, len(
+                    plot_dict["feature_selection"]))
+                # current cluster selection
+                for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
+                    if subselection_var.get() == 1:
+                        selected_cluster = subselection_id
+                selected = np.where(
+                    clust_ids == selected_cluster)[0]
+                not_selected = np.where(
+                    clust_ids != selected_cluster)[0]
+                clust_colors[not_selected, -1] = 0.2
+                clust_colors[selected, -1] = 1
+                feature_selection_bool = np.repeat(
+                    plot_dict["feature_selection"], len(plot_dict["subselection_vars"]))
+
+                plot_dict["ax"].clear()
+
+                subplot_idx = plot_dict["subplot_idx"]
+
+                scat = self.plot_dicts[subplot_idx]["ax"].scatter(
+                    cat_clust_data[feature_selection_bool],
+                    var_ids,
+                    c=clust_colors[feature_selection_bool])
+                y_tick_labels = np.array(plot_dict["col_names"])[
+                    plot_dict["feature_selection"]]
+                self.plot_dicts[subplot_idx]["ax"].set_yticks(
+                    np.arange(0, sum(plot_dict["feature_selection"])))
+                self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
+                    y_tick_labels)
+                self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
+
         self.canvas.draw_idle()
 
     # governs what happens when disconnected (after pressing "enter")
@@ -240,6 +296,59 @@ class BarSelect:
                 plot_dict["ax"].set_xlim(x_lims)
                 plot_dict["ax"].set_title(title)
                 plot_dict["ax"].set_xlabel(x_label)
+
+            elif plot_dict["type"] == "cat_clust_interface":
+                cat_clust_data = np.empty(
+                    (len(self.feature_selection), len(plot_dict["subselection_vars"])))
+                # get ratios
+                all_pos = np.sum(self.data, axis=0)
+                for subset_idx, subset in enumerate(plot_dict["subselections"]):
+                    if subset.shape[0] != 0:
+                        all_pos_subset = np.sum(self.data[subset], axis=0)
+                        cat_clust_data[:,
+                                       subset_idx] = all_pos_subset/all_pos
+                    else:
+                        cat_clust_data[:, subset_idx] = np.zeros(
+                            len(self.feature_selection))
+                var_ids = np.repeat(np.arange(sum(self.feature_selection)),
+                                    len(plot_dict["subselection_vars"]))
+                cat_clust_data = cat_clust_data.flatten()
+                # make cluster color scheme
+                clust_colors = np.tile(self.colors,
+                                       (len(self.feature_selection), 1))
+                clust_colors = np.concatenate((clust_colors,
+                                               np.ones((clust_colors.shape[0], 1))),
+                                              axis=1)
+                clust_ids = np.arange(len(plot_dict["subselection_vars"]))
+                clust_ids = np.tile(clust_ids, len(self.feature_selection))
+                # current cluster selection
+                for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
+                    if subselection_var.get() == 1:
+                        selected_cluster = subselection_id
+                selected = np.where(
+                    clust_ids == selected_cluster)[0]
+                not_selected = np.where(
+                    clust_ids != selected_cluster)[0]
+                clust_colors[not_selected, -1] = 0.2
+                clust_colors[selected, -1] = 1
+                feature_selection_bool = np.repeat(
+                    self.feature_selection, len(plot_dict["subselection_vars"]))
+
+                plot_dict["ax"].clear()
+
+                subplot_idx = plot_dict["subplot_idx"]
+
+                scat = self.plot_dicts[subplot_idx]["ax"].scatter(
+                    cat_clust_data[feature_selection_bool],
+                    var_ids,
+                    c=clust_colors[feature_selection_bool])
+                y_tick_labels = np.array(plot_dict["col_names"])[
+                    self.feature_selection]
+                self.plot_dicts[subplot_idx]["ax"].set_yticks(
+                    np.arange(0, sum(self.feature_selection)))
+                self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
+                    y_tick_labels)
+                self.plot_dicts[subplot_idx]["data"] = cat_clust_data
 
         self.canvas.draw_idle()
 
