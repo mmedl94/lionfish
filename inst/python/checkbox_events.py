@@ -114,10 +114,11 @@ def feature_checkbox_event(self, feature_idx):
 
             self.plot_dicts[subplot_idx] = plot_dict
 
-        if plot_dict["subtype"] == "cat_clust_interface":
+        if plot_dict["type"] == "cat_clust_interface":
             cat_clust_data = plot_dict["cat_clust_data"]
+            n_subsets = len(self.subselection_vars)
             var_ids = np.repeat(np.arange(sum(self.feature_selection)),
-                                len(self.subselection_vars))
+                                n_subsets)
 
             # make cluster color scheme
             clust_colors = np.tile(self.colors,
@@ -126,7 +127,7 @@ def feature_checkbox_event(self, feature_idx):
                                           np.ones((clust_colors.shape[0], 1))),
                                           axis=1)
 
-            clust_ids = np.arange(len(self.subselection_vars))
+            clust_ids = np.arange(n_subsets)
             clust_ids = np.tile(clust_ids, len(self.feature_selection))
 
             # current cluster selection
@@ -139,21 +140,45 @@ def feature_checkbox_event(self, feature_idx):
             clust_colors[not_selected, -1] = 0.2
 
             feature_selection_bool = np.repeat(
-                self.feature_selection, len(self.subselection_vars))
+                self.feature_selection, n_subsets)
+
+            x = cat_clust_data[feature_selection_bool]
+            fc = clust_colors[feature_selection_bool]
+
+            # Sort to display inter cluster max at the top
+            sort_idx = np.arange(
+                selected_cluster, x.shape[0], n_subsets, dtype=int)
+            ranked_vars = np.argsort(x[sort_idx])[::-1]
+            sorting_helper = np.arange(x.shape[0])
+            sorting_helper = sorting_helper.reshape(
+                sort_idx.shape[0], int(n_subsets))
+            sorting_helper = sorting_helper[ranked_vars].flatten()
+
+            # flip var_ids so most important is on top
+            var_ids = np.flip(var_ids)
 
             self.axs[subplot_idx].clear()
 
             scat = self.axs[subplot_idx].scatter(
-                cat_clust_data[feature_selection_bool],
+                x[sorting_helper],
                 var_ids,
-                c=clust_colors[feature_selection_bool])
+                c=fc[sorting_helper])
 
-            y_tick_labels = np.array(plot_dict["col_names"])[
-                self.feature_selection]
+            y_tick_labels = np.array(self.col_names)[self.feature_selection]
+            y_tick_labels = y_tick_labels[ranked_vars]
+            # flip so that labels agree with var_ids
+            y_tick_labels = np.flip(y_tick_labels)
+
             self.axs[subplot_idx].set_yticks(
                 np.arange(0, sum(self.feature_selection)))
             self.axs[subplot_idx].set_yticklabels(y_tick_labels)
-
+            self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
+            
+            subset_size = self.data[self.subselections[selected_cluster]].shape[0]
+            fraction_of_total = (subset_size/self.data.shape[0])*100
+            title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+            self.axs[subplot_idx].set_title(title)
+            
         self.plot_dicts[0]["ax"].figure.canvas.draw_idle()
 
 
@@ -165,10 +190,11 @@ def subselection_checkbox_event(self, subselection_idx):
             self.subselection_vars[i].set(0)
 
         for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            if plot_dict["subtype"] == "cat_clust_interface":
+            if plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = plot_dict["cat_clust_data"]
+                n_subsets = len(self.subselection_vars)
                 var_ids = np.repeat(np.arange(sum(self.feature_selection)),
-                                    len(self.subselection_vars))
+                                    n_subsets)
 
                 # make cluster color scheme
                 clust_colors = np.tile(self.colors,
@@ -190,19 +216,44 @@ def subselection_checkbox_event(self, subselection_idx):
                 clust_colors[not_selected, -1] = 0.2
 
                 feature_selection_bool = np.repeat(
-                    self.feature_selection, len(self.subselection_vars))
+                    self.feature_selection, n_subsets)
+
+                x = cat_clust_data[feature_selection_bool]
+                fc = clust_colors[feature_selection_bool]
+
+                # Sort to display inter cluster max at the top
+                sort_idx = np.arange(
+                    selected_cluster, x.shape[0], n_subsets, dtype=int)
+                ranked_vars = np.argsort(x[sort_idx])[::-1]
+                sorting_helper = np.arange(x.shape[0])
+                sorting_helper = sorting_helper.reshape(
+                    sort_idx.shape[0], int(n_subsets))
+                sorting_helper = sorting_helper[ranked_vars].flatten()
+
+                # flip var_ids so most important is on top
+                var_ids = np.flip(var_ids)
 
                 self.axs[subplot_idx].clear()
 
                 scat = self.axs[subplot_idx].scatter(
-                    cat_clust_data[feature_selection_bool],
+                    x[sorting_helper],
                     var_ids,
-                    c=clust_colors[feature_selection_bool])
+                    c=fc[sorting_helper])
 
-                y_tick_labels = np.array(plot_dict["col_names"])[
+                y_tick_labels = np.array(self.col_names)[
                     self.feature_selection]
+                y_tick_labels = y_tick_labels[ranked_vars]
+                # flip so that labels agree with var_ids
+                y_tick_labels = np.flip(y_tick_labels)
+
                 self.axs[subplot_idx].set_yticks(
                     np.arange(0, sum(self.feature_selection)))
                 self.axs[subplot_idx].set_yticklabels(y_tick_labels)
-
-            self.plot_dicts[0]["ax"].figure.canvas.draw_idle()
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
+                
+                subset_size = self.data[self.subselections[selected_cluster]].shape[0]
+                fraction_of_total = (subset_size/self.data.shape[0])*100
+                title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+                self.axs[subplot_idx].set_title(title)
+                
+                self.plot_dicts[0]["ax"].figure.canvas.draw_idle()

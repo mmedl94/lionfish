@@ -22,6 +22,7 @@ class LassoSelect:
         self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
         self.fc = self.plot_dicts[0]["fc"]
         self.colors = colors
+        self.data = plot_dicts[subplot_idx]["data"]
 
         # initialize lasso selector
         self.lasso = LassoSelector(
@@ -62,7 +63,7 @@ class LassoSelect:
         self.collection.set_facecolors(self.plot_dicts[0]["fc"])
 
         # update other plots if applicable
-        for plot_dict in self.plot_dicts:
+        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
             # check plots if they are scatterplots. if so recolor datapoints
             if plot_dict["type"] == "scatter":
                 collection_subplot = plot_dict["ax"].collections[0]
@@ -109,56 +110,92 @@ class LassoSelect:
                 cat_clust_data = np.empty(
                     (len(plot_dict["feature_selection"]),
                      len(plot_dict["subselection_vars"])))
+                
+                n_subsets = len(plot_dict["subselection_vars"])
+                data = self.plot_dicts[subplot_idx]["data"]
                 # get ratios
                 all_pos = np.sum(plot_dict["data"], axis=0)
                 for subset_idx, subset in enumerate(plot_dict["subselections"]):
                     if subset.shape[0] != 0:
                         all_pos_subset = np.sum(
                             plot_dict["data"][subset], axis=0)
-                        cat_clust_data[:,
-                                       subset_idx] = all_pos_subset/all_pos
+                        if plot_dict["subtype"] == "Intra cluster fraction of positive":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/self.data[subset].shape[0]
+                        elif plot_dict["subtype"] == "Total fraction of positive":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/all_pos
+                        elif plot_dict["subtype"] == "Total fraction":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/self.data.shape[0]
                     else:
                         cat_clust_data[:, subset_idx] = np.zeros(
                             len(plot_dict["feature_selection"]))
                 var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
-                                    len(plot_dict["subselection_vars"]))
+                                    n_subsets)
                 cat_clust_data = cat_clust_data.flatten()
+
                 # make cluster color scheme
                 clust_colors = np.tile(self.colors,
                                        (len(plot_dict["feature_selection"]), 1))
                 clust_colors = np.concatenate((clust_colors,
                                                np.ones((clust_colors.shape[0], 1))),
                                               axis=1)
-                clust_ids = np.arange(len(plot_dict["subselection_vars"]))
+                clust_ids = np.arange(n_subsets)
                 clust_ids = np.tile(clust_ids, len(
                     plot_dict["feature_selection"]))
+
                 # current cluster selection
                 for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
                     if subselection_var.get() == 1:
                         selected_cluster = subselection_id
-                selected = np.where(
-                    clust_ids == selected_cluster)[0]
+
                 not_selected = np.where(
                     clust_ids != selected_cluster)[0]
                 clust_colors[not_selected, -1] = 0.2
-                clust_colors[selected, -1] = 1
+
                 feature_selection_bool = np.repeat(
-                    plot_dict["feature_selection"], len(plot_dict["subselection_vars"]))
+                    plot_dict["feature_selection"], n_subsets)
 
-                plot_dict["ax"].clear()
+                x = cat_clust_data[feature_selection_bool]
+                fc = clust_colors[feature_selection_bool]
 
-                subplot_idx = plot_dict["subplot_idx"]
+                # Sort to display inter cluster max at the top
+                sort_idx = np.arange(
+                    selected_cluster, x.shape[0], n_subsets, dtype=int)
+                ranked_vars = np.argsort(x[sort_idx])[::-1]
+                sorting_helper = np.arange(x.shape[0])
+                sorting_helper = sorting_helper.reshape(
+                    sort_idx.shape[0], int(n_subsets))
+                sorting_helper = sorting_helper[ranked_vars].flatten()
 
-                scat = self.plot_dicts[subplot_idx]["ax"].scatter(
-                    cat_clust_data[feature_selection_bool],
+                # flip var_ids so most important is on top
+                var_ids = np.flip(var_ids)
+
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                self.plot_dicts[subplot_idx]["ax"].scatter(
+                    x[sorting_helper],
                     var_ids,
-                    c=clust_colors[feature_selection_bool])
+                    c=fc[sorting_helper])
+
                 y_tick_labels = np.array(plot_dict["col_names"])[
                     plot_dict["feature_selection"]]
+                y_tick_labels = y_tick_labels[ranked_vars]
+                # flip so that labels agree with var_ids
+                y_tick_labels = np.flip(y_tick_labels)
+
                 self.plot_dicts[subplot_idx]["ax"].set_yticks(
                     np.arange(0, sum(plot_dict["feature_selection"])))
                 self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
                     y_tick_labels)
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
+                
+                subselections = self.plot_dicts[subplot_idx]["subselections"]
+                subset_size = data[subselections[selected_cluster]].shape[0]
+                fraction_of_total = (subset_size/data.shape[0])*100
+                title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+                self.plot_dicts[subplot_idx]["ax"].set_title(title)
+                    
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
         self.canvas.draw_idle()
@@ -253,7 +290,7 @@ class BarSelect:
             if subselection.shape[0] != 0:
                 self.plot_dicts[0]["fc"][subselection] = self.colors[col_idx]
 
-        for plot_dict in self.plot_dicts:
+        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
             # update colors of scatterplot
             if plot_dict["type"] == "scatter":
                 collection_subplot = plot_dict["ax"].collections[0]
@@ -299,55 +336,93 @@ class BarSelect:
 
             elif plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = np.empty(
-                    (len(self.feature_selection), len(plot_dict["subselection_vars"])))
+                    (len(plot_dict["feature_selection"]),
+                     len(plot_dict["subselection_vars"])))
+
+                n_subsets = len(plot_dict["subselection_vars"])
                 # get ratios
-                all_pos = np.sum(self.data, axis=0)
+                all_pos = np.sum(plot_dict["data"], axis=0)
                 for subset_idx, subset in enumerate(plot_dict["subselections"]):
                     if subset.shape[0] != 0:
-                        all_pos_subset = np.sum(self.data[subset], axis=0)
-                        cat_clust_data[:,
-                                       subset_idx] = all_pos_subset/all_pos
+                        all_pos_subset = np.sum(
+                            plot_dict["data"][subset], axis=0)
+                        if plot_dict["subtype"] == "Intra cluster fraction of positive":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/self.data[subset].shape[0]
+                        elif plot_dict["subtype"] == "Total fraction of positive":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/all_pos
+                        elif plot_dict["subtype"] == "Total fraction":
+                            cat_clust_data[:,
+                                           subset_idx] = all_pos_subset/self.data.shape[0]
                     else:
                         cat_clust_data[:, subset_idx] = np.zeros(
-                            len(self.feature_selection))
-                var_ids = np.repeat(np.arange(sum(self.feature_selection)),
-                                    len(plot_dict["subselection_vars"]))
+                            len(plot_dict["feature_selection"]))
+                var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
+                                    n_subsets)
                 cat_clust_data = cat_clust_data.flatten()
+
                 # make cluster color scheme
                 clust_colors = np.tile(self.colors,
-                                       (len(self.feature_selection), 1))
+                                       (len(plot_dict["feature_selection"]), 1))
                 clust_colors = np.concatenate((clust_colors,
                                                np.ones((clust_colors.shape[0], 1))),
                                               axis=1)
-                clust_ids = np.arange(len(plot_dict["subselection_vars"]))
-                clust_ids = np.tile(clust_ids, len(self.feature_selection))
+                clust_ids = np.arange(n_subsets)
+                clust_ids = np.tile(clust_ids, len(
+                    plot_dict["feature_selection"]))
+
                 # current cluster selection
                 for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
                     if subselection_var.get() == 1:
                         selected_cluster = subselection_id
-                selected = np.where(
-                    clust_ids == selected_cluster)[0]
+
                 not_selected = np.where(
                     clust_ids != selected_cluster)[0]
                 clust_colors[not_selected, -1] = 0.2
-                clust_colors[selected, -1] = 1
+
                 feature_selection_bool = np.repeat(
-                    self.feature_selection, len(plot_dict["subselection_vars"]))
+                    plot_dict["feature_selection"], n_subsets)
 
-                plot_dict["ax"].clear()
+                x = cat_clust_data[feature_selection_bool]
+                fc = clust_colors[feature_selection_bool]
 
-                subplot_idx = plot_dict["subplot_idx"]
+                # Sort to display inter cluster max at the top
+                sort_idx = np.arange(
+                    selected_cluster, x.shape[0], n_subsets, dtype=int)
+                ranked_vars = np.argsort(x[sort_idx])[::-1]
+                sorting_helper = np.arange(x.shape[0])
+                sorting_helper = sorting_helper.reshape(
+                    sort_idx.shape[0], int(n_subsets))
+                sorting_helper = sorting_helper[ranked_vars].flatten()
 
-                scat = self.plot_dicts[subplot_idx]["ax"].scatter(
-                    cat_clust_data[feature_selection_bool],
+                # flip var_ids so most important is on top
+                var_ids = np.flip(var_ids)
+
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                self.plot_dicts[subplot_idx]["ax"].scatter(
+                    x[sorting_helper],
                     var_ids,
-                    c=clust_colors[feature_selection_bool])
+                    c=fc[sorting_helper])
+
                 y_tick_labels = np.array(plot_dict["col_names"])[
-                    self.feature_selection]
+                    plot_dict["feature_selection"]]
+                y_tick_labels = y_tick_labels[ranked_vars]
+                # flip so that labels agree with var_ids
+                y_tick_labels = np.flip(y_tick_labels)
+
                 self.plot_dicts[subplot_idx]["ax"].set_yticks(
-                    np.arange(0, sum(self.feature_selection)))
+                    np.arange(0, sum(plot_dict["feature_selection"])))
                 self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
                     y_tick_labels)
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
+                
+                subselections = self.plot_dicts[subplot_idx]["subselections"]
+                subset_size = self.data[subselections[selected_cluster]].shape[0]
+                fraction_of_total = (subset_size/self.data.shape[0])*100
+                title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+                self.plot_dicts[subplot_idx]["ax"].set_title(title)
+
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
         self.canvas.draw_idle()

@@ -64,6 +64,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.plot_objects = plot_objects
         self.displayed_tour = "Original tour"
         self.r = r
+        self.reset_selection_check = False
 
         if preselection is not False:
             if n_subsets < len(set(preselection)):
@@ -218,6 +219,8 @@ class InteractiveTourInterface(ctk.CTk):
             for subplot_idx, _ in enumerate(self.plot_objects):
                 if "selector" in self.plot_dicts[subplot_idx]:
                     self.plot_dicts[subplot_idx]["selector"].disconnect()
+
+            self.reset_selection_check = True
             self.pause_var.set(0)
 
         reset_selection_button = ctk.CTkButton(master=subselection_frame,
@@ -357,7 +360,9 @@ class InteractiveTourInterface(ctk.CTk):
                                              text="Reset original tour",
                                              command=partial(reset_original_tour, self))
         original_tour_button.grid(row=6, column=0, pady=(3, 3), sticky="n")
-
+        
+        row_tracker = 6
+        
         # Get max number of frames
         self.n_frames = 0
         for plot_object in plot_objects:
@@ -390,8 +395,12 @@ class InteractiveTourInterface(ctk.CTk):
                         frame = plot_object["obj"].shape[-1]-1
                         self.frame_vars[subplot_idx].set(str(frame))
 
-                    proj = np.copy(
-                        plot_object["obj"][:, :, frame])
+                    if self.reset_selection_check is False:
+                        proj = np.copy(
+                            plot_object["obj"][:, :, frame])
+                    else:
+                        proj = self.plot_dicts[subplot_idx]["proj"]
+                        self.reset_selection_check = False
                     proj_subet = proj[self.feature_selection]
 
                     proj_subet[:, 0] = proj_subet[:, 0] / \
@@ -440,6 +449,7 @@ class InteractiveTourInterface(ctk.CTk):
                                  "subtype": "2d_tour",
                                  "subplot_idx": subplot_idx,
                                  "ax": self.axs[subplot_idx],
+                                 "data": self.data,
                                  "feature_selection": self.feature_selection,
                                  "subselection_vars": self.subselection_vars,
                                  "subselections": self.subselections,
@@ -609,6 +619,7 @@ class InteractiveTourInterface(ctk.CTk):
                     plot_dict = {"type": "scatter",
                                  "subtype": "scatter",
                                  "subplot_idx": subplot_idx,
+                                 "data": self.data,
                                  "fc": self.fc,
                                  "ax": self.axs[subplot_idx]
                                  }
@@ -714,7 +725,36 @@ class InteractiveTourInterface(ctk.CTk):
 
                 elif plot_object["type"] == "cat_clust_interface":
                     self.axs[subplot_idx].set_box_aspect(aspect=1)
-
+                    
+                    if self.initial_loop:
+                        #### Metric menu ####
+                        def metric_selection_event(self, selection):
+                            self.initial_loop = False
+                            for subplot_idx, _ in enumerate(self.plot_objects):
+                                if "selector" in self.plot_dicts[subplot_idx]:
+                                    self.plot_dicts[subplot_idx]["selector"].disconnect()
+                            self.pause_var.set(0)
+                        
+                        metrics = ["Intra cluster fraction of positive",
+                                   "Total fraction of positive",
+                                   "Total fraction"]
+                        
+                        if plot_object["type"] in metrics:
+                            self.metric_var = ctk.StringVar(value=plot_object["type"])
+                        else:
+                            self.metric_var = ctk.StringVar(value="Intra cluster fraction of positive")
+                        metric_selection_menu = ctk.CTkComboBox(master=sidebar,
+                                                   values=metrics,
+                                                   command=partial(metric_selection_event, self),
+                                                   variable=self.metric_var)
+                        metric_selection_menu.grid(row=row_tracker, column=0, pady=(3, 3), sticky="n")
+                        ####################
+                        
+                        self.frame_vars[subplot_idx].set("")
+                        self.frame_textboxes[subplot_idx].configure(
+                            state="disabled",
+                            fg_color="grey")
+                        
                     # Get data
                     # Initialize data array
                     cat_clust_data = np.empty(
@@ -725,8 +765,15 @@ class InteractiveTourInterface(ctk.CTk):
                     for subset_idx, subset in enumerate(self.subselections):
                         if subset.shape[0] != 0:
                             all_pos_subset = np.sum(self.data[subset], axis=0)
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/all_pos
+                            if self.metric_var.get() == "Intra cluster fraction of positive":
+                                cat_clust_data[:,
+                                               subset_idx] = all_pos_subset/self.data[subset].shape[0]
+                            elif self.metric_var.get() == "Total fraction of positive":
+                                cat_clust_data[:,
+                                               subset_idx] = all_pos_subset/all_pos
+                            elif self.metric_var.get() == "Total fraction":
+                                cat_clust_data[:,
+                                               subset_idx] = all_pos_subset/self.data.shape[0]
                         else:
                             cat_clust_data[:, subset_idx] = np.zeros(
                                 len(self.feature_selection))
@@ -742,7 +789,7 @@ class InteractiveTourInterface(ctk.CTk):
                                                   np.ones((clust_colors.shape[0], 1))),
                                                   axis=1)
 
-                    clust_ids = np.arange(int(n_subsets))
+                    clust_ids = np.arange(n_subsets)
                     clust_ids = np.tile(clust_ids, len(self.feature_selection))
 
                     # current cluster selection
@@ -750,37 +797,53 @@ class InteractiveTourInterface(ctk.CTk):
                         if subselection_var.get() == 1:
                             selected_cluster = subselection_id
 
-                    selected = np.where(
-                        clust_ids == selected_cluster)[0]
                     not_selected = np.where(
                         clust_ids != selected_cluster)[0]
-
                     clust_colors[not_selected, -1] = 0.2
-                    clust_colors[selected, -1] = 1
 
                     feature_selection_bool = np.repeat(
                         self.feature_selection, n_subsets)
 
                     if self.initial_loop is False:
                         self.axs[subplot_idx].clear()
-                    else:
-                        self.frame_vars[subplot_idx].set("")
-                        self.frame_textboxes[subplot_idx].configure(
-                            state="disabled",
-                            fg_color="grey")
+
+                    x = cat_clust_data[feature_selection_bool]
+                    fc = clust_colors[feature_selection_bool]
+
+                    # Sort to display inter cluster max at the top
+                    sort_idx = np.arange(
+                        selected_cluster, x.shape[0], n_subsets, dtype=int)
+                    ranked_vars = np.argsort(x[sort_idx])[::-1]
+                    sorting_helper = np.arange(x.shape[0])
+                    sorting_helper = sorting_helper.reshape(
+                        sort_idx.shape[0], int(n_subsets))
+                    sorting_helper = sorting_helper[ranked_vars].flatten()
+
+                    # flip var_ids so most important is on top
+                    var_ids = np.flip(var_ids)
 
                     scat = self.axs[subplot_idx].scatter(
-                        cat_clust_data[feature_selection_bool],
+                        x[sorting_helper],
                         var_ids,
-                        c=clust_colors[feature_selection_bool])
+                        c=fc[sorting_helper])
 
                     y_tick_labels = np.array(col_names)[self.feature_selection]
+                    y_tick_labels = y_tick_labels[ranked_vars]
+                    # flip so that labels agree with var_ids
+                    y_tick_labels = np.flip(y_tick_labels)
+
                     self.axs[subplot_idx].set_yticks(
                         np.arange(0, sum(self.feature_selection)))
                     self.axs[subplot_idx].set_yticklabels(y_tick_labels)
+                    self.axs[subplot_idx].set_xlabel(self.metric_var.get())
 
+                    subset_size = self.data[self.subselections[selected_cluster]].shape[0]
+                    fraction_of_total = (subset_size/self.data.shape[0])*100
+                    title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+                    self.axs[subplot_idx].set_title(title)
+                    
                     plot_dict = {"type": "cat_clust_interface",
-                                 "subtype": "cat_clust_interface",
+                                 "subtype": self.metric_var.get(),
                                  "subplot_idx": subplot_idx,
                                  "ax": self.axs[subplot_idx],
                                  "data": self.data,
