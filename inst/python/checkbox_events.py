@@ -173,12 +173,12 @@ def feature_checkbox_event(self, feature_idx):
                 np.arange(0, sum(self.feature_selection)))
             self.axs[subplot_idx].set_yticklabels(y_tick_labels)
             self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
-            
+
             subset_size = self.data[self.subselections[selected_cluster]].shape[0]
             fraction_of_total = (subset_size/self.data.shape[0])*100
             title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
             self.axs[subplot_idx].set_title(title)
-            
+
         self.plot_dicts[0]["ax"].figure.canvas.draw_idle()
 
 
@@ -249,11 +249,15 @@ def subselection_checkbox_event(self, subselection_idx):
                 self.axs[subplot_idx].set_yticks(
                     np.arange(0, sum(self.feature_selection)))
                 self.axs[subplot_idx].set_yticklabels(y_tick_labels)
-                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
-                
-                subset_size = self.data[self.subselections[selected_cluster]].shape[0]
-                fraction_of_total = (subset_size/self.data.shape[0])*100
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(
+                    plot_dict["subtype"])
+                if self.subselections[selected_cluster].shape[0] != 0:
+                    subset_size = self.data[self.subselections[selected_cluster]].shape[0]
+                    fraction_of_total = (subset_size/self.data.shape[0])*100
+                else:
+                    subset_size = 0
+                    fraction_of_total = 0
                 title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
                 self.axs[subplot_idx].set_title(title)
-                
+
                 self.plot_dicts[0]["ax"].figure.canvas.draw_idle()

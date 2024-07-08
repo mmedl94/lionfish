@@ -453,7 +453,7 @@ class DraggableAnnotation1d:
         self.arrs = []
         self.labels = []
 
-        if len(self.feature_selection) > 10:
+        if sum(self.feature_selection) > 10:
             self.alpha = 0.1
         else:
             self.alpha = 1
@@ -526,71 +526,72 @@ class DraggableAnnotation1d:
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
-        if self.alpha != 1:
-            if event.inaxes == self.arrow_axs:
-                for label_idx, label in enumerate(self.labels):
-                    label_pos = label.get_position()
-                    if (label_pos[0] > event.xdata-0.3) and (label_pos[0] < event.xdata+0.1) and \
-                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                        self.labels[label_idx].set_alpha(1)
-                    else:
-                        self.labels[label_idx].set_alpha(0.1)
-
-                self.ax.figure.canvas.draw_idle()
-
-        if self.press is None:
+        if event.inaxes != self.arrow_axs:
             return
-        axis_id = self.press
-        if event.xdata and event.ydata is not False:
-            # Update projections
-            self.proj[axis_id] = event.xdata
-            # Orthonormalize
-            self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
-                np.linalg.norm(self.proj[self.feature_selection, 0])
+        if self.press is None:
+            if self.alpha != 1:
+                for label_idx, label in enumerate(self.labels):
+                    if label:
+                        label_pos = label.get_position()
+                        if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                                (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                            self.labels[label_idx].set_alpha(1)
+                        else:
+                            self.labels[label_idx].set_alpha(0.1)
+                self.ax.figure.canvas.draw_idle()
+        else:
+            axis_id = self.press
+            if event.xdata and event.ydata is not False:
+                # Update projections
+                self.proj[axis_id] = event.xdata
+                # Orthonormalize
+                self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+                    np.linalg.norm(self.proj[self.feature_selection, 0])
 
-            for axis_id, feature_bool in enumerate(self.feature_selection):
-                if feature_bool == True:
-                    self.arrs[axis_id].set_data(dx=self.proj[axis_id, 0])
-                    if self.labels[axis_id] != None:
-                        # Update labels
-                        self.labels[axis_id].set_x(self.proj[axis_id])
+                for axis_id, feature_bool in enumerate(self.feature_selection):
+                    if feature_bool == True:
+                        self.arrs[axis_id].set_data(dx=self.proj[axis_id, 0])
+                        if self.labels[axis_id] != None:
+                            # Update labels
+                            self.labels[axis_id].set_x(self.proj[axis_id])
 
-            x = np.matmul(self.data[:, self.feature_selection],
-                          self.proj[self.feature_selection])/self.half_range
-            x = x[:, 0]
-            self.plot_dicts[self.subplot_idx]["x"] = x
+                x = np.matmul(self.data[:, self.feature_selection],
+                              self.proj[self.feature_selection])/self.half_range
+                x = x[:, 0]
+                self.plot_dicts[self.subplot_idx]["x"] = x
 
-            title = self.ax.get_title()
-            x_label = self.ax.get_xlabel()
+                title = self.ax.get_title()
+                x_label = self.ax.get_xlabel()
 
-            # check if there are preselected points and update plot
-            x_subselections = []
-            for subselection in self.plot_dicts[0]["subselections"]:
-                if subselection.shape[0] != 0:
-                    x_subselections.append(x[subselection])
-                else:
-                    x_subselections.append(np.array([]))
-            self.plot_dicts[self.subplot_idx]["ax"].clear()
-            self.plot_dicts[self.subplot_idx]["ax"].hist(
-                x_subselections,
-                stacked=True,
-                picker=True,
-                color=self.colors[:len(x_subselections)])
+                # check if there are preselected points and update plot
+                x_subselections = []
+                for subselection in self.plot_dicts[0]["subselections"]:
+                    if subselection.shape[0] != 0:
+                        x_subselections.append(x[subselection])
+                    else:
+                        x_subselections.append(np.array([]))
+                self.plot_dicts[self.subplot_idx]["ax"].clear()
+                self.plot_dicts[self.subplot_idx]["ax"].hist(
+                    x_subselections,
+                    stacked=True,
+                    picker=True,
+                    color=self.colors[:len(x_subselections)])
 
-            bar_selector = BarSelect(plot_dicts=self.plot_dicts,
-                                     subplot_idx=self.subplot_idx,
-                                     feature_selection=self.feature_selection,
-                                     colors=self.colors,
-                                     half_range=self.half_range)
-            self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
+                bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                                         subplot_idx=self.subplot_idx,
+                                         feature_selection=self.feature_selection,
+                                         colors=self.colors,
+                                         half_range=self.half_range)
+                self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
-            # redraw
-            self.ax.tick_params(axis="x", labelbottom=False)
-            self.arrow_axs.tick_params(axis="y", which="both", labelleft=False)
-            self.ax.set_title(title)
-            self.ax.set_xlabel(x_label)
-            self.ax.set_xlim(-1, 1)
-            self.ax.figure.canvas.draw()
+                # redraw
+                self.ax.tick_params(axis="x", labelbottom=False)
+                self.arrow_axs.tick_params(
+                    axis="y", which="both", labelleft=False)
+                self.ax.set_title(title)
+                self.ax.set_xlabel(x_label)
+                self.ax.set_xlim(-1, 1)
+                self.ax.figure.canvas.draw()
 
     def on_release(self, event):
         """Clear button press information."""
@@ -610,8 +611,8 @@ class DraggableAnnotation2d:
         self.ax = ax
         self.scat = scat
         self.half_range = half_range
-
-        if len(self.feature_selection) > 10:
+        self.pressing = 0
+        if sum(self.feature_selection) > 10:
             self.alpha = 0.1
         else:
             self.alpha = 1
@@ -654,6 +655,7 @@ class DraggableAnnotation2d:
     def on_press(self, event):
         """Check whether mouse is over us; if so, store some data."""
         # Iterate through projection axes
+        self.pressing = 1
         for axis_id, arr in enumerate(self.arrs):
             if arr is not None:
                 if event.inaxes == arr.axes and event.button == 3:
@@ -663,59 +665,59 @@ class DraggableAnnotation2d:
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
-
-        if event.inaxes == self.ax:
-            if self.alpha != 1:
-                for label_idx, label in enumerate(self.labels):
-                    label_pos = label.get_position()
-                    if (label_pos[0] > event.xdata-0.3) and (label_pos[0] < event.xdata+0.1) and \
-                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                        self.labels[label_idx].set_alpha(1)
-                    else:
-                        self.labels[label_idx].set_alpha(0.1)
-
-                self.ax.figure.canvas.draw_idle()
-
-        if self.press is None:
+        if event.inaxes != self.ax:
             return
-        axis_id = self.press
+        if self.press is None:
+            if (self.alpha != 1) and (self.pressing == 0):
+                for label_idx, label in enumerate(self.labels):
+                    if label:
+                        label_pos = label.get_position()
+                        if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                                (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                            self.labels[label_idx].set_alpha(1)
+                        else:
+                            self.labels[label_idx].set_alpha(0.1)
+                self.ax.figure.canvas.draw_idle()
+        else:
+            axis_id = self.press
 
-        if event.xdata and event.ydata is not False:
-            # Update projections
-            self.proj[axis_id] = [event.xdata/(2/3), event.ydata/(2/3)]
-            # Orthonormalize
-            self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
-                np.linalg.norm(self.proj[self.feature_selection, 0])
-            self.proj[self.feature_selection, 1] = gram_schmidt(
-                self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
-            self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
-                np.linalg.norm(self.proj[self.feature_selection, 1])
+            if event.xdata and event.ydata is not False:
+                # Update projections
+                self.proj[axis_id] = [event.xdata/(2/3), event.ydata/(2/3)]
+                # Orthonormalize
+                self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+                    np.linalg.norm(self.proj[self.feature_selection, 0])
+                self.proj[self.feature_selection, 1] = gram_schmidt(
+                    self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
+                self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
+                    np.linalg.norm(self.proj[self.feature_selection, 1])
 
-            for axis_id, feature_bool in enumerate(self.feature_selection):
-                if feature_bool == True:
-                    self.arrs[axis_id].set_data(x=0,
-                                                y=0,
-                                                dx=self.proj[axis_id,
-                                                             0]*2/3,
-                                                dy=self.proj[axis_id,
-                                                             1]*2/3)
+                for axis_id, feature_bool in enumerate(self.feature_selection):
+                    if feature_bool == True:
+                        self.arrs[axis_id].set_data(x=0,
+                                                    y=0,
+                                                    dx=self.proj[axis_id,
+                                                                 0]*2/3,
+                                                    dy=self.proj[axis_id,
+                                                                 1]*2/3)
 
-                    # Update labels
-                    self.labels[axis_id].set_x(self.proj[axis_id, 0]*2/3)
-                    self.labels[axis_id].set_y(self.proj[axis_id, 1]*2/3)
+                        # Update labels
+                        self.labels[axis_id].set_x(self.proj[axis_id, 0]*2/3)
+                        self.labels[axis_id].set_y(self.proj[axis_id, 1]*2/3)
 
-            # Update scattplot locations
-            new_data = np.matmul(self.data[:, self.feature_selection],
-                                 self.proj[self.feature_selection])/self.half_range
-            self.scat.set_offsets(new_data)
+                # Update scattplot locations
+                new_data = np.matmul(self.data[:, self.feature_selection],
+                                     self.proj[self.feature_selection])/self.half_range
+                self.scat.set_offsets(new_data)
 
-            # redraw
-            # self.ax.figure.canvas.draw()
-            # self.ax.draw_artist(self.scat)
-            # self.ax.figure.canvas.update()
-            self.ax.figure.canvas.draw_idle()
+                # redraw
+                # self.ax.figure.canvas.draw()
+                # self.ax.draw_artist(self.scat)
+                # self.ax.figure.canvas.update()
+                self.ax.figure.canvas.draw_idle()
             self.ax.figure.canvas.flush_events()
 
     def on_release(self, event):
         """Clear button press information."""
+        self.pressing = 0
         self.press = None
