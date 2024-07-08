@@ -326,23 +326,75 @@ class InteractiveTourInterface(ctk.CTk):
                                     command=partial(save_event, self))
         save_button.grid(row=4, column=0, pady=(3, 3), sticky="n")
 
-        def run_local_tour(self):
+        ##### New tours #####
+
+        tour_types = ["Local tour",
+                      "Guided tour - holes",
+                      "Guided tour - holes - better",
+                      "Guided tour - lda"]
+
+        self.selected_tour_type = ctk.StringVar(
+            value="Local tour")
+        tour_menu = ctk.CTkComboBox(master=sidebar,
+                                    values=tour_types,
+                                    variable=self.selected_tour_type)
+        tour_menu.grid(row=5, column=0, pady=(3, 3), sticky="n")
+
+        def run_tour(self):
             for idx, plot_object in enumerate(self.plot_objects):
                 if plot_object["type"] == "1d_tour" or plot_object["type"] == "2d_tour":
-                    new_proj = self.r.get_local_history(self.data[:2],
-                                                        self.plot_dicts[idx]["proj"])
+
+                    if plot_object["type"] == "1d_tour":
+                        dimension = 1
+                    elif plot_object["type"] == "2d_tour":
+                        dimension = 2
+                    full_array = np.zeros(
+                        (self.feature_selection.shape[0], dimension))
+
+                    if self.selected_tour_type.get() == "Local tour":
+                        new_proj = self.r.get_local_history(
+                            self.data[:2, self.feature_selection],
+                            self.plot_dicts[idx]["proj"][self.feature_selection])
+                        self.displayed_tour = self.selected_tour_type.get()
+
+                    elif self.selected_tour_type.get() == "Guided tour - holes":
+                        new_proj = self.r.get_guided_holes_history(
+                            self.data[:, self.feature_selection],
+                            dimension)
+                        self.displayed_tour = self.selected_tour_type.get()
+
+                    elif self.selected_tour_type.get() == "Guided tour - holes - better":
+                        new_proj = self.r.get_guided_holes_better_history(
+                            self.data[:, self.feature_selection],
+                            dimension)
+                        self.displayed_tour = self.selected_tour_type.get()
+
+                    elif self.selected_tour_type.get() == "Guided tour - lda":
+                        subselection_idxs = np.zeros(self.n_pts, dtype=int)
+                        for subselection_idx, arr in enumerate(self.subselections):
+                            if arr.shape[0] != 0:
+                                subselection_idxs[arr] = subselection_idx + 1
+
+                        new_proj = self.r.get_guided_lda_history(self.data[:, self.feature_selection],
+                                                                 subselection_idxs,
+                                                                 dimension)
+                        self.displayed_tour = self.selected_tour_type.get()
+
+                    full_array = np.tile(
+                        full_array[:, :, np.newaxis], (1, 1, new_proj.shape[2]))
+                    full_array[self.feature_selection] = new_proj
+
                     self.plot_objects[idx]["og_frame"] = int(
                         self.frame_vars[idx].get())
-                    self.plot_objects[idx]["obj"] = new_proj
-                    self.displayed_tour = "Local tour"
+                    self.plot_objects[idx]["obj"] = full_array
                     self.frame_vars[idx].set("0")
             self.initial_loop = False
             self.pause_var.set(0)
 
-        local_tour_button = ctk.CTkButton(master=sidebar,
-                                          text="Run local tour",
-                                          command=partial(run_local_tour, self))
-        local_tour_button.grid(row=5, column=0, pady=(3, 3), sticky="n")
+        run_tour_button = ctk.CTkButton(master=sidebar,
+                                        text="Run tour",
+                                        command=partial(run_tour, self))
+        run_tour_button.grid(row=6, column=0, pady=(3, 3), sticky="n")
 
         ###### Reset tour button ######
 
@@ -359,10 +411,10 @@ class InteractiveTourInterface(ctk.CTk):
         original_tour_button = ctk.CTkButton(master=sidebar,
                                              text="Reset original tour",
                                              command=partial(reset_original_tour, self))
-        original_tour_button.grid(row=6, column=0, pady=(3, 3), sticky="n")
-        
-        row_tracker = 6
-        
+        original_tour_button.grid(row=7, column=0, pady=(3, 3), sticky="n")
+
+        row_tracker = 7
+
         # Get max number of frames
         self.n_frames = 0
         for plot_object in plot_objects:
@@ -725,36 +777,42 @@ class InteractiveTourInterface(ctk.CTk):
 
                 elif plot_object["type"] == "cat_clust_interface":
                     self.axs[subplot_idx].set_box_aspect(aspect=1)
-                    
+
                     if self.initial_loop:
                         #### Metric menu ####
                         def metric_selection_event(self, selection):
                             self.initial_loop = False
                             for subplot_idx, _ in enumerate(self.plot_objects):
                                 if "selector" in self.plot_dicts[subplot_idx]:
-                                    self.plot_dicts[subplot_idx]["selector"].disconnect()
+                                    self.plot_dicts[subplot_idx]["selector"].disconnect(
+                                    )
                             self.pause_var.set(0)
-                        
+
                         metrics = ["Intra cluster fraction of positive",
                                    "Total fraction of positive",
                                    "Total fraction"]
-                        
+
                         if plot_object["type"] in metrics:
-                            self.metric_var = ctk.StringVar(value=plot_object["type"])
+                            self.metric_var = ctk.StringVar(
+                                value=plot_object["type"])
                         else:
-                            self.metric_var = ctk.StringVar(value="Intra cluster fraction of positive")
+                            self.metric_var = ctk.StringVar(
+                                value="Intra cluster fraction of positive")
+                        row_tracker += 1
                         metric_selection_menu = ctk.CTkComboBox(master=sidebar,
-                                                   values=metrics,
-                                                   command=partial(metric_selection_event, self),
-                                                   variable=self.metric_var)
-                        metric_selection_menu.grid(row=row_tracker, column=0, pady=(3, 3), sticky="n")
+                                                                values=metrics,
+                                                                command=partial(
+                                                                    metric_selection_event, self),
+                                                                variable=self.metric_var)
+                        metric_selection_menu.grid(
+                            row=row_tracker, column=0, pady=(3, 3), sticky="n")
                         ####################
-                        
+
                         self.frame_vars[subplot_idx].set("")
                         self.frame_textboxes[subplot_idx].configure(
                             state="disabled",
                             fg_color="grey")
-                        
+
                     # Get data
                     # Initialize data array
                     cat_clust_data = np.empty(
@@ -841,7 +899,7 @@ class InteractiveTourInterface(ctk.CTk):
                     fraction_of_total = (subset_size/self.data.shape[0])*100
                     title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
                     self.axs[subplot_idx].set_title(title)
-                    
+
                     plot_dict = {"type": "cat_clust_interface",
                                  "subtype": self.metric_var.get(),
                                  "subplot_idx": subplot_idx,

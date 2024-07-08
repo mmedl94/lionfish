@@ -110,7 +110,7 @@ class LassoSelect:
                 cat_clust_data = np.empty(
                     (len(plot_dict["feature_selection"]),
                      len(plot_dict["subselection_vars"])))
-                
+
                 n_subsets = len(plot_dict["subselection_vars"])
                 data = self.plot_dicts[subplot_idx]["data"]
                 # get ratios
@@ -188,14 +188,15 @@ class LassoSelect:
                     np.arange(0, sum(plot_dict["feature_selection"])))
                 self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
                     y_tick_labels)
-                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
-                
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(
+                    plot_dict["subtype"])
+
                 subselections = self.plot_dicts[subplot_idx]["subselections"]
                 subset_size = data[subselections[selected_cluster]].shape[0]
                 fraction_of_total = (subset_size/data.shape[0])*100
                 title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
                 self.plot_dicts[subplot_idx]["ax"].set_title(title)
-                    
+
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
         self.canvas.draw_idle()
@@ -254,18 +255,20 @@ class BarSelect:
 
         min_select = event.artist.get_x()
         max_select = min_select+event.artist.get_width()
+        cur_plot_dict = self.plot_dicts[self.subplot_idx]
 
-        if self.plot_dict["subtype"] == "1d_tour":
-            self.plot_dict["proj"][self.feature_selection, 0] = self.plot_dict["proj"][self.feature_selection, 0] / \
+        if cur_plot_dict["subtype"] == "1d_tour":
+            cur_plot_dict["proj"][self.feature_selection, 0] = cur_plot_dict["proj"][self.feature_selection, 0] / \
                 np.linalg.norm(
-                    self.plot_dict["proj"][self.feature_selection, 0])
-            x = np.matmul(self.plot_dict["data"][:, self.feature_selection],
-                          self.plot_dict["proj"][self.feature_selection])/self.half_range
+                    cur_plot_dict["proj"][self.feature_selection, 0])
+            x = np.matmul(cur_plot_dict["data"][:, self.feature_selection],
+                          cur_plot_dict["proj"][self.feature_selection])/self.half_range
             x = x[:, 0]
-            self.plot_dicts[self.subplot_idx]["x"] = x
+            cur_plot_dict["x"] = x
 
         new_ind = np.where(np.logical_and(
-            self.plot_dict["x"] >= min_select, self.plot_dict["x"] <= max_select))[0].tolist()
+            cur_plot_dict["x"] >= min_select,
+            cur_plot_dict["x"] <= max_select))[0].tolist()
 
         # Check which subset is active
         for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
@@ -415,8 +418,9 @@ class BarSelect:
                     np.arange(0, sum(plot_dict["feature_selection"])))
                 self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
                     y_tick_labels)
-                self.plot_dicts[subplot_idx]["ax"].set_xlabel(plot_dict["subtype"])
-                
+                self.plot_dicts[subplot_idx]["ax"].set_xlabel(
+                    plot_dict["subtype"])
+
                 subselections = self.plot_dicts[subplot_idx]["subselections"]
                 subset_size = self.data[subselections[selected_cluster]].shape[0]
                 fraction_of_total = (subset_size/self.data.shape[0])*100
