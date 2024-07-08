@@ -453,6 +453,11 @@ class DraggableAnnotation1d:
         self.arrs = []
         self.labels = []
 
+        if len(self.feature_selection) > 10:
+            self.alpha = 0.1
+        else:
+            self.alpha = 1
+
         # Receive full projection
         self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
             np.linalg.norm(self.proj[self.feature_selection, 0])
@@ -487,7 +492,8 @@ class DraggableAnnotation1d:
                                            length_includes_head=True)
 
                 label = self.arrow_axs.text(dx, y_0,
-                                            labels[axis_id])
+                                            labels[axis_id],
+                                            alpha=self.alpha)
 
                 self.cidpress = arr.figure.canvas.mpl_connect(
                     "button_press_event", self.on_press)
@@ -501,7 +507,8 @@ class DraggableAnnotation1d:
                     label = self.arrow_axs.text(0,
                                                 axis_id /
                                                 len(self.feature_selection),
-                                                labels[axis_id])
+                                                labels[axis_id],
+                                                alpha=self.alpha)
                 else:
                     label = None
             self.arrs.append(arr)
@@ -519,6 +526,18 @@ class DraggableAnnotation1d:
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
+        if self.alpha != 1:
+            if event.inaxes == self.arrow_axs:
+                for label_idx, label in enumerate(self.labels):
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.3) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        self.labels[label_idx].set_alpha(1)
+                    else:
+                        self.labels[label_idx].set_alpha(0.1)
+
+                self.ax.figure.canvas.draw_idle()
+
         if self.press is None:
             return
         axis_id = self.press
@@ -592,6 +611,11 @@ class DraggableAnnotation2d:
         self.scat = scat
         self.half_range = half_range
 
+        if len(self.feature_selection) > 10:
+            self.alpha = 0.1
+        else:
+            self.alpha = 1
+
         self.arrs = []
         self.labels = []
         # Receive full projection
@@ -612,7 +636,8 @@ class DraggableAnnotation2d:
 
                 label = self.ax.text(self.proj[axis_id, 0]*2/3,
                                      self.proj[axis_id, 1]*2/3,
-                                     labels[axis_id])
+                                     labels[axis_id],
+                                     alpha=self.alpha)
 
                 self.cidpress = arr.figure.canvas.mpl_connect(
                     "button_press_event", self.on_press)
@@ -638,6 +663,19 @@ class DraggableAnnotation2d:
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
+
+        if event.inaxes == self.ax:
+            if self.alpha != 1:
+                for label_idx, label in enumerate(self.labels):
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.3) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        self.labels[label_idx].set_alpha(1)
+                    else:
+                        self.labels[label_idx].set_alpha(0.1)
+
+                self.ax.figure.canvas.draw_idle()
+
         if self.press is None:
             return
         axis_id = self.press
