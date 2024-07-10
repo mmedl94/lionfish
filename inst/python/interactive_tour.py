@@ -6,6 +6,7 @@ from functools import partial
 from datetime import datetime
 import os
 import time
+import copy
 
 import numpy as np
 import pandas as pd
@@ -116,10 +117,6 @@ class InteractiveTourInterface(ctk.CTk):
         canvas.draw()
         canvas.get_tk_widget().grid(row=0, column=1, sticky="n")
 
-        toolbar = NavigationToolbar2Tk(canvas, pack_toolbar=False)
-        toolbar.update()
-        toolbar.grid(row=1, column=0, columnspan=2, sticky="w")
-
         sidebar = ctk.CTkScrollableFrame(self)
         sidebar.grid(row=0, column=0, sticky="ns")
 
@@ -215,7 +212,6 @@ class InteractiveTourInterface(ctk.CTk):
             for subplot_idx, plot_dict in enumerate(self.plot_dicts):
                 if "fc" in plot_dict:
                     self.plot_dicts[subplot_idx]["fc"] = self.original_fc.copy()
-            self.initial_loop = False
             for subplot_idx, _ in enumerate(self.plot_objects):
                 if "selector" in self.plot_dicts[subplot_idx]:
                     self.plot_dicts[subplot_idx]["selector"].disconnect()
@@ -255,7 +251,6 @@ class InteractiveTourInterface(ctk.CTk):
             self.frame_textboxes.append(textbox)
 
         def update_frames_event(self):
-            self.initial_loop = False
             for subplot_idx, _ in enumerate(self.plot_objects):
                 if "selector" in self.plot_dicts[subplot_idx]:
                     self.plot_dicts[subplot_idx]["selector"].disconnect()
@@ -388,7 +383,6 @@ class InteractiveTourInterface(ctk.CTk):
                         self.frame_vars[idx].get())
                     self.plot_objects[idx]["obj"] = full_array
                     self.frame_vars[idx].set("0")
-            self.initial_loop = False
             self.pause_var.set(0)
 
         run_tour_button = ctk.CTkButton(master=sidebar,
@@ -405,7 +399,6 @@ class InteractiveTourInterface(ctk.CTk):
                     self.frame_vars[idx].set(
                         str(self.plot_objects[idx]["og_frame"]))
                     self.displayed_tour = "Original tour"
-            self.initial_loop = False
             self.pause_var.set(0)
 
         original_tour_button = ctk.CTkButton(master=sidebar,
@@ -433,8 +426,10 @@ class InteractiveTourInterface(ctk.CTk):
         self.initial_loop = True
 
         ###### Plot loop ######
+        self.blit = 0
 
         while self.frame < self.n_frames:
+            self.pause_var = tk.StringVar()
             for subplot_idx, plot_object in enumerate(plot_objects):
                 frame = self.frame
 
@@ -477,16 +472,24 @@ class InteractiveTourInterface(ctk.CTk):
                         for idx, subset in enumerate(self.subselections):
                             if subset.shape[0] != 0:
                                 self.fc[subset] = self.colors[idx]
-                        scat = self.axs[subplot_idx].scatter(x, y)
+                        scat = self.axs[subplot_idx].scatter(
+                            x, y, animated=True)
                         scat.set_facecolor(self.fc)
                         self.original_fc = self.fc.copy()
-
+                        self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
+                                                   circle_prj.iloc[:, 1], color="grey")
                     else:
-                        # clear old scatterplot
-                        self.axs[subplot_idx].clear()
-                        # Make new scatterplot
-                        self.axs[subplot_idx].scatter(x, y)
-                        scat = self.axs[subplot_idx].collections[0]
+                        # clear old arrows and text
+                        for patch_idx, _ in enumerate(self.axs[subplot_idx].patches):
+                            self.axs[subplot_idx].patches[0].remove()
+                            self.axs[subplot_idx].texts[0].remove()
+                        self.plot_dicts[subplot_idx]["draggable_annot"].disconnect(
+                        )
+                        self.plot_dicts[subplot_idx]["selector"].disconnect()
+                        # update scatterplot
+                        self.plot_dicts[subplot_idx]["scat"].set_offsets(
+                            np.array([x, y]).T)
+                        scat = self.plot_dicts[subplot_idx]["ax"].collections[0]
                         scat.set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
                         self.fc = self.plot_dicts[subplot_idx]["fc"]
@@ -496,12 +499,15 @@ class InteractiveTourInterface(ctk.CTk):
                     self.axs[subplot_idx].set_ylim(-self.limits *
                                                    1.1, self.limits*1.1)
                     self.axs[subplot_idx].set_box_aspect(aspect=1)
+                    self.axs[subplot_idx].set_xticks([])
+                    self.axs[subplot_idx].set_yticks([])
 
                     plot_dict = {"type": "scatter",
                                  "subtype": "2d_tour",
                                  "subplot_idx": subplot_idx,
                                  "ax": self.axs[subplot_idx],
                                  "data": self.data,
+                                 "scat": scat,
                                  "feature_selection": self.feature_selection,
                                  "subselection_vars": self.subselection_vars,
                                  "subselections": self.subselections,
@@ -515,20 +521,22 @@ class InteractiveTourInterface(ctk.CTk):
                         plot_dicts=self.plot_dicts,
                         subplot_idx=subplot_idx,
                         colors=self.colors,
-                        n_pts=self.n_pts)
+                        n_pts=self.n_pts,
+                        pause_var=self.pause_var)
                     self.plot_dicts[subplot_idx]["selector"] = selector
 
                     plot_dict["draggable_annot"] = DraggableAnnotation2d(
                         self.data,
                         self.plot_dicts[subplot_idx]["proj"],
                         self.axs[subplot_idx],
-                        scat,
+                        self.plot_dicts[subplot_idx]["scat"],
                         half_range,
                         self.feature_selection,
-                        col_names)
+                        col_names,
+                        self.plot_dicts[subplot_idx],
+                        self.plot_dicts,
+                        self.pause_var)
 
-                    self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
-                                               circle_prj.iloc[:, 1], color="grey")
                     n_frames = plot_object["obj"].shape[-1]-1
                     self.axs[subplot_idx].set_title(
                         f"{self.displayed_tour}\n" +
@@ -568,7 +576,8 @@ class InteractiveTourInterface(ctk.CTk):
                         x_subselections,
                         stacked=True,
                         picker=True,
-                        color=self.colors[:len(x_subselections)])
+                        color=self.colors[:len(x_subselections)],
+                        animated=True)
                     y_lims = self.axs[subplot_idx].get_ylim()
                     self.axs[subplot_idx].set_ylim(y_lims)
 
@@ -594,8 +603,10 @@ class InteractiveTourInterface(ctk.CTk):
                                                  subplot_idx=subplot_idx,
                                                  feature_selection=self.feature_selection,
                                                  colors=self.colors,
-                                                 half_range=self.half_range)
+                                                 half_range=self.half_range,
+                                                 pause_var=self.pause_var)
                     else:
+                        self.plot_dicts[subplot_idx]["arrows"].disconnect()
                         self.plot_dicts[subplot_idx]["arrows"].remove()
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
@@ -613,7 +624,8 @@ class InteractiveTourInterface(ctk.CTk):
                                                  subplot_idx=subplot_idx,
                                                  feature_selection=self.feature_selection,
                                                  colors=self.colors,
-                                                 half_range=self.half_range)
+                                                 half_range=self.half_range,
+                                                 pause_var=self.pause_var)
                     self.plot_dicts[subplot_idx]["selector"] = bar_selector
 
                     draggable_arrows_1d = DraggableAnnotation1d(
@@ -624,11 +636,14 @@ class InteractiveTourInterface(ctk.CTk):
                         half_range,
                         self.feature_selection,
                         self.colors,
-                        col_names)
+                        col_names,
+                        self.pause_var)
 
                     self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
 
                     n_frames = plot_object["obj"].shape[-1]-1
+                    self.axs[subplot_idx].set_xticks([])
+                    self.axs[subplot_idx].set_yticks([])
                     self.axs[subplot_idx].set_xlim(-1, 1)
                     self.axs[subplot_idx].set_title(
                         f"{self.displayed_tour}\n" +
@@ -651,7 +666,8 @@ class InteractiveTourInterface(ctk.CTk):
                         for idx, subset in enumerate(self.subselections):
                             if subset.shape[0] != 0:
                                 self.fc[subset] = self.colors[idx]
-                        scat = self.axs[subplot_idx].scatter(x, y)
+                        scat = self.axs[subplot_idx].scatter(x, y,
+                                                             animated=True)
                         scat.set_facecolor(self.fc)
                         self.frame_vars[subplot_idx].set("")
                         self.frame_textboxes[subplot_idx].configure(
@@ -660,6 +676,7 @@ class InteractiveTourInterface(ctk.CTk):
                     else:
                         self.axs[subplot_idx].collections[0].set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
+                        self.plot_dicts[subplot_idx]["selector"].disconnect()
 
                     x_lims = self.axs[subplot_idx].get_xlim()
                     y_lims = self.axs[subplot_idx].get_ylim()
@@ -681,7 +698,8 @@ class InteractiveTourInterface(ctk.CTk):
                         plot_dicts=self.plot_dicts,
                         subplot_idx=subplot_idx,
                         colors=self.colors,
-                        n_pts=self.n_pts)
+                        n_pts=self.n_pts,
+                        pause_var=self.pause_var)
                     self.plot_dicts[subplot_idx]["selector"] = selector
                     x_name = plot_object["obj"][0]
                     y_name = plot_object["obj"][1]
@@ -710,7 +728,8 @@ class InteractiveTourInterface(ctk.CTk):
                             x_subselections,
                             stacked=True,
                             picker=True,
-                            color=self.colors[:len(x_subselections)])
+                            color=self.colors[:len(x_subselections)],
+                            animated=True)
                         y_lims = self.axs[subplot_idx].get_ylim()
                         self.axs[subplot_idx].set_ylim(y_lims)
 
@@ -719,6 +738,7 @@ class InteractiveTourInterface(ctk.CTk):
                         self.axs[subplot_idx].set_xlabel(hist_variable_name)
                         self.axs[subplot_idx].set_title(
                             f"Histogram of variable {hist_variable_name}")
+                        self.axs[subplot_idx].set_xticks([])
 
                         if self.initial_loop is True:
                             self.fc = np.repeat(
@@ -740,6 +760,7 @@ class InteractiveTourInterface(ctk.CTk):
                                          "hist_feature": col_index,
                                          "subselection_vars": self.subselection_vars,
                                          "subselections": self.subselections,
+                                         "feature_selection": self.feature_selection,
                                          "half_range": half_range,
                                          "fc": self.fc}
                             self.plot_dicts[subplot_idx] = plot_dict
@@ -747,7 +768,8 @@ class InteractiveTourInterface(ctk.CTk):
                                                      subplot_idx=subplot_idx,
                                                      feature_selection=self.feature_selection,
                                                      colors=self.colors,
-                                                     half_range=self.half_range)
+                                                     half_range=self.half_range,
+                                                     pause_var=self.pause_var)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                         else:
                             plot_dict = {"type": "hist",
@@ -758,6 +780,7 @@ class InteractiveTourInterface(ctk.CTk):
                                          "hist_feature": col_index,
                                          "subselection_vars": self.subselection_vars,
                                          "subselections": self.subselections,
+                                         "feature_selection": self.feature_selection,
                                          "half_range": half_range,
                                          "fc": self.fc,
                                          "selector": self.plot_dicts[subplot_idx]["selector"]}
@@ -768,7 +791,8 @@ class InteractiveTourInterface(ctk.CTk):
                                                      subplot_idx=subplot_idx,
                                                      feature_selection=self.feature_selection,
                                                      colors=self.colors,
-                                                     half_range=self.half_range)
+                                                     half_range=self.half_range,
+                                                     pause_var=self.pause_var)
                             self.plot_dicts[subplot_idx]["selector"] = bar_selector
                     else:
                         print("Column not found")
@@ -913,12 +937,57 @@ class InteractiveTourInterface(ctk.CTk):
                                  "half_range": half_range}
                     self.plot_dicts[subplot_idx] = plot_dict
 
+            # remove animated elements
+            collections = []
+            patches = []
+            texts = []
+            for ax in fig.get_axes():
+                if ax.collections:
+                    for collection in ax.collections:
+                        collections.append(collection.get_alpha())
+                        collection.set_alpha(0)
+                if ax.patches:
+                    for patch in ax.patches:
+                        patches.append(patch.get_alpha())
+                        patch.set_alpha(0)
+                if ax.texts:
+                    for text in ax.texts:
+                        texts.append(text.get_alpha())
+                        text.set_alpha(0)
+                for label in ax.get_yticklabels():
+                    label.set_alpha(0)
+
             fig.canvas.draw()
+            self.blit = fig.canvas.copy_from_bbox(fig.bbox)
+
+            # update plot
+            for ax in fig.get_axes():
+                if ax.collections:
+                    for idx, collection in enumerate(ax.collections):
+                        collection.set_alpha(collections[idx])
+                        ax.draw_artist(collection)
+                if ax.patches:
+                    for idx, patch in enumerate(ax.patches):
+                        patch.set_alpha(patches[idx])
+                        ax.draw_artist(patch)
+                if ax.texts:
+                    for idx, text in enumerate(ax.texts):
+                        text.set_alpha(texts[idx])
+                        ax.draw_artist(text)
+                for label in ax.get_yticklabels():
+                    label.set_alpha(1)
+                    ax.draw_artist(label)
+
+            for plot_dict_idx, plot_dict in enumerate(self.plot_dicts):
+                self.plot_dicts[plot_dict_idx]["blit"] = self.blit
+
+            fig.canvas.blit(fig.bbox)
 
             def wait(self):
                 var = tk.IntVar()
                 self.after(
                     int(float(self.fps_variable.get()) * 1000), var.set, 1)
+                self.initial_loop = False
                 self.wait_variable(var)
 
             if self.animation_switch.get() == 1:
@@ -933,8 +1002,8 @@ class InteractiveTourInterface(ctk.CTk):
                         self.frame_vars[subplot_idx].set(str(next_frame))
 
             else:
-                self.pause_var = tk.StringVar()
                 fig.canvas.mpl_connect("key_press_event", accept)
+                self.initial_loop = False
                 self.wait_variable(self.pause_var)
 
         self.destroy()

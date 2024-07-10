@@ -13,23 +13,27 @@ from helpers import gram_schmidt
 
 
 class LassoSelect:
-    def __init__(self, plot_dicts, subplot_idx, colors, n_pts):
+    def __init__(self, plot_dicts, subplot_idx, colors, n_pts, pause_var):
         # initialize arguments
         self.n_pts = n_pts
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
+        self.ax = plot_dicts[subplot_idx]["ax"]
         self.canvas = plot_dicts[subplot_idx]["ax"].figure.canvas
         self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
         self.fc = self.plot_dicts[0]["fc"]
         self.colors = colors
         self.data = plot_dicts[subplot_idx]["data"]
+        self.pause_var = pause_var
 
         # initialize lasso selector
         self.lasso = LassoSelector(
             plot_dicts[subplot_idx]["ax"],
             onselect=partial(self.onselect),
-            button=1)
+            button=1,
+            useblit=True)
         self.ind = []
+
     # onselect governs what happens with selected data points
     # changes alpha of selected data points
     # saves indices of selected data points
@@ -38,6 +42,8 @@ class LassoSelect:
         path = Path(verts)
         xys = self.collection.get_offsets()
         self.ind = np.nonzero(path.contains_points(xys))[0]
+        self.ax.figure.canvas.restore_region(
+            self.plot_dicts[self.subplot_idx]["blit"])
 
         # Check which subset is active
         for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
@@ -71,21 +77,9 @@ class LassoSelect:
 
             elif plot_dict["type"] == "hist":
                 if plot_dict["subtype"] == "1d_tour":
-                    feature_selection = plot_dict["feature_selection"]
-                    plot_dict["proj"][feature_selection, 0] = plot_dict["proj"][feature_selection, 0] / \
-                        np.linalg.norm(
-                            plot_dict["proj"][feature_selection, 0])
-                    x = np.matmul(plot_dict["data"][:, feature_selection],
-                                  plot_dict["proj"][feature_selection])/plot_dict["half_range"]
-                    x = x[:, 0]
+                    x = self.plot_dicts[subplot_idx]["x"]
                 else:
                     x = plot_dict["data"][:, plot_dict["hist_feature"]]
-
-                # Get x and y_lims of old plot
-                x_lims = plot_dict["ax"].get_xlim()
-                y_lims = plot_dict["ax"].get_ylim()
-                title = plot_dict["ax"].get_title()
-                x_label = plot_dict["ax"].get_xlabel()
 
                 x_subselections = []
                 for subselection in self.plot_dicts[0]["subselections"]:
@@ -94,17 +88,15 @@ class LassoSelect:
                     else:
                         x_subselections.append(np.array([]))
 
-                plot_dict["ax"].clear()
-                plot_dict["ax"].hist(
+                xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                self.plot_dicts[subplot_idx]["ax"].hist(
                     x_subselections,
                     stacked=True,
                     picker=True,
-                    color=self.colors[:len(x_subselections)])
-
-                plot_dict["ax"].set_ylim(y_lims)
-                plot_dict["ax"].set_xlim(x_lims)
-                plot_dict["ax"].set_title(title)
-                plot_dict["ax"].set_xlabel(x_label)
+                    color=self.colors[:len(x_subselections)],
+                    animated=True)
+                self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
 
             elif plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = np.empty(
@@ -199,16 +191,29 @@ class LassoSelect:
 
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
-        self.canvas.draw_idle()
+        for ax in self.ax.figure.get_axes():
+            if ax.collections:
+                for collection in ax.collections:
+                    ax.draw_artist(
+                        collection)
+            if ax.patches:
+                for patch in ax.patches:
+                    ax.draw_artist(
+                        patch)
+            if ax.texts:
+                for text in ax.texts:
+                    ax.draw_artist(
+                        text)
+            for label in ax.get_yticklabels():
+                ax.draw_artist(label)
+        self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
-    # governs what happens when disconnected (after pressing "enter")
     def disconnect(self):
         self.lasso.disconnect_events()
-        self.canvas.draw_idle()
 
 
 class BarSelect:
-    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range):
+    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range, pause_var):
         # initialize parameters
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
@@ -226,6 +231,7 @@ class BarSelect:
         self.patches = self.ax.patches
         self.y_lims = self.ax.get_ylim()
         self.colors = colors
+        self.pause_var = pause_var
 
         self.connection = self.ax.figure.canvas.mpl_connect("pick_event", partial(
             self.onselect))
@@ -252,17 +258,21 @@ class BarSelect:
     def onselect(self, event):
         if event.artist.axes != self.ax:
             return
+        self.ax.figure.canvas.restore_region(
+            self.plot_dicts[self.subplot_idx]["blit"])
 
         min_select = event.artist.get_x()
         max_select = min_select+event.artist.get_width()
+
         cur_plot_dict = self.plot_dicts[self.subplot_idx]
+        feature_selection = self.plot_dicts[self.subplot_idx]["feature_selection"]
 
         if cur_plot_dict["subtype"] == "1d_tour":
-            cur_plot_dict["proj"][self.feature_selection, 0] = cur_plot_dict["proj"][self.feature_selection, 0] / \
+            cur_plot_dict["proj"][feature_selection, 0] = cur_plot_dict["proj"][feature_selection, 0] / \
                 np.linalg.norm(
-                    cur_plot_dict["proj"][self.feature_selection, 0])
-            x = np.matmul(cur_plot_dict["data"][:, self.feature_selection],
-                          cur_plot_dict["proj"][self.feature_selection])/self.half_range
+                    cur_plot_dict["proj"][feature_selection, 0])
+            x = np.matmul(cur_plot_dict["data"][:, feature_selection],
+                          cur_plot_dict["proj"][feature_selection])/self.half_range
             x = x[:, 0]
             cur_plot_dict["x"] = x
 
@@ -302,21 +312,9 @@ class BarSelect:
             # update colors of histograms
             elif plot_dict["type"] == "hist":
                 if plot_dict["subtype"] == "1d_tour":
-                    feature_selection = plot_dict["feature_selection"]
-                    plot_dict["proj"][feature_selection, 0] = plot_dict["proj"][feature_selection, 0] / \
-                        np.linalg.norm(
-                            plot_dict["proj"][feature_selection, 0])
-                    x = np.matmul(plot_dict["data"][:, feature_selection],
-                                  plot_dict["proj"][feature_selection])/plot_dict["half_range"]
-                    x = x[:, 0]
+                    x = self.plot_dicts[subplot_idx]["x"]
                 else:
                     x = plot_dict["data"][:, plot_dict["hist_feature"]]
-
-                # Get x and y_lims of old plot
-                x_lims = plot_dict["ax"].get_xlim()
-                y_lims = plot_dict["ax"].get_ylim()
-                title = plot_dict["ax"].get_title()
-                x_label = plot_dict["ax"].get_xlabel()
 
                 x_subselections = []
                 for subselection in self.plot_dicts[0]["subselections"]:
@@ -325,17 +323,15 @@ class BarSelect:
                     else:
                         x_subselections.append(np.array([]))
 
-                plot_dict["ax"].clear()
-                plot_dict["ax"].hist(
+                xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                self.plot_dicts[subplot_idx]["ax"].hist(
                     x_subselections,
                     stacked=True,
                     picker=True,
-                    color=self.colors[:len(x_subselections)])
-
-                plot_dict["ax"].set_ylim(y_lims)
-                plot_dict["ax"].set_xlim(x_lims)
-                plot_dict["ax"].set_title(title)
-                plot_dict["ax"].set_xlabel(x_label)
+                    color=self.colors[:len(x_subselections)],
+                    animated=True)
+                self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
 
             elif plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = np.empty(
@@ -343,6 +339,7 @@ class BarSelect:
                      len(plot_dict["subselection_vars"])))
 
                 n_subsets = len(plot_dict["subselection_vars"])
+                data = self.plot_dicts[subplot_idx]["data"]
                 # get ratios
                 all_pos = np.sum(plot_dict["data"], axis=0)
                 for subset_idx, subset in enumerate(plot_dict["subselections"]):
@@ -422,22 +419,37 @@ class BarSelect:
                     plot_dict["subtype"])
 
                 subselections = self.plot_dicts[subplot_idx]["subselections"]
-                subset_size = self.data[subselections[selected_cluster]].shape[0]
-                fraction_of_total = (subset_size/self.data.shape[0])*100
+                subset_size = data[subselections[selected_cluster]].shape[0]
+                fraction_of_total = (subset_size/data.shape[0])*100
                 title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
                 self.plot_dicts[subplot_idx]["ax"].set_title(title)
 
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
 
-        self.canvas.draw_idle()
+        for ax in self.ax.figure.get_axes():
+            if ax.collections:
+                for collection in ax.collections:
+                    ax.draw_artist(
+                        collection)
+            if ax.patches:
+                for patch in ax.patches:
+                    ax.draw_artist(
+                        patch)
+            if ax.texts:
+                for text in ax.texts:
+                    ax.draw_artist(
+                        text)
+            for label in ax.get_yticklabels():
+                ax.draw_artist(label)
+
+        self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def disconnect(self):
         self.canvas.mpl_disconnect(self.connection)
-        self.canvas.draw_idle()
 
 
 class DraggableAnnotation1d:
-    def __init__(self, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels):
+    def __init__(self, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels, pause_var):
         self.data = data
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
@@ -449,6 +461,7 @@ class DraggableAnnotation1d:
         self.ax = plot_dicts[subplot_idx]["ax"]
         self.hist = hist
         self.half_range = half_range
+        self.pause_var = pause_var
 
         self.arrs = []
         self.labels = []
@@ -466,10 +479,10 @@ class DraggableAnnotation1d:
         self.arrow_axs = divider.append_axes(
             "bottom", 1, pad=0.1)
         self.ax.tick_params(axis="x", labelbottom=False)
-        self.arrow_axs.tick_params(
-            axis="y", which="both", left=False, labelleft=False)
         self.arrow_axs.set_ylim(-0.05, 1.05)
         self.arrow_axs.set_xlim(-1, 1)
+        self.arrow_axs.set_xticks([])
+        self.arrow_axs.set_yticks([])
 
         true_counter = 0
         for axis_id, feature_bool in enumerate(self.feature_selection):
@@ -528,6 +541,10 @@ class DraggableAnnotation1d:
         """Move the rectangle if the mouse is over us."""
         if event.inaxes != self.arrow_axs:
             return
+
+        self.ax.figure.canvas.restore_region(
+            self.plot_dicts[self.subplot_idx]["blit"])
+
         if self.press is None:
             if self.alpha != 1:
                 for label_idx, label in enumerate(self.labels):
@@ -538,7 +555,6 @@ class DraggableAnnotation1d:
                             self.labels[label_idx].set_alpha(1)
                         else:
                             self.labels[label_idx].set_alpha(0.1)
-                self.ax.figure.canvas.draw_idle()
         else:
             axis_id = self.press
             if event.xdata and event.ydata is not False:
@@ -560,9 +576,6 @@ class DraggableAnnotation1d:
                 x = x[:, 0]
                 self.plot_dicts[self.subplot_idx]["x"] = x
 
-                title = self.ax.get_title()
-                x_label = self.ax.get_xlabel()
-
                 # check if there are preselected points and update plot
                 x_subselections = []
                 for subselection in self.plot_dicts[0]["subselections"]:
@@ -570,28 +583,41 @@ class DraggableAnnotation1d:
                         x_subselections.append(x[subselection])
                     else:
                         x_subselections.append(np.array([]))
+                xlim = self.plot_dicts[self.subplot_idx]["ax"].get_xlim()
                 self.plot_dicts[self.subplot_idx]["ax"].clear()
                 self.plot_dicts[self.subplot_idx]["ax"].hist(
                     x_subselections,
                     stacked=True,
                     picker=True,
-                    color=self.colors[:len(x_subselections)])
+                    color=self.colors[:len(x_subselections)],
+                    animated=True)
+                self.plot_dicts[self.subplot_idx]["ax"].set_xlim(xlim)
 
+                self.plot_dicts[self.subplot_idx]["selector"].disconnect()
                 bar_selector = BarSelect(plot_dicts=self.plot_dicts,
                                          subplot_idx=self.subplot_idx,
                                          feature_selection=self.feature_selection,
                                          colors=self.colors,
-                                         half_range=self.half_range)
+                                         half_range=self.half_range,
+                                         pause_var=self.pause_var)
                 self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
-                # redraw
-                self.ax.tick_params(axis="x", labelbottom=False)
-                self.arrow_axs.tick_params(
-                    axis="y", which="both", labelleft=False)
-                self.ax.set_title(title)
-                self.ax.set_xlabel(x_label)
-                self.ax.set_xlim(-1, 1)
-                self.ax.figure.canvas.draw()
+        for ax in self.ax.figure.get_axes():
+            if ax.collections:
+                for collection in ax.collections:
+                    ax.draw_artist(
+                        collection)
+            if ax.patches:
+                for patch in ax.patches:
+                    ax.draw_artist(
+                        patch)
+            if ax.texts:
+                for text in ax.texts:
+                    ax.draw_artist(
+                        text)
+            for label in ax.get_yticklabels():
+                ax.draw_artist(label)
+        self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def on_release(self, event):
         """Clear button press information."""
@@ -600,18 +626,26 @@ class DraggableAnnotation1d:
     def remove(self):
         self.arrow_axs.remove()
 
+    def disconnect(self):
+        self.ax.figure.canvas.mpl_disconnect(self.cidpress)
+        self.ax.figure.canvas.mpl_disconnect(self.cidrelease)
+        self.ax.figure.canvas.mpl_disconnect(self.cidmotion)
+
 
 class DraggableAnnotation2d:
-    def __init__(self, data, proj, ax, scat, half_range, feature_selection, labels):
+    def __init__(self, data, proj, ax, scat, half_range, feature_selection, labels, plot_dict, plot_dicts, pause_var):
         self.data = data
         self.feature_selection = feature_selection
         self.proj = proj
         self.proj.setflags(write=True)
         self.press = None
         self.ax = ax
-        self.scat = scat
         self.half_range = half_range
         self.pressing = 0
+        self.plot_dict = plot_dict
+        self.plot_dicts = plot_dicts
+        self.pause_var = pause_var
+
         if sum(self.feature_selection) > 10:
             self.alpha = 0.1
         else:
@@ -633,12 +667,17 @@ class DraggableAnnotation2d:
                                     self.proj[axis_id, 0]*2/3,
                                     self.proj[axis_id, 1]*2/3,
                                     head_width=0.06,
-                                    length_includes_head=True)
+                                    length_includes_head=True,
+                                    animated=True)
 
                 label = self.ax.text(self.proj[axis_id, 0]*2/3,
                                      self.proj[axis_id, 1]*2/3,
                                      labels[axis_id],
-                                     alpha=self.alpha)
+                                     alpha=self.alpha,
+                                     animated=True)
+
+                self.ax.draw_artist(arr)
+                self.ax.draw_artist(label)
 
                 self.cidpress = arr.figure.canvas.mpl_connect(
                     "button_press_event", self.on_press)
@@ -649,6 +688,7 @@ class DraggableAnnotation2d:
             else:
                 arr = None
                 label = None
+
             self.arrs.append(arr)
             self.labels.append(label)
 
@@ -667,20 +707,22 @@ class DraggableAnnotation2d:
         """Move the rectangle if the mouse is over us."""
         if event.inaxes != self.ax:
             return
-        if self.press is None:
-            if (self.alpha != 1) and (self.pressing == 0):
-                for label_idx, label in enumerate(self.labels):
-                    if label:
-                        label_pos = label.get_position()
-                        if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
-                                (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                            self.labels[label_idx].set_alpha(1)
-                        else:
-                            self.labels[label_idx].set_alpha(0.1)
-                self.ax.figure.canvas.draw_idle()
-        else:
-            axis_id = self.press
+        if event.button == 1:
+            return
+        self.ax.figure.canvas.restore_region(self.plot_dict["blit"])
+        if self.alpha != 1:
+            for label_idx, label in enumerate(self.labels):
+                if label:
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        self.labels[label_idx].set_alpha(1)
+                    else:
+                        self.labels[label_idx].set_alpha(0.1)
 
+        axis_id = self.press
+
+        if self.press is not None:
             if event.xdata and event.ydata is not False:
                 # Update projections
                 self.proj[axis_id] = [event.xdata/(2/3), event.ydata/(2/3)]
@@ -691,33 +733,48 @@ class DraggableAnnotation2d:
                     self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
                 self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
                     np.linalg.norm(self.proj[self.feature_selection, 1])
-
-                for axis_id, feature_bool in enumerate(self.feature_selection):
+                for proj_axis_id, feature_bool in enumerate(self.feature_selection):
                     if feature_bool == True:
-                        self.arrs[axis_id].set_data(x=0,
-                                                    y=0,
-                                                    dx=self.proj[axis_id,
-                                                                 0]*2/3,
-                                                    dy=self.proj[axis_id,
-                                                                 1]*2/3)
-
+                        self.arrs[proj_axis_id].set_data(x=0,
+                                                         y=0,
+                                                         dx=self.proj[proj_axis_id,
+                                                                      0]*2/3,
+                                                         dy=self.proj[proj_axis_id,
+                                                                      1]*2/3)
                         # Update labels
-                        self.labels[axis_id].set_x(self.proj[axis_id, 0]*2/3)
-                        self.labels[axis_id].set_y(self.proj[axis_id, 1]*2/3)
-
+                        self.labels[proj_axis_id].set_x(
+                            self.proj[proj_axis_id, 0]*2/3)
+                        self.labels[proj_axis_id].set_y(
+                            self.proj[proj_axis_id, 1]*2/3)
                 # Update scattplot locations
                 new_data = np.matmul(self.data[:, self.feature_selection],
                                      self.proj[self.feature_selection])/self.half_range
-                self.scat.set_offsets(new_data)
+                self.ax.collections[0].set_offsets(new_data)
 
-                # redraw
-                # self.ax.figure.canvas.draw()
-                # self.ax.draw_artist(self.scat)
-                # self.ax.figure.canvas.update()
-                self.ax.figure.canvas.draw_idle()
-            self.ax.figure.canvas.flush_events()
+        for ax in self.ax.figure.get_axes():
+            if ax.collections:
+                for collection in ax.collections:
+                    ax.draw_artist(
+                        collection)
+            if ax.patches:
+                for patch in ax.patches:
+                    ax.draw_artist(
+                        patch)
+            if ax.texts:
+                for text in ax.texts:
+                    ax.draw_artist(
+                        text)
+            for label in ax.get_yticklabels():
+                ax.draw_artist(label)
+
+        self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def on_release(self, event):
         """Clear button press information."""
         self.pressing = 0
         self.press = None
+
+    def disconnect(self):
+        self.ax.figure.canvas.mpl_disconnect(self.cidpress)
+        self.ax.figure.canvas.mpl_disconnect(self.cidrelease)
+        self.ax.figure.canvas.mpl_disconnect(self.cidmotion)
