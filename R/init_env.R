@@ -12,6 +12,8 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
 
+  required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter", "statsmodels")
+
   if (virtual_env == "anaconda"){
     # check if python environment exists and create new one if not
     if (env_name %in% reticulate::conda_list()$name==FALSE){
@@ -22,8 +24,6 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
 
     # check if required packages are installed and install them if not
     package_names <- reticulate::py_list_packages(envname = env_name, "conda")
-    print(package_names)
-    required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter")
     for (package in required_packages){
       if (package %in% package_names$package==FALSE){
         if (package == "customtkinter"){
@@ -45,7 +45,6 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
 
     # check if required packages are installed and install them if not
     package_names <- reticulate::py_list_packages(envname = env_name, "virtualenv")
-    required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter")
     for (package in required_packages){
       if (package %in% package_names$package==FALSE){
         if (package == "customtkinter"){

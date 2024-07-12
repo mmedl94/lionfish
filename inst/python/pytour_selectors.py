@@ -1,12 +1,15 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import tkinter as tk
 from functools import partial
+from itertools import product
 import time
 
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from statsmodels.graphics.mosaicplot import mosaic
 
 from helpers import gram_schmidt
 # Helper class that manages the lasso selection
@@ -97,6 +100,8 @@ class LassoSelect:
                     color=self.colors[:len(x_subselections)],
                     animated=True)
                 self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
+                self.plot_dicts[subplot_idx]["ax"].set_xticks([])
+                self.plot_dicts[subplot_idx]["ax"].set_yticks([])
 
             elif plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = np.empty(
@@ -190,6 +195,64 @@ class LassoSelect:
                 self.plot_dicts[subplot_idx]["ax"].set_title(title)
 
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
+
+            elif plot_dict["type"] == "mosaic":
+                n_subsets = len(plot_dict["subselection_vars"])
+                subselections = self.plot_dicts[subplot_idx]["subselections"]
+                feature_selection = plot_dict["feature_selection"]
+                mosaic_data = np.empty(
+                    (len(feature_selection), int(n_subsets)))
+                non_empty_sets = []
+                for subset_idx, subset in enumerate(subselections):
+                    if subset.shape[0] != 0:
+                        mosaic_data[:,
+                                    subset_idx] = self.data[subset].sum(axis=0)
+                        non_empty_sets.append(True)
+                    else:
+                        mosaic_data[:, subset_idx] = np.zeros(
+                            len(feature_selection))
+                        non_empty_sets.append(False)
+
+                mosaic_data = mosaic_data[feature_selection]
+                mosaic_data = mosaic_data[:, non_empty_sets]
+                y_tick_labels = np.array(plot_dict["col_names"])[
+                    feature_selection]
+                x_tick_labels = np.array([subselection_var.get()
+                                          for subselection_var in plot_dict["subset_names"]])
+                x_tick_labels = x_tick_labels[non_empty_sets]
+                tuples = list(
+                    product(x_tick_labels, y_tick_labels))
+                index = pd.MultiIndex.from_tuples(
+                    tuples, names=["first", "second"])
+                mosaic_data = pd.Series(
+                    mosaic_data.T.flatten(), index=index)
+
+                # Get coordinates of new axes before formatting
+                mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
+                twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
+                remove_pos = twinaxs.get_position().bounds
+                # remove redundant extra axes
+                for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
+                    if axs_idx > len(self.plot_dicts)-1:
+                        if axs.get_position().bounds == mosaic_position_primary:
+                            axs.remove()
+                        if axs.get_position().bounds == remove_pos:
+                            axs.remove()
+
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                mosaic(mosaic_data,
+                       ax=self.plot_dicts[subplot_idx]["ax"])
+                self.plot_dicts[subplot_idx]["ax"].tick_params(
+                    axis="x", labelrotation=20)
+                self.plot_dicts[subplot_idx]["ax"].set_position(
+                    mosaic_position_primary)
+
+                for patch in self.plot_dicts[subplot_idx]["ax"].patches:
+                    patch.set_animated(True)
+                for text in self.plot_dicts[subplot_idx]["ax"].texts:
+                    text.remove()
+                for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
+                    label.set_animated(True)
 
         for ax in self.ax.figure.get_axes():
             if ax.collections:
@@ -332,6 +395,8 @@ class BarSelect:
                     color=self.colors[:len(x_subselections)],
                     animated=True)
                 self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
+                self.plot_dicts[subplot_idx]["ax"].set_xticks([])
+                self.plot_dicts[subplot_idx]["ax"].set_yticks([])
 
             elif plot_dict["type"] == "cat_clust_interface":
                 cat_clust_data = np.empty(
@@ -425,6 +490,64 @@ class BarSelect:
                 self.plot_dicts[subplot_idx]["ax"].set_title(title)
 
                 self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
+
+            elif plot_dict["type"] == "mosaic":
+                n_subsets = len(plot_dict["subselection_vars"])
+                subselections = self.plot_dicts[subplot_idx]["subselections"]
+                feature_selection = plot_dict["feature_selection"]
+                mosaic_data = np.empty(
+                    (len(feature_selection), int(n_subsets)))
+                non_empty_sets = []
+                for subset_idx, subset in enumerate(subselections):
+                    if subset.shape[0] != 0:
+                        mosaic_data[:,
+                                    subset_idx] = self.data[subset].sum(axis=0)
+                        non_empty_sets.append(True)
+                    else:
+                        mosaic_data[:, subset_idx] = np.zeros(
+                            len(feature_selection))
+                        non_empty_sets.append(False)
+
+                mosaic_data = mosaic_data[feature_selection]
+                mosaic_data = mosaic_data[:, non_empty_sets]
+                y_tick_labels = np.array(plot_dict["col_names"])[
+                    feature_selection]
+                x_tick_labels = np.array([subselection_var.get()
+                                          for subselection_var in plot_dict["subset_names"]])
+                x_tick_labels = x_tick_labels[non_empty_sets]
+                tuples = list(
+                    product(x_tick_labels, y_tick_labels))
+                index = pd.MultiIndex.from_tuples(
+                    tuples, names=["first", "second"])
+                mosaic_data = pd.Series(
+                    mosaic_data.T.flatten(), index=index)
+
+                # Get coordinates of new axes before formatting
+                mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
+                twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
+                remove_pos = twinaxs.get_position().bounds
+                # remove redundant extra axes
+                for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
+                    if axs_idx > len(self.plot_dicts)-1:
+                        if axs.get_position().bounds == mosaic_position_primary:
+                            axs.remove()
+                        if axs.get_position().bounds == remove_pos:
+                            axs.remove()
+
+                self.plot_dicts[subplot_idx]["ax"].clear()
+                mosaic(mosaic_data,
+                       ax=self.plot_dicts[subplot_idx]["ax"])
+                self.plot_dicts[subplot_idx]["ax"].tick_params(
+                    axis="x", labelrotation=20)
+                self.plot_dicts[subplot_idx]["ax"].set_position(
+                    mosaic_position_primary)
+
+                for patch in self.plot_dicts[subplot_idx]["ax"].patches:
+                    patch.set_animated(True)
+                for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
+                    label.set_animated(True)
+                for text in self.plot_dicts[subplot_idx]["ax"].texts:
+                    text.remove()
 
         for ax in self.ax.figure.get_axes():
             if ax.collections:
@@ -592,6 +715,8 @@ class DraggableAnnotation1d:
                     color=self.colors[:len(x_subselections)],
                     animated=True)
                 self.plot_dicts[self.subplot_idx]["ax"].set_xlim(xlim)
+                self.plot_dicts[self.subplot_idx]["ax"].set_xticks([])
+                self.plot_dicts[self.subplot_idx]["ax"].set_yticks([])
 
                 self.plot_dicts[self.subplot_idx]["selector"].disconnect()
                 bar_selector = BarSelect(plot_dicts=self.plot_dicts,

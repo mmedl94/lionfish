@@ -3,6 +3,7 @@ from pytour_selectors import LassoSelect, DraggableAnnotation1d, DraggableAnnota
 from helpers import gram_schmidt
 import tkinter as tk
 from functools import partial
+from itertools import product
 from datetime import datetime
 import os
 import time
@@ -15,6 +16,7 @@ import matplotlib
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 import matplotlib.style as mplstyle
+from statsmodels.graphics.mosaicplot import mosaic
 import customtkinter as ctk
 
 
@@ -919,8 +921,12 @@ class InteractiveTourInterface(ctk.CTk):
                     self.axs[subplot_idx].set_yticklabels(y_tick_labels)
                     self.axs[subplot_idx].set_xlabel(self.metric_var.get())
 
-                    subset_size = self.data[self.subselections[selected_cluster]].shape[0]
-                    fraction_of_total = (subset_size/self.data.shape[0])*100
+                    if self.subselections[selected_cluster].shape[0] == 0:
+                        fraction_of_total = 0
+                    else:
+                        subset_size = self.data[self.subselections[selected_cluster]].shape[0]
+                        fraction_of_total = (
+                            subset_size/self.data.shape[0])*100
                     title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
                     self.axs[subplot_idx].set_title(title)
 
@@ -935,6 +941,78 @@ class InteractiveTourInterface(ctk.CTk):
                                  "subselection_vars": self.subselection_vars,
                                  "subselections": self.subselections,
                                  "half_range": half_range}
+                    self.plot_dicts[subplot_idx] = plot_dict
+
+                elif plot_object["type"] == "mosaic":
+                    mosaic_data = np.empty(
+                        (len(self.feature_selection), int(n_subsets)))
+                    non_empty_sets = []
+                    for subset_idx, subset in enumerate(self.subselections):
+                        if subset.shape[0] != 0:
+                            mosaic_data[:,
+                                        subset_idx] = self.data[subset].sum(axis=0)
+                            non_empty_sets.append(True)
+                        else:
+                            mosaic_data[:, subset_idx] = np.zeros(
+                                len(self.feature_selection))
+                            non_empty_sets.append(False)
+
+                    mosaic_data = mosaic_data[self.feature_selection]
+                    mosaic_data = mosaic_data[:, non_empty_sets]
+
+                    y_tick_labels = np.array(col_names)[self.feature_selection]
+                    x_tick_labels = np.array([subselection_var.get()
+                                              for subselection_var in self.subset_names])
+                    x_tick_labels = x_tick_labels[non_empty_sets]
+                    tuples = list(
+                        product(x_tick_labels, y_tick_labels))
+                    index = pd.MultiIndex.from_tuples(
+                        tuples, names=["first", "second"])
+
+                    mosaic_data = pd.Series(
+                        mosaic_data.T.flatten(), index=index)
+
+                    if self.initial_loop is False:
+                        # remove extra subplots from mosaic
+                        for axs_idx, axs in enumerate(fig.get_axes()):
+                            if axs_idx > len(self.plot_objects)-1:
+                                if axs.get_position().bounds == self.axs[subplot_idx].get_position().bounds:
+                                    axs.remove()
+
+                        self.axs[subplot_idx].clear()
+
+                    mosaic(mosaic_data,
+                           ax=self.axs[subplot_idx])
+                    self.axs[subplot_idx].tick_params(
+                        axis="x", labelrotation=20)
+
+                    for axs_idx, axs in enumerate(fig.get_axes()):
+                        if axs_idx > len(self.plot_objects)-1:
+                            if axs.get_position().bounds == self.axs[subplot_idx].get_position().bounds:
+                                axs.set_xticklabels([])
+                                axs.set_yticklabels([])
+
+                    for patch in self.axs[subplot_idx].patches:
+                        patch.set_animated(True)
+                    for text in self.axs[subplot_idx].texts:
+                        text.remove()
+                    for label in self.axs[subplot_idx].get_yticklabels():
+                        label.set_animated(True)
+                    # for label in self.axs[subplot_idx].get_xticklabels():
+                    #    label.set_alpha(0)
+
+                    plot_dict = {"type": "mosaic",
+                                 "subtype": "mosaic",
+                                 "subplot_idx": subplot_idx,
+                                 "ax": self.axs[subplot_idx],
+                                 "data": self.data,
+                                 "feature_selection": self.feature_selection,
+                                 "mosaic_data": mosaic_data,
+                                 "col_names": col_names,
+                                 "subselection_vars": self.subselection_vars,
+                                 "subselections": self.subselections,
+                                 "half_range": half_range,
+                                 "subset_names": self.subset_names}
                     self.plot_dicts[subplot_idx] = plot_dict
 
             # remove animated elements
@@ -978,8 +1056,15 @@ class InteractiveTourInterface(ctk.CTk):
                     label.set_alpha(1)
                     ax.draw_artist(label)
 
+            # Remove redundant mosaic subpltots
             for plot_dict_idx, plot_dict in enumerate(self.plot_dicts):
                 self.plot_dicts[plot_dict_idx]["blit"] = self.blit
+                if self.plot_dicts[plot_dict_idx]["type"] == "mosaic":
+                    mosaic_position = self.axs[plot_dict_idx].get_position(
+                    ).bounds
+                    self.plot_dicts[plot_dict_idx]["mosaic_position"] = mosaic_position
+                    # for label in self.plot_dicts[plot_dict_idx]["ax"].get_xticklabels():
+                    #    label.set_alpha(1)
 
             fig.canvas.blit(fig.bbox)
 
