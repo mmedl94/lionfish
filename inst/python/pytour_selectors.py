@@ -70,206 +70,209 @@ class LassoSelect:
                     selected_set)
 
         self.collection.set_facecolors(self.plot_dicts[0]["fc"])
+        self.pause_var.set(0)
 
         # update other plots if applicable
-        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            # check plots if they are scatterplots. if so recolor datapoints
-            if plot_dict["type"] == "scatter":
-                collection_subplot = plot_dict["ax"].collections[0]
-                collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
-
-            elif plot_dict["type"] == "hist":
-                if plot_dict["subtype"] == "1d_tour":
-                    x = self.plot_dicts[subplot_idx]["x"]
-                else:
-                    x = plot_dict["data"][:, plot_dict["hist_feature"]]
-
-                x_subselections = []
-                for subselection in self.plot_dicts[0]["subselections"]:
-                    if subselection.shape[0] != 0:
-                        x_subselections.append(x[subselection])
-                    else:
-                        x_subselections.append(np.array([]))
-
-                xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                self.plot_dicts[subplot_idx]["ax"].hist(
-                    x_subselections,
-                    stacked=True,
-                    picker=True,
-                    color=self.colors[:len(x_subselections)],
-                    animated=True)
-                self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
-                self.plot_dicts[subplot_idx]["ax"].set_xticks([])
-                self.plot_dicts[subplot_idx]["ax"].set_yticks([])
-
-            elif plot_dict["type"] == "cat_clust_interface":
-                cat_clust_data = np.empty(
-                    (len(plot_dict["feature_selection"]),
-                     len(plot_dict["subselection_vars"])))
-
-                n_subsets = len(plot_dict["subselection_vars"])
-                data = self.plot_dicts[subplot_idx]["data"]
-                # get ratios
-                all_pos = np.sum(plot_dict["data"], axis=0)
-                for subset_idx, subset in enumerate(plot_dict["subselections"]):
-                    if subset.shape[0] != 0:
-                        all_pos_subset = np.sum(
-                            plot_dict["data"][subset], axis=0)
-                        if plot_dict["subtype"] == "Intra cluster fraction of positive":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/self.data[subset].shape[0]
-                        elif plot_dict["subtype"] == "Total fraction of positive":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/all_pos
-                        elif plot_dict["subtype"] == "Total fraction":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/self.data.shape[0]
-                    else:
-                        cat_clust_data[:, subset_idx] = np.zeros(
-                            len(plot_dict["feature_selection"]))
-                var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
-                                    n_subsets)
-                cat_clust_data = cat_clust_data.flatten()
-
-                # make cluster color scheme
-                clust_colors = np.tile(self.colors,
-                                       (len(plot_dict["feature_selection"]), 1))
-                clust_colors = np.concatenate((clust_colors,
-                                               np.ones((clust_colors.shape[0], 1))),
-                                              axis=1)
-                clust_ids = np.arange(n_subsets)
-                clust_ids = np.tile(clust_ids, len(
-                    plot_dict["feature_selection"]))
-
-                # current cluster selection
-                for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
-                    if subselection_var.get() == 1:
-                        selected_cluster = subselection_id
-
-                not_selected = np.where(
-                    clust_ids != selected_cluster)[0]
-                clust_colors[not_selected, -1] = 0.2
-
-                feature_selection_bool = np.repeat(
-                    plot_dict["feature_selection"], n_subsets)
-
-                x = cat_clust_data[feature_selection_bool]
-                fc = clust_colors[feature_selection_bool]
-
-                # Sort to display inter cluster max at the top
-                sort_idx = np.arange(
-                    selected_cluster, x.shape[0], n_subsets, dtype=int)
-                ranked_vars = np.argsort(x[sort_idx])[::-1]
-                sorting_helper = np.arange(x.shape[0])
-                sorting_helper = sorting_helper.reshape(
-                    sort_idx.shape[0], int(n_subsets))
-                sorting_helper = sorting_helper[ranked_vars].flatten()
-
-                # flip var_ids so most important is on top
-                var_ids = np.flip(var_ids)
-
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                self.plot_dicts[subplot_idx]["ax"].scatter(
-                    x[sorting_helper],
-                    var_ids,
-                    c=fc[sorting_helper])
-
-                y_tick_labels = np.array(plot_dict["col_names"])[
-                    plot_dict["feature_selection"]]
-                y_tick_labels = y_tick_labels[ranked_vars]
-                # flip so that labels agree with var_ids
-                y_tick_labels = np.flip(y_tick_labels)
-
-                self.plot_dicts[subplot_idx]["ax"].set_yticks(
-                    np.arange(0, sum(plot_dict["feature_selection"])))
-                self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
-                    y_tick_labels)
-                self.plot_dicts[subplot_idx]["ax"].set_xlabel(
-                    plot_dict["subtype"])
-
-                subselections = self.plot_dicts[subplot_idx]["subselections"]
-                subset_size = data[subselections[selected_cluster]].shape[0]
-                fraction_of_total = (subset_size/data.shape[0])*100
-                title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
-                self.plot_dicts[subplot_idx]["ax"].set_title(title)
-
-                self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
-
-            elif plot_dict["type"] == "mosaic":
-                n_subsets = len(plot_dict["subselection_vars"])
-                subselections = self.plot_dicts[subplot_idx]["subselections"]
-                feature_selection = plot_dict["feature_selection"]
-                mosaic_data = np.empty(
-                    (len(feature_selection), int(n_subsets)))
-                non_empty_sets = []
-                for subset_idx, subset in enumerate(subselections):
-                    if subset.shape[0] != 0:
-                        mosaic_data[:,
-                                    subset_idx] = self.data[subset].sum(axis=0)
-                        non_empty_sets.append(True)
-                    else:
-                        mosaic_data[:, subset_idx] = np.zeros(
-                            len(feature_selection))
-                        non_empty_sets.append(False)
-
-                mosaic_data = mosaic_data[feature_selection]
-                mosaic_data = mosaic_data[:, non_empty_sets]
-                y_tick_labels = np.array(plot_dict["col_names"])[
-                    feature_selection]
-                x_tick_labels = np.array([subselection_var.get()
-                                          for subselection_var in plot_dict["subset_names"]])
-                x_tick_labels = x_tick_labels[non_empty_sets]
-                tuples = list(
-                    product(x_tick_labels, y_tick_labels))
-                index = pd.MultiIndex.from_tuples(
-                    tuples, names=["first", "second"])
-                mosaic_data = pd.Series(
-                    mosaic_data.T.flatten(), index=index)
-
-                # Get coordinates of new axes before formatting
-                mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
-                twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
-                remove_pos = twinaxs.get_position().bounds
-                # remove redundant extra axes
-                for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
-                    if axs_idx > len(self.plot_dicts)-1:
-                        if axs.get_position().bounds == mosaic_position_primary:
-                            axs.remove()
-                        if axs.get_position().bounds == remove_pos:
-                            axs.remove()
-
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                mosaic(mosaic_data,
-                       ax=self.plot_dicts[subplot_idx]["ax"])
-                self.plot_dicts[subplot_idx]["ax"].tick_params(
-                    axis="x", labelrotation=20)
-                self.plot_dicts[subplot_idx]["ax"].set_position(
-                    mosaic_position_primary)
-
-                for patch in self.plot_dicts[subplot_idx]["ax"].patches:
-                    patch.set_animated(True)
-                for text in self.plot_dicts[subplot_idx]["ax"].texts:
-                    text.remove()
-                for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
-                    label.set_animated(True)
-
-        for ax in self.ax.figure.get_axes():
-            if ax.collections:
-                for collection in ax.collections:
-                    ax.draw_artist(
-                        collection)
-            if ax.patches:
-                for patch in ax.patches:
-                    ax.draw_artist(
-                        patch)
-            if ax.texts:
-                for text in ax.texts:
-                    ax.draw_artist(
-                        text)
-            for label in ax.get_yticklabels():
-                ax.draw_artist(label)
-        self.ax.figure.canvas.blit(self.ax.figure.bbox)
+        # for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+        #    # check plots if they are scatterplots. if so recolor datapoints
+        #    if plot_dict["type"] == "scatter":
+        #        collection_subplot = plot_dict["ax"].collections[0]
+        #        collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
+#
+        #    elif plot_dict["type"] == "hist":
+        #        if plot_dict["subtype"] == "1d_tour":
+        #            x = self.plot_dicts[subplot_idx]["x"]
+        #        else:
+        #            x = plot_dict["data"][:, plot_dict["hist_feature"]]
+#
+        #        x_subselections = []
+        #        for subselection in self.plot_dicts[0]["subselections"]:
+        #            if subselection.shape[0] != 0:
+        #                x_subselections.append(x[subselection])
+        #            else:
+        #                x_subselections.append(np.array([]))
+#
+        #        xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        self.plot_dicts[subplot_idx]["ax"].hist(
+        #            x_subselections,
+        #            stacked=True,
+        #            picker=True,
+        #            color=self.colors[:len(x_subselections)],
+        #            animated=True)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xticks([])
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticks([])
+#
+        #    elif plot_dict["type"] == "cat_clust_interface":
+        #        cat_clust_data = np.empty(
+        #            (len(plot_dict["feature_selection"]),
+        #             len(plot_dict["subselection_vars"])))
+#
+        #        n_subsets = len(plot_dict["subselection_vars"])
+        #        data = self.plot_dicts[subplot_idx]["data"]
+        #        # get ratios
+        #        all_pos = np.sum(plot_dict["data"], axis=0)
+        #        for subset_idx, subset in enumerate(plot_dict["subselections"]):
+        #            if subset.shape[0] != 0:
+        #                all_pos_subset = np.sum(
+        #                    plot_dict["data"][subset], axis=0)
+        #                if plot_dict["subtype"] == "Intra cluster fraction of positive":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/self.data[subset].shape[0]
+        #                elif plot_dict["subtype"] == "Total fraction of positive":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/all_pos
+        #                elif plot_dict["subtype"] == "Total fraction":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/self.data.shape[0]
+        #            else:
+        #                cat_clust_data[:, subset_idx] = np.zeros(
+        #                    len(plot_dict["feature_selection"]))
+        #        var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
+        #                            n_subsets)
+        #        cat_clust_data = cat_clust_data.flatten()
+#
+        #        # make cluster color scheme
+        #        clust_colors = np.tile(self.colors,
+        #                               (len(plot_dict["feature_selection"]), 1))
+        #        clust_colors = np.concatenate((clust_colors,
+        #                                       np.ones((clust_colors.shape[0], 1))),
+        #                                      axis=1)
+        #        clust_ids = np.arange(n_subsets)
+        #        clust_ids = np.tile(clust_ids, len(
+        #            plot_dict["feature_selection"]))
+#
+        #        # current cluster selection
+        #        for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
+        #            if subselection_var.get() == 1:
+        #                selected_cluster = subselection_id
+#
+        #        not_selected = np.where(
+        #            clust_ids != selected_cluster)[0]
+        #        clust_colors[not_selected, -1] = 0.2
+#
+        #        feature_selection_bool = np.repeat(
+        #            plot_dict["feature_selection"], n_subsets)
+#
+        #        x = cat_clust_data[feature_selection_bool]
+        #        fc = clust_colors[feature_selection_bool]
+#
+        #        # Sort to display inter cluster max at the top
+        #        sort_idx = np.arange(
+        #            selected_cluster, x.shape[0], n_subsets, dtype=int)
+        #        ranked_vars = np.argsort(x[sort_idx])[::-1]
+        #        sorting_helper = np.arange(x.shape[0])
+        #        sorting_helper = sorting_helper.reshape(
+        #            sort_idx.shape[0], int(n_subsets))
+        #        sorting_helper = sorting_helper[ranked_vars].flatten()
+#
+        #        # flip var_ids so most important is on top
+        #        var_ids = np.flip(var_ids)
+#
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        self.plot_dicts[subplot_idx]["ax"].scatter(
+        #            x[sorting_helper],
+        #            var_ids,
+        #            c=fc[sorting_helper])
+#
+        #        y_tick_labels = np.array(plot_dict["col_names"])[
+        #            plot_dict["feature_selection"]]
+        #        y_tick_labels = y_tick_labels[ranked_vars]
+        #        # flip so that labels agree with var_ids
+        #        y_tick_labels = np.flip(y_tick_labels)
+#
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticks(
+        #            np.arange(0, sum(plot_dict["feature_selection"])))
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
+        #            y_tick_labels)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xlabel(
+        #            plot_dict["subtype"])
+#
+        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
+        #        subset_size = data[subselections[selected_cluster]].shape[0]
+        #        fraction_of_total = (subset_size/data.shape[0])*100
+        #        title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+        #        self.plot_dicts[subplot_idx]["ax"].set_title(title)
+#
+        #        self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
+#
+        #    elif plot_dict["type"] == "mosaic":
+        #        n_subsets = len(plot_dict["subselection_vars"])
+        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
+        #        feature_selection = plot_dict["feature_selection"]
+        #        mosaic_data = np.empty(
+        #            (len(feature_selection), int(n_subsets)))
+        #        non_empty_sets = []
+        #        for subset_idx, subset in enumerate(subselections):
+        #            if subset.shape[0] != 0:
+        #                mosaic_data[:,
+        #                            subset_idx] = self.data[subset].sum(axis=0)
+        #                non_empty_sets.append(True)
+        #            else:
+        #                mosaic_data[:, subset_idx] = np.zeros(
+        #                    len(feature_selection))
+        #                non_empty_sets.append(False)
+#
+        #        mosaic_data = mosaic_data[feature_selection]
+        #        mosaic_data = mosaic_data[:, non_empty_sets]
+        #        y_tick_labels = np.array(plot_dict["col_names"])[
+        #            feature_selection]
+        #        x_tick_labels = np.array([subselection_var.get()
+        #                                  for subselection_var in plot_dict["subset_names"]])
+        #        x_tick_labels = x_tick_labels[non_empty_sets]
+        #        tuples = list(
+        #            product(x_tick_labels, y_tick_labels))
+        #        index = pd.MultiIndex.from_tuples(
+        #            tuples, names=["first", "second"])
+        #        mosaic_data = pd.Series(
+        #            mosaic_data.T.flatten(), index=index)
+#
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        mosaic(mosaic_data,
+        #               ax=self.plot_dicts[subplot_idx]["ax"])
+        #        self.plot_dicts[subplot_idx]["ax"].tick_params(
+        #            axis="x", labelrotation=20)
+        #        self.plot_dicts[subplot_idx]["ax"].set_position(
+        #            self.plot_dicts[subplot_idx]["mosaic_position"])
+        #        remove_pos = self.plot_dicts[subplot_idx]["mosaic_position"]
+#
+        #        # remove extra plots
+        #        for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
+        #            print(axs.get_position().bounds, remove_pos)
+        #            if axs.get_position().bounds == remove_pos:
+        #                if axs != self.plot_dicts[subplot_idx]["ax"]:
+        #                    axs.remove()
+#
+        #        for patch in self.plot_dicts[subplot_idx]["ax"].patches:
+        #            patch.set_animated(True)
+        #        for text in self.plot_dicts[subplot_idx]["ax"].texts:
+        #            text.remove()
+        #        for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
+        #            label.set_animated(True)
+        #        for label in self.plot_dicts[subplot_idx]["ax"].get_xticklabels():
+        #            label.set_animated(True)
+#
+        # for ax in self.ax.figure.get_axes():
+        #    if ax.collections:
+        #        for collection in ax.collections:
+        #            ax.draw_artist(
+        #                collection)
+        #    if ax.patches:
+        #        for patch in ax.patches:
+        #            ax.draw_artist(
+        #                patch)
+        #    if ax.texts:
+        #        for text in ax.texts:
+        #            ax.draw_artist(
+        #                text)
+        #    for label in ax.get_yticklabels():
+        #        ax.draw_artist(label)
+#
+        #    for label in ax.get_xticklabels():
+        #        ax.draw_artist(label)
+#
+        # self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def disconnect(self):
         self.lasso.disconnect_events()
@@ -365,207 +368,208 @@ class BarSelect:
         for col_idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
             if subselection.shape[0] != 0:
                 self.plot_dicts[0]["fc"][subselection] = self.colors[col_idx]
+        self.pause_var.set(0)
 
-        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            # update colors of scatterplot
-            if plot_dict["type"] == "scatter":
-                collection_subplot = plot_dict["ax"].collections[0]
-                collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
-
-            # update colors of histograms
-            elif plot_dict["type"] == "hist":
-                if plot_dict["subtype"] == "1d_tour":
-                    x = self.plot_dicts[subplot_idx]["x"]
-                else:
-                    x = plot_dict["data"][:, plot_dict["hist_feature"]]
-
-                x_subselections = []
-                for subselection in self.plot_dicts[0]["subselections"]:
-                    if subselection.shape[0] != 0:
-                        x_subselections.append(x[subselection])
-                    else:
-                        x_subselections.append(np.array([]))
-
-                xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                self.plot_dicts[subplot_idx]["ax"].hist(
-                    x_subselections,
-                    stacked=True,
-                    picker=True,
-                    color=self.colors[:len(x_subselections)],
-                    animated=True)
-                self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
-                self.plot_dicts[subplot_idx]["ax"].set_xticks([])
-                self.plot_dicts[subplot_idx]["ax"].set_yticks([])
-
-            elif plot_dict["type"] == "cat_clust_interface":
-                cat_clust_data = np.empty(
-                    (len(plot_dict["feature_selection"]),
-                     len(plot_dict["subselection_vars"])))
-
-                n_subsets = len(plot_dict["subselection_vars"])
-                data = self.plot_dicts[subplot_idx]["data"]
-                # get ratios
-                all_pos = np.sum(plot_dict["data"], axis=0)
-                for subset_idx, subset in enumerate(plot_dict["subselections"]):
-                    if subset.shape[0] != 0:
-                        all_pos_subset = np.sum(
-                            plot_dict["data"][subset], axis=0)
-                        if plot_dict["subtype"] == "Intra cluster fraction of positive":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/self.data[subset].shape[0]
-                        elif plot_dict["subtype"] == "Total fraction of positive":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/all_pos
-                        elif plot_dict["subtype"] == "Total fraction":
-                            cat_clust_data[:,
-                                           subset_idx] = all_pos_subset/self.data.shape[0]
-                    else:
-                        cat_clust_data[:, subset_idx] = np.zeros(
-                            len(plot_dict["feature_selection"]))
-                var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
-                                    n_subsets)
-                cat_clust_data = cat_clust_data.flatten()
-
-                # make cluster color scheme
-                clust_colors = np.tile(self.colors,
-                                       (len(plot_dict["feature_selection"]), 1))
-                clust_colors = np.concatenate((clust_colors,
-                                               np.ones((clust_colors.shape[0], 1))),
-                                              axis=1)
-                clust_ids = np.arange(n_subsets)
-                clust_ids = np.tile(clust_ids, len(
-                    plot_dict["feature_selection"]))
-
-                # current cluster selection
-                for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
-                    if subselection_var.get() == 1:
-                        selected_cluster = subselection_id
-
-                not_selected = np.where(
-                    clust_ids != selected_cluster)[0]
-                clust_colors[not_selected, -1] = 0.2
-
-                feature_selection_bool = np.repeat(
-                    plot_dict["feature_selection"], n_subsets)
-
-                x = cat_clust_data[feature_selection_bool]
-                fc = clust_colors[feature_selection_bool]
-
-                # Sort to display inter cluster max at the top
-                sort_idx = np.arange(
-                    selected_cluster, x.shape[0], n_subsets, dtype=int)
-                ranked_vars = np.argsort(x[sort_idx])[::-1]
-                sorting_helper = np.arange(x.shape[0])
-                sorting_helper = sorting_helper.reshape(
-                    sort_idx.shape[0], int(n_subsets))
-                sorting_helper = sorting_helper[ranked_vars].flatten()
-
-                # flip var_ids so most important is on top
-                var_ids = np.flip(var_ids)
-
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                self.plot_dicts[subplot_idx]["ax"].scatter(
-                    x[sorting_helper],
-                    var_ids,
-                    c=fc[sorting_helper])
-
-                y_tick_labels = np.array(plot_dict["col_names"])[
-                    plot_dict["feature_selection"]]
-                y_tick_labels = y_tick_labels[ranked_vars]
-                # flip so that labels agree with var_ids
-                y_tick_labels = np.flip(y_tick_labels)
-
-                self.plot_dicts[subplot_idx]["ax"].set_yticks(
-                    np.arange(0, sum(plot_dict["feature_selection"])))
-                self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
-                    y_tick_labels)
-                self.plot_dicts[subplot_idx]["ax"].set_xlabel(
-                    plot_dict["subtype"])
-
-                subselections = self.plot_dicts[subplot_idx]["subselections"]
-                subset_size = data[subselections[selected_cluster]].shape[0]
-                fraction_of_total = (subset_size/data.shape[0])*100
-                title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
-                self.plot_dicts[subplot_idx]["ax"].set_title(title)
-
-                self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
-
-            elif plot_dict["type"] == "mosaic":
-                n_subsets = len(plot_dict["subselection_vars"])
-                subselections = self.plot_dicts[subplot_idx]["subselections"]
-                feature_selection = plot_dict["feature_selection"]
-                mosaic_data = np.empty(
-                    (len(feature_selection), int(n_subsets)))
-                non_empty_sets = []
-                for subset_idx, subset in enumerate(subselections):
-                    if subset.shape[0] != 0:
-                        mosaic_data[:,
-                                    subset_idx] = self.data[subset].sum(axis=0)
-                        non_empty_sets.append(True)
-                    else:
-                        mosaic_data[:, subset_idx] = np.zeros(
-                            len(feature_selection))
-                        non_empty_sets.append(False)
-
-                mosaic_data = mosaic_data[feature_selection]
-                mosaic_data = mosaic_data[:, non_empty_sets]
-                y_tick_labels = np.array(plot_dict["col_names"])[
-                    feature_selection]
-                x_tick_labels = np.array([subselection_var.get()
-                                          for subselection_var in plot_dict["subset_names"]])
-                x_tick_labels = x_tick_labels[non_empty_sets]
-                tuples = list(
-                    product(x_tick_labels, y_tick_labels))
-                index = pd.MultiIndex.from_tuples(
-                    tuples, names=["first", "second"])
-                mosaic_data = pd.Series(
-                    mosaic_data.T.flatten(), index=index)
-
-                # Get coordinates of new axes before formatting
-                mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
-                twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
-                remove_pos = twinaxs.get_position().bounds
-                # remove redundant extra axes
-                for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
-                    if axs_idx > len(self.plot_dicts)-1:
-                        if axs.get_position().bounds == mosaic_position_primary:
-                            axs.remove()
-                        if axs.get_position().bounds == remove_pos:
-                            axs.remove()
-
-                self.plot_dicts[subplot_idx]["ax"].clear()
-                mosaic(mosaic_data,
-                       ax=self.plot_dicts[subplot_idx]["ax"])
-                self.plot_dicts[subplot_idx]["ax"].tick_params(
-                    axis="x", labelrotation=20)
-                self.plot_dicts[subplot_idx]["ax"].set_position(
-                    mosaic_position_primary)
-
-                for patch in self.plot_dicts[subplot_idx]["ax"].patches:
-                    patch.set_animated(True)
-                for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
-                    label.set_animated(True)
-                for text in self.plot_dicts[subplot_idx]["ax"].texts:
-                    text.remove()
-
-        for ax in self.ax.figure.get_axes():
-            if ax.collections:
-                for collection in ax.collections:
-                    ax.draw_artist(
-                        collection)
-            if ax.patches:
-                for patch in ax.patches:
-                    ax.draw_artist(
-                        patch)
-            if ax.texts:
-                for text in ax.texts:
-                    ax.draw_artist(
-                        text)
-            for label in ax.get_yticklabels():
-                ax.draw_artist(label)
-
-        self.ax.figure.canvas.blit(self.ax.figure.bbox)
+        # for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+        #    # update colors of scatterplot
+        #    if plot_dict["type"] == "scatter":
+        #        collection_subplot = plot_dict["ax"].collections[0]
+        #        collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
+#
+        #    # update colors of histograms
+        #    elif plot_dict["type"] == "hist":
+        #        if plot_dict["subtype"] == "1d_tour":
+        #            x = self.plot_dicts[subplot_idx]["x"]
+        #        else:
+        #            x = plot_dict["data"][:, plot_dict["hist_feature"]]
+#
+        #        x_subselections = []
+        #        for subselection in self.plot_dicts[0]["subselections"]:
+        #            if subselection.shape[0] != 0:
+        #                x_subselections.append(x[subselection])
+        #            else:
+        #                x_subselections.append(np.array([]))
+#
+        #        xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        self.plot_dicts[subplot_idx]["ax"].hist(
+        #            x_subselections,
+        #            stacked=True,
+        #            picker=True,
+        #            color=self.colors[:len(x_subselections)],
+        #            animated=True)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xticks([])
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticks([])
+#
+        #    elif plot_dict["type"] == "cat_clust_interface":
+        #        cat_clust_data = np.empty(
+        #            (len(plot_dict["feature_selection"]),
+        #             len(plot_dict["subselection_vars"])))
+#
+        #        n_subsets = len(plot_dict["subselection_vars"])
+        #        data = self.plot_dicts[subplot_idx]["data"]
+        #        # get ratios
+        #        all_pos = np.sum(plot_dict["data"], axis=0)
+        #        for subset_idx, subset in enumerate(plot_dict["subselections"]):
+        #            if subset.shape[0] != 0:
+        #                all_pos_subset = np.sum(
+        #                    plot_dict["data"][subset], axis=0)
+        #                if plot_dict["subtype"] == "Intra cluster fraction of positive":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/self.data[subset].shape[0]
+        #                elif plot_dict["subtype"] == "Total fraction of positive":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/all_pos
+        #                elif plot_dict["subtype"] == "Total fraction":
+        #                    cat_clust_data[:,
+        #                                   subset_idx] = all_pos_subset/self.data.shape[0]
+        #            else:
+        #                cat_clust_data[:, subset_idx] = np.zeros(
+        #                    len(plot_dict["feature_selection"]))
+        #        var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
+        #                            n_subsets)
+        #        cat_clust_data = cat_clust_data.flatten()
+#
+        #        # make cluster color scheme
+        #        clust_colors = np.tile(self.colors,
+        #                               (len(plot_dict["feature_selection"]), 1))
+        #        clust_colors = np.concatenate((clust_colors,
+        #                                       np.ones((clust_colors.shape[0], 1))),
+        #                                      axis=1)
+        #        clust_ids = np.arange(n_subsets)
+        #        clust_ids = np.tile(clust_ids, len(
+        #            plot_dict["feature_selection"]))
+#
+        #        # current cluster selection
+        #        for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
+        #            if subselection_var.get() == 1:
+        #                selected_cluster = subselection_id
+#
+        #        not_selected = np.where(
+        #            clust_ids != selected_cluster)[0]
+        #        clust_colors[not_selected, -1] = 0.2
+#
+        #        feature_selection_bool = np.repeat(
+        #            plot_dict["feature_selection"], n_subsets)
+#
+        #        x = cat_clust_data[feature_selection_bool]
+        #        fc = clust_colors[feature_selection_bool]
+#
+        #        # Sort to display inter cluster max at the top
+        #        sort_idx = np.arange(
+        #            selected_cluster, x.shape[0], n_subsets, dtype=int)
+        #        ranked_vars = np.argsort(x[sort_idx])[::-1]
+        #        sorting_helper = np.arange(x.shape[0])
+        #        sorting_helper = sorting_helper.reshape(
+        #            sort_idx.shape[0], int(n_subsets))
+        #        sorting_helper = sorting_helper[ranked_vars].flatten()
+#
+        #        # flip var_ids so most important is on top
+        #        var_ids = np.flip(var_ids)
+#
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        self.plot_dicts[subplot_idx]["ax"].scatter(
+        #            x[sorting_helper],
+        #            var_ids,
+        #            c=fc[sorting_helper])
+#
+        #        y_tick_labels = np.array(plot_dict["col_names"])[
+        #            plot_dict["feature_selection"]]
+        #        y_tick_labels = y_tick_labels[ranked_vars]
+        #        # flip so that labels agree with var_ids
+        #        y_tick_labels = np.flip(y_tick_labels)
+#
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticks(
+        #            np.arange(0, sum(plot_dict["feature_selection"])))
+        #        self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
+        #            y_tick_labels)
+        #        self.plot_dicts[subplot_idx]["ax"].set_xlabel(
+        #            plot_dict["subtype"])
+#
+        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
+        #        subset_size = data[subselections[selected_cluster]].shape[0]
+        #        fraction_of_total = (subset_size/data.shape[0])*100
+        #        title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+        #        self.plot_dicts[subplot_idx]["ax"].set_title(title)
+#
+        #        self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
+#
+        #    elif plot_dict["type"] == "mosaic":
+        #        n_subsets = len(plot_dict["subselection_vars"])
+        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
+        #        feature_selection = plot_dict["feature_selection"]
+        #        mosaic_data = np.empty(
+        #            (len(feature_selection), int(n_subsets)))
+        #        non_empty_sets = []
+        #        for subset_idx, subset in enumerate(subselections):
+        #            if subset.shape[0] != 0:
+        #                mosaic_data[:,
+        #                            subset_idx] = self.data[subset].sum(axis=0)
+        #                non_empty_sets.append(True)
+        #            else:
+        #                mosaic_data[:, subset_idx] = np.zeros(
+        #                    len(feature_selection))
+        #                non_empty_sets.append(False)
+#
+        #        mosaic_data = mosaic_data[feature_selection]
+        #        mosaic_data = mosaic_data[:, non_empty_sets]
+        #        y_tick_labels = np.array(plot_dict["col_names"])[
+        #            feature_selection]
+        #        x_tick_labels = np.array([subselection_var.get()
+        #                                  for subselection_var in plot_dict["subset_names"]])
+        #        x_tick_labels = x_tick_labels[non_empty_sets]
+        #        tuples = list(
+        #            product(x_tick_labels, y_tick_labels))
+        #        index = pd.MultiIndex.from_tuples(
+        #            tuples, names=["first", "second"])
+        #        mosaic_data = pd.Series(
+        #            mosaic_data.T.flatten(), index=index)
+#
+        #        # Get coordinates of new axes before formatting
+        #        mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
+        #        twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
+        #        remove_pos = twinaxs.get_position().bounds
+        #        # remove redundant extra axes
+        #        for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
+        #            if axs_idx > len(self.plot_dicts)-1:
+        #                if axs.get_position().bounds == mosaic_position_primary:
+        #                    axs.remove()
+        #                if axs.get_position().bounds == remove_pos:
+        #                    axs.remove()
+#
+        #        self.plot_dicts[subplot_idx]["ax"].clear()
+        #        mosaic(mosaic_data,
+        #               ax=self.plot_dicts[subplot_idx]["ax"])
+        #        self.plot_dicts[subplot_idx]["ax"].tick_params(
+        #            axis="x", labelrotation=20)
+        #        self.plot_dicts[subplot_idx]["ax"].set_position(
+        #            mosaic_position_primary)
+#
+        #        for patch in self.plot_dicts[subplot_idx]["ax"].patches:
+        #            patch.set_animated(True)
+        #        for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
+        #            label.set_animated(True)
+        #        for text in self.plot_dicts[subplot_idx]["ax"].texts:
+        #            text.remove()
+#
+        # for ax in self.ax.figure.get_axes():
+        #    if ax.collections:
+        #        for collection in ax.collections:
+        #            ax.draw_artist(
+        #                collection)
+        #    if ax.patches:
+        #        for patch in ax.patches:
+        #            ax.draw_artist(
+        #                patch)
+        #    if ax.texts:
+        #        for text in ax.texts:
+        #            ax.draw_artist(
+        #                text)
+        #    for label in ax.get_yticklabels():
+        #        ax.draw_artist(label)
+#
+        # self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def disconnect(self):
         self.canvas.mpl_disconnect(self.connection)
@@ -740,8 +744,6 @@ class DraggableAnnotation1d:
                 for text in ax.texts:
                     ax.draw_artist(
                         text)
-            for label in ax.get_yticklabels():
-                ax.draw_artist(label)
         self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def on_release(self, event):
@@ -889,8 +891,6 @@ class DraggableAnnotation2d:
                 for text in ax.texts:
                     ax.draw_artist(
                         text)
-            for label in ax.get_yticklabels():
-                ax.draw_artist(label)
 
         self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
