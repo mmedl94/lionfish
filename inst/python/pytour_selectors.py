@@ -8,6 +8,7 @@ import time
 
 from matplotlib.path import Path
 from matplotlib.widgets import LassoSelector
+from matplotlib.transforms import Bbox
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from statsmodels.graphics.mosaicplot import mosaic
 
@@ -45,8 +46,6 @@ class LassoSelect:
         path = Path(verts)
         xys = self.collection.get_offsets()
         self.ind = np.nonzero(path.contains_points(xys))[0]
-        self.ax.figure.canvas.restore_region(
-            self.plot_dicts[self.subplot_idx]["blit"])
 
         # Check which subset is active
         for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
@@ -70,209 +69,9 @@ class LassoSelect:
                     selected_set)
 
         self.collection.set_facecolors(self.plot_dicts[0]["fc"])
-        self.pause_var.set(0)
-
-        # update other plots if applicable
-        # for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-        #    # check plots if they are scatterplots. if so recolor datapoints
-        #    if plot_dict["type"] == "scatter":
-        #        collection_subplot = plot_dict["ax"].collections[0]
-        #        collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
-#
-        #    elif plot_dict["type"] == "hist":
-        #        if plot_dict["subtype"] == "1d_tour":
-        #            x = self.plot_dicts[subplot_idx]["x"]
-        #        else:
-        #            x = plot_dict["data"][:, plot_dict["hist_feature"]]
-#
-        #        x_subselections = []
-        #        for subselection in self.plot_dicts[0]["subselections"]:
-        #            if subselection.shape[0] != 0:
-        #                x_subselections.append(x[subselection])
-        #            else:
-        #                x_subselections.append(np.array([]))
-#
-        #        xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        self.plot_dicts[subplot_idx]["ax"].hist(
-        #            x_subselections,
-        #            stacked=True,
-        #            picker=True,
-        #            color=self.colors[:len(x_subselections)],
-        #            animated=True)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xticks([])
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticks([])
-#
-        #    elif plot_dict["type"] == "cat_clust_interface":
-        #        cat_clust_data = np.empty(
-        #            (len(plot_dict["feature_selection"]),
-        #             len(plot_dict["subselection_vars"])))
-#
-        #        n_subsets = len(plot_dict["subselection_vars"])
-        #        data = self.plot_dicts[subplot_idx]["data"]
-        #        # get ratios
-        #        all_pos = np.sum(plot_dict["data"], axis=0)
-        #        for subset_idx, subset in enumerate(plot_dict["subselections"]):
-        #            if subset.shape[0] != 0:
-        #                all_pos_subset = np.sum(
-        #                    plot_dict["data"][subset], axis=0)
-        #                if plot_dict["subtype"] == "Intra cluster fraction of positive":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/self.data[subset].shape[0]
-        #                elif plot_dict["subtype"] == "Total fraction of positive":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/all_pos
-        #                elif plot_dict["subtype"] == "Total fraction":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/self.data.shape[0]
-        #            else:
-        #                cat_clust_data[:, subset_idx] = np.zeros(
-        #                    len(plot_dict["feature_selection"]))
-        #        var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
-        #                            n_subsets)
-        #        cat_clust_data = cat_clust_data.flatten()
-#
-        #        # make cluster color scheme
-        #        clust_colors = np.tile(self.colors,
-        #                               (len(plot_dict["feature_selection"]), 1))
-        #        clust_colors = np.concatenate((clust_colors,
-        #                                       np.ones((clust_colors.shape[0], 1))),
-        #                                      axis=1)
-        #        clust_ids = np.arange(n_subsets)
-        #        clust_ids = np.tile(clust_ids, len(
-        #            plot_dict["feature_selection"]))
-#
-        #        # current cluster selection
-        #        for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
-        #            if subselection_var.get() == 1:
-        #                selected_cluster = subselection_id
-#
-        #        not_selected = np.where(
-        #            clust_ids != selected_cluster)[0]
-        #        clust_colors[not_selected, -1] = 0.2
-#
-        #        feature_selection_bool = np.repeat(
-        #            plot_dict["feature_selection"], n_subsets)
-#
-        #        x = cat_clust_data[feature_selection_bool]
-        #        fc = clust_colors[feature_selection_bool]
-#
-        #        # Sort to display inter cluster max at the top
-        #        sort_idx = np.arange(
-        #            selected_cluster, x.shape[0], n_subsets, dtype=int)
-        #        ranked_vars = np.argsort(x[sort_idx])[::-1]
-        #        sorting_helper = np.arange(x.shape[0])
-        #        sorting_helper = sorting_helper.reshape(
-        #            sort_idx.shape[0], int(n_subsets))
-        #        sorting_helper = sorting_helper[ranked_vars].flatten()
-#
-        #        # flip var_ids so most important is on top
-        #        var_ids = np.flip(var_ids)
-#
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        self.plot_dicts[subplot_idx]["ax"].scatter(
-        #            x[sorting_helper],
-        #            var_ids,
-        #            c=fc[sorting_helper])
-#
-        #        y_tick_labels = np.array(plot_dict["col_names"])[
-        #            plot_dict["feature_selection"]]
-        #        y_tick_labels = y_tick_labels[ranked_vars]
-        #        # flip so that labels agree with var_ids
-        #        y_tick_labels = np.flip(y_tick_labels)
-#
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticks(
-        #            np.arange(0, sum(plot_dict["feature_selection"])))
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
-        #            y_tick_labels)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xlabel(
-        #            plot_dict["subtype"])
-#
-        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
-        #        subset_size = data[subselections[selected_cluster]].shape[0]
-        #        fraction_of_total = (subset_size/data.shape[0])*100
-        #        title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
-        #        self.plot_dicts[subplot_idx]["ax"].set_title(title)
-#
-        #        self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
-#
-        #    elif plot_dict["type"] == "mosaic":
-        #        n_subsets = len(plot_dict["subselection_vars"])
-        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
-        #        feature_selection = plot_dict["feature_selection"]
-        #        mosaic_data = np.empty(
-        #            (len(feature_selection), int(n_subsets)))
-        #        non_empty_sets = []
-        #        for subset_idx, subset in enumerate(subselections):
-        #            if subset.shape[0] != 0:
-        #                mosaic_data[:,
-        #                            subset_idx] = self.data[subset].sum(axis=0)
-        #                non_empty_sets.append(True)
-        #            else:
-        #                mosaic_data[:, subset_idx] = np.zeros(
-        #                    len(feature_selection))
-        #                non_empty_sets.append(False)
-#
-        #        mosaic_data = mosaic_data[feature_selection]
-        #        mosaic_data = mosaic_data[:, non_empty_sets]
-        #        y_tick_labels = np.array(plot_dict["col_names"])[
-        #            feature_selection]
-        #        x_tick_labels = np.array([subselection_var.get()
-        #                                  for subselection_var in plot_dict["subset_names"]])
-        #        x_tick_labels = x_tick_labels[non_empty_sets]
-        #        tuples = list(
-        #            product(x_tick_labels, y_tick_labels))
-        #        index = pd.MultiIndex.from_tuples(
-        #            tuples, names=["first", "second"])
-        #        mosaic_data = pd.Series(
-        #            mosaic_data.T.flatten(), index=index)
-#
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        mosaic(mosaic_data,
-        #               ax=self.plot_dicts[subplot_idx]["ax"])
-        #        self.plot_dicts[subplot_idx]["ax"].tick_params(
-        #            axis="x", labelrotation=20)
-        #        self.plot_dicts[subplot_idx]["ax"].set_position(
-        #            self.plot_dicts[subplot_idx]["mosaic_position"])
-        #        remove_pos = self.plot_dicts[subplot_idx]["mosaic_position"]
-#
-        #        # remove extra plots
-        #        for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
-        #            print(axs.get_position().bounds, remove_pos)
-        #            if axs.get_position().bounds == remove_pos:
-        #                if axs != self.plot_dicts[subplot_idx]["ax"]:
-        #                    axs.remove()
-#
-        #        for patch in self.plot_dicts[subplot_idx]["ax"].patches:
-        #            patch.set_animated(True)
-        #        for text in self.plot_dicts[subplot_idx]["ax"].texts:
-        #            text.remove()
-        #        for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
-        #            label.set_animated(True)
-        #        for label in self.plot_dicts[subplot_idx]["ax"].get_xticklabels():
-        #            label.set_animated(True)
-#
-        # for ax in self.ax.figure.get_axes():
-        #    if ax.collections:
-        #        for collection in ax.collections:
-        #            ax.draw_artist(
-        #                collection)
-        #    if ax.patches:
-        #        for patch in ax.patches:
-        #            ax.draw_artist(
-        #                patch)
-        #    if ax.texts:
-        #        for text in ax.texts:
-        #            ax.draw_artist(
-        #                text)
-        #    for label in ax.get_yticklabels():
-        #        ax.draw_artist(label)
-#
-        #    for label in ax.get_xticklabels():
-        #        ax.draw_artist(label)
-#
-        # self.ax.figure.canvas.blit(self.ax.figure.bbox)
+        for plot_idx, _ in enumerate(self.plot_dicts):
+            self.plot_dicts[plot_idx]["update_plot"] = False
+        self.pause_var.set(1)
 
     def disconnect(self):
         self.lasso.disconnect_events()
@@ -305,7 +104,7 @@ class BarSelect:
 
         # transform x if necessary and save transform. Do we need this???
         for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            if not isinstance(plot_dict, int):
+            if len(plot_dict) != 0:
                 if plot_dict["subtype"] == "1d_tour":
                     plot_dict["proj"][self.feature_selection, 0] = plot_dict["proj"][self.feature_selection, 0] / \
                         np.linalg.norm(
@@ -324,8 +123,8 @@ class BarSelect:
     def onselect(self, event):
         if event.artist.axes != self.ax:
             return
-        self.ax.figure.canvas.restore_region(
-            self.plot_dicts[self.subplot_idx]["blit"])
+        # self.ax.figure.canvas.restore_region(
+        #    self.plot_dicts[self.subplot_idx]["blit"])
 
         min_select = event.artist.get_x()
         max_select = min_select+event.artist.get_width()
@@ -368,208 +167,9 @@ class BarSelect:
         for col_idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
             if subselection.shape[0] != 0:
                 self.plot_dicts[0]["fc"][subselection] = self.colors[col_idx]
+        for plot_idx, _ in enumerate(self.plot_dicts):
+            self.plot_dicts[plot_idx]["update_plot"] = False
         self.pause_var.set(0)
-
-        # for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-        #    # update colors of scatterplot
-        #    if plot_dict["type"] == "scatter":
-        #        collection_subplot = plot_dict["ax"].collections[0]
-        #        collection_subplot.set_facecolors(self.plot_dicts[0]["fc"])
-#
-        #    # update colors of histograms
-        #    elif plot_dict["type"] == "hist":
-        #        if plot_dict["subtype"] == "1d_tour":
-        #            x = self.plot_dicts[subplot_idx]["x"]
-        #        else:
-        #            x = plot_dict["data"][:, plot_dict["hist_feature"]]
-#
-        #        x_subselections = []
-        #        for subselection in self.plot_dicts[0]["subselections"]:
-        #            if subselection.shape[0] != 0:
-        #                x_subselections.append(x[subselection])
-        #            else:
-        #                x_subselections.append(np.array([]))
-#
-        #        xlim = self.plot_dicts[subplot_idx]["ax"].get_xlim()
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        self.plot_dicts[subplot_idx]["ax"].hist(
-        #            x_subselections,
-        #            stacked=True,
-        #            picker=True,
-        #            color=self.colors[:len(x_subselections)],
-        #            animated=True)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xlim(xlim)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xticks([])
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticks([])
-#
-        #    elif plot_dict["type"] == "cat_clust_interface":
-        #        cat_clust_data = np.empty(
-        #            (len(plot_dict["feature_selection"]),
-        #             len(plot_dict["subselection_vars"])))
-#
-        #        n_subsets = len(plot_dict["subselection_vars"])
-        #        data = self.plot_dicts[subplot_idx]["data"]
-        #        # get ratios
-        #        all_pos = np.sum(plot_dict["data"], axis=0)
-        #        for subset_idx, subset in enumerate(plot_dict["subselections"]):
-        #            if subset.shape[0] != 0:
-        #                all_pos_subset = np.sum(
-        #                    plot_dict["data"][subset], axis=0)
-        #                if plot_dict["subtype"] == "Intra cluster fraction of positive":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/self.data[subset].shape[0]
-        #                elif plot_dict["subtype"] == "Total fraction of positive":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/all_pos
-        #                elif plot_dict["subtype"] == "Total fraction":
-        #                    cat_clust_data[:,
-        #                                   subset_idx] = all_pos_subset/self.data.shape[0]
-        #            else:
-        #                cat_clust_data[:, subset_idx] = np.zeros(
-        #                    len(plot_dict["feature_selection"]))
-        #        var_ids = np.repeat(np.arange(sum(plot_dict["feature_selection"])),
-        #                            n_subsets)
-        #        cat_clust_data = cat_clust_data.flatten()
-#
-        #        # make cluster color scheme
-        #        clust_colors = np.tile(self.colors,
-        #                               (len(plot_dict["feature_selection"]), 1))
-        #        clust_colors = np.concatenate((clust_colors,
-        #                                       np.ones((clust_colors.shape[0], 1))),
-        #                                      axis=1)
-        #        clust_ids = np.arange(n_subsets)
-        #        clust_ids = np.tile(clust_ids, len(
-        #            plot_dict["feature_selection"]))
-#
-        #        # current cluster selection
-        #        for subselection_id, subselection_var in enumerate(plot_dict["subselection_vars"]):
-        #            if subselection_var.get() == 1:
-        #                selected_cluster = subselection_id
-#
-        #        not_selected = np.where(
-        #            clust_ids != selected_cluster)[0]
-        #        clust_colors[not_selected, -1] = 0.2
-#
-        #        feature_selection_bool = np.repeat(
-        #            plot_dict["feature_selection"], n_subsets)
-#
-        #        x = cat_clust_data[feature_selection_bool]
-        #        fc = clust_colors[feature_selection_bool]
-#
-        #        # Sort to display inter cluster max at the top
-        #        sort_idx = np.arange(
-        #            selected_cluster, x.shape[0], n_subsets, dtype=int)
-        #        ranked_vars = np.argsort(x[sort_idx])[::-1]
-        #        sorting_helper = np.arange(x.shape[0])
-        #        sorting_helper = sorting_helper.reshape(
-        #            sort_idx.shape[0], int(n_subsets))
-        #        sorting_helper = sorting_helper[ranked_vars].flatten()
-#
-        #        # flip var_ids so most important is on top
-        #        var_ids = np.flip(var_ids)
-#
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        self.plot_dicts[subplot_idx]["ax"].scatter(
-        #            x[sorting_helper],
-        #            var_ids,
-        #            c=fc[sorting_helper])
-#
-        #        y_tick_labels = np.array(plot_dict["col_names"])[
-        #            plot_dict["feature_selection"]]
-        #        y_tick_labels = y_tick_labels[ranked_vars]
-        #        # flip so that labels agree with var_ids
-        #        y_tick_labels = np.flip(y_tick_labels)
-#
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticks(
-        #            np.arange(0, sum(plot_dict["feature_selection"])))
-        #        self.plot_dicts[subplot_idx]["ax"].set_yticklabels(
-        #            y_tick_labels)
-        #        self.plot_dicts[subplot_idx]["ax"].set_xlabel(
-        #            plot_dict["subtype"])
-#
-        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
-        #        subset_size = data[subselections[selected_cluster]].shape[0]
-        #        fraction_of_total = (subset_size/data.shape[0])*100
-        #        title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
-        #        self.plot_dicts[subplot_idx]["ax"].set_title(title)
-#
-        #        self.plot_dicts[subplot_idx]["cat_clust_data"] = cat_clust_data
-#
-        #    elif plot_dict["type"] == "mosaic":
-        #        n_subsets = len(plot_dict["subselection_vars"])
-        #        subselections = self.plot_dicts[subplot_idx]["subselections"]
-        #        feature_selection = plot_dict["feature_selection"]
-        #        mosaic_data = np.empty(
-        #            (len(feature_selection), int(n_subsets)))
-        #        non_empty_sets = []
-        #        for subset_idx, subset in enumerate(subselections):
-        #            if subset.shape[0] != 0:
-        #                mosaic_data[:,
-        #                            subset_idx] = self.data[subset].sum(axis=0)
-        #                non_empty_sets.append(True)
-        #            else:
-        #                mosaic_data[:, subset_idx] = np.zeros(
-        #                    len(feature_selection))
-        #                non_empty_sets.append(False)
-#
-        #        mosaic_data = mosaic_data[feature_selection]
-        #        mosaic_data = mosaic_data[:, non_empty_sets]
-        #        y_tick_labels = np.array(plot_dict["col_names"])[
-        #            feature_selection]
-        #        x_tick_labels = np.array([subselection_var.get()
-        #                                  for subselection_var in plot_dict["subset_names"]])
-        #        x_tick_labels = x_tick_labels[non_empty_sets]
-        #        tuples = list(
-        #            product(x_tick_labels, y_tick_labels))
-        #        index = pd.MultiIndex.from_tuples(
-        #            tuples, names=["first", "second"])
-        #        mosaic_data = pd.Series(
-        #            mosaic_data.T.flatten(), index=index)
-#
-        #        # Get coordinates of new axes before formatting
-        #        mosaic_position_primary = self.plot_dicts[subplot_idx]["mosaic_position"]
-        #        twinaxs = self.plot_dicts[subplot_idx]["ax"].twinx()
-        #        remove_pos = twinaxs.get_position().bounds
-        #        # remove redundant extra axes
-        #        for axs_idx, axs in enumerate(self.ax.figure.get_axes()):
-        #            if axs_idx > len(self.plot_dicts)-1:
-        #                if axs.get_position().bounds == mosaic_position_primary:
-        #                    axs.remove()
-        #                if axs.get_position().bounds == remove_pos:
-        #                    axs.remove()
-#
-        #        self.plot_dicts[subplot_idx]["ax"].clear()
-        #        mosaic(mosaic_data,
-        #               ax=self.plot_dicts[subplot_idx]["ax"])
-        #        self.plot_dicts[subplot_idx]["ax"].tick_params(
-        #            axis="x", labelrotation=20)
-        #        self.plot_dicts[subplot_idx]["ax"].set_position(
-        #            mosaic_position_primary)
-#
-        #        for patch in self.plot_dicts[subplot_idx]["ax"].patches:
-        #            patch.set_animated(True)
-        #        for label in self.plot_dicts[subplot_idx]["ax"].get_yticklabels():
-        #            label.set_animated(True)
-        #        for text in self.plot_dicts[subplot_idx]["ax"].texts:
-        #            text.remove()
-#
-        # for ax in self.ax.figure.get_axes():
-        #    if ax.collections:
-        #        for collection in ax.collections:
-        #            ax.draw_artist(
-        #                collection)
-        #    if ax.patches:
-        #        for patch in ax.patches:
-        #            ax.draw_artist(
-        #                patch)
-        #    if ax.texts:
-        #        for text in ax.texts:
-        #            ax.draw_artist(
-        #                text)
-        #    for label in ax.get_yticklabels():
-        #        ax.draw_artist(label)
-#
-        # self.ax.figure.canvas.blit(self.ax.figure.bbox)
 
     def disconnect(self):
         self.canvas.mpl_disconnect(self.connection)
@@ -664,14 +264,75 @@ class DraggableAnnotation1d:
                     if contains:
                         self.press = axis_id
 
+    def get_blit(self):
+        collections = []
+        patches = []
+        texts = []
+        if self.ax.collections:
+            for collection in self.ax.collections:
+                collections.append(collection.get_alpha())
+                collection.set_alpha(0)
+        if self.ax.patches:
+            for patch in self.ax.patches:
+                patches.append(patch.get_alpha())
+                patch.set_alpha(0)
+        if self.ax.texts:
+            for text in self.ax.texts:
+                texts.append(text.get_alpha())
+                text.set_alpha(0)
+
+        if self.arrow_axs.collections:
+            for collection in self.arrow_axs.collections:
+                collections.append(collection.get_alpha())
+                collection.set_alpha(0)
+        if self.arrow_axs.patches:
+            for patch in self.arrow_axs.patches:
+                patches.append(patch.get_alpha())
+                patch.set_alpha(0)
+        if self.arrow_axs.texts:
+            for text in self.arrow_axs.texts:
+                texts.append(text.get_alpha())
+                text.set_alpha(0)
+
+        self.ax.figure.canvas.draw()
+
+        bbox_mins = self.arrow_axs.bbox.get_points()[0]
+        bbox_maxs = self.ax.bbox.get_points()[1]
+        self.bbox = Bbox((bbox_mins, bbox_maxs))
+
+        self.blit = self.ax.figure.canvas.copy_from_bbox(self.bbox)
+
+        if self.ax.collections:
+            for idx, collection in enumerate(self.ax.collections):
+                collection.set_alpha(collections[idx])
+                self.ax.draw_artist(collection)
+        if self.ax.patches:
+            for idx, patch in enumerate(self.ax.patches):
+                patch.set_alpha(patches[idx])
+                self.ax.draw_artist(patch)
+        if self.ax.texts:
+            for idx, text in enumerate(self.ax.texts):
+                text.set_alpha(texts[idx])
+                self.ax.draw_artist(text)
+
+        if self.arrow_axs.collections:
+            for idx, collection in enumerate(self.arrow_axs.collections):
+                collection.set_alpha(collections[idx])
+                self.arrow_axs.draw_artist(collection)
+        if self.arrow_axs.patches:
+            for idx, patch in enumerate(self.arrow_axs.patches):
+                patch.set_alpha(patches[idx])
+                self.arrow_axs.draw_artist(patch)
+        if self.arrow_axs.texts:
+            for idx, text in enumerate(self.arrow_axs.texts):
+                text.set_alpha(texts[idx])
+                self.arrow_axs.draw_artist(text)
+
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
         if event.inaxes != self.arrow_axs:
             return
-
-        self.ax.figure.canvas.restore_region(
-            self.plot_dicts[self.subplot_idx]["blit"])
-
+        self.ax.figure.canvas.restore_region(self.blit)
         if self.press is None:
             if self.alpha != 1:
                 for label_idx, label in enumerate(self.labels):
@@ -702,7 +363,7 @@ class DraggableAnnotation1d:
                               self.proj[self.feature_selection])/self.half_range
                 x = x[:, 0]
                 self.plot_dicts[self.subplot_idx]["x"] = x
-
+                self.plot_dicts[self.subplot_idx]["proj"] = self.proj
                 # check if there are preselected points and update plot
                 x_subselections = []
                 for subselection in self.plot_dicts[0]["subselections"]:
@@ -731,20 +392,21 @@ class DraggableAnnotation1d:
                                          pause_var=self.pause_var)
                 self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
-        for ax in self.ax.figure.get_axes():
-            if ax.collections:
-                for collection in ax.collections:
-                    ax.draw_artist(
-                        collection)
-            if ax.patches:
-                for patch in ax.patches:
-                    ax.draw_artist(
-                        patch)
-            if ax.texts:
-                for text in ax.texts:
-                    ax.draw_artist(
-                        text)
-        self.ax.figure.canvas.blit(self.ax.figure.bbox)
+        for collection in self.ax.collections:
+            self.ax.draw_artist(collection)
+        for patch in self.ax.patches:
+            self.ax.draw_artist(patch)
+        for text in self.ax.texts:
+            self.ax.draw_artist(text)
+
+        for collection in self.arrow_axs.collections:
+            self.arrow_axs.draw_artist(collection)
+        for patch in self.arrow_axs.patches:
+            self.arrow_axs.draw_artist(patch)
+        for text in self.arrow_axs.texts:
+            self.arrow_axs.draw_artist(text)
+
+        self.ax.figure.canvas.blit(self.bbox)
 
     def on_release(self, event):
         """Clear button press information."""
@@ -760,7 +422,9 @@ class DraggableAnnotation1d:
 
 
 class DraggableAnnotation2d:
-    def __init__(self, data, proj, ax, scat, half_range, feature_selection, labels, plot_dict, plot_dicts, pause_var):
+    def __init__(self, data, proj, ax, scat, half_range,
+                 feature_selection, labels, plot_dict,
+                 plot_dicts, plot_idx, pause_var, canvas_drawn):
         self.data = data
         self.feature_selection = feature_selection
         self.proj = proj
@@ -771,7 +435,9 @@ class DraggableAnnotation2d:
         self.pressing = 0
         self.plot_dict = plot_dict
         self.plot_dicts = plot_dicts
+        self.plot_idx = plot_idx
         self.pause_var = pause_var
+        self.canvas_drawn = canvas_drawn
 
         if sum(self.feature_selection) > 10:
             self.alpha = 0.1
@@ -819,6 +485,41 @@ class DraggableAnnotation2d:
             self.arrs.append(arr)
             self.labels.append(label)
 
+    def get_blit(self):
+        collections = []
+        patches = []
+        texts = []
+        if self.ax.collections:
+            for collection in self.ax.collections:
+                collections.append(collection.get_alpha())
+                collection.set_alpha(0)
+        if self.ax.patches:
+            for patch in self.ax.patches:
+                patches.append(patch.get_alpha())
+                patch.set_alpha(0)
+        if self.ax.texts:
+            for text in self.ax.texts:
+                texts.append(text.get_alpha())
+                text.set_alpha(0)
+
+        self.ax.figure.canvas.draw()
+
+        self.blit = self.ax.figure.canvas.copy_from_bbox(
+            self.ax.bbox)
+
+        if self.ax.collections:
+            for idx, collection in enumerate(self.ax.collections):
+                collection.set_alpha(collections[idx])
+                self.ax.draw_artist(collection)
+        if self.ax.patches:
+            for idx, patch in enumerate(self.ax.patches):
+                patch.set_alpha(patches[idx])
+                self.ax.draw_artist(patch)
+        if self.ax.texts:
+            for idx, text in enumerate(self.ax.texts):
+                text.set_alpha(texts[idx])
+                self.ax.draw_artist(text)
+
     def on_press(self, event):
         """Check whether mouse is over us; if so, store some data."""
         # Iterate through projection axes
@@ -836,7 +537,9 @@ class DraggableAnnotation2d:
             return
         if event.button == 1:
             return
-        self.ax.figure.canvas.restore_region(self.plot_dict["blit"])
+
+        self.ax.figure.canvas.restore_region(self.blit)
+
         if self.alpha != 1:
             for label_idx, label in enumerate(self.labels):
                 if label:
@@ -878,21 +581,13 @@ class DraggableAnnotation2d:
                                      self.proj[self.feature_selection])/self.half_range
                 self.ax.collections[0].set_offsets(new_data)
 
-        for ax in self.ax.figure.get_axes():
-            if ax.collections:
-                for collection in ax.collections:
-                    ax.draw_artist(
-                        collection)
-            if ax.patches:
-                for patch in ax.patches:
-                    ax.draw_artist(
-                        patch)
-            if ax.texts:
-                for text in ax.texts:
-                    ax.draw_artist(
-                        text)
-
-        self.ax.figure.canvas.blit(self.ax.figure.bbox)
+        for collection in self.ax.collections:
+            self.ax.draw_artist(collection)
+        for patch in self.ax.patches:
+            self.ax.draw_artist(patch)
+        for text in self.ax.texts:
+            self.ax.draw_artist(text)
+        self.ax.figure.canvas.blit(self.ax.bbox)
 
     def on_release(self, event):
         """Clear button press information."""

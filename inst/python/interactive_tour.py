@@ -424,14 +424,15 @@ class InteractiveTourInterface(ctk.CTk):
             self.pause_var.set(1)
         self.protocol("WM_DELETE_WINDOW", cleanup)
 
-        self.plot_dicts = [i for i, _ in enumerate(plot_objects)]
+        self.plot_dicts = [{} for i, _ in enumerate(plot_objects)]
         self.initial_loop = True
 
         ###### Plot loop ######
         self.blit = 0
-
+        self.last_frame = -1
         while self.frame < self.n_frames:
-            self.pause_var = tk.StringVar()
+            self.pause_var = tk.StringVar(value=42)
+            self.canvas_drawn = tk.IntVar(value=0)
             for subplot_idx, plot_object in enumerate(plot_objects):
                 frame = self.frame
 
@@ -444,125 +445,152 @@ class InteractiveTourInterface(ctk.CTk):
                         frame = plot_object["obj"].shape[-1]-1
                         self.frame_vars[subplot_idx].set(str(frame))
 
-                    if self.reset_selection_check is False:
-                        proj = np.copy(
-                            plot_object["obj"][:, :, frame])
+                    if "update_plot" in self.plot_dicts[subplot_idx]:
+                        update_plot = self.plot_dicts[subplot_idx]["update_plot"]
+                        self.plot_dicts[subplot_idx]["update_plot"] = True
                     else:
-                        proj = self.plot_dicts[subplot_idx]["proj"]
-                        self.reset_selection_check = False
-                    proj_subet = proj[self.feature_selection]
+                        update_plot = True
 
-                    proj_subet[:, 0] = proj_subet[:, 0] / \
-                        np.linalg.norm(proj_subet[:, 0])
-                    proj_subet[:, 1] = gram_schmidt(
-                        proj_subet[:, 0], proj_subet[:, 1])
-                    proj_subet[:, 1] = proj_subet[:, 1] / \
-                        np.linalg.norm(proj_subet[:, 1])
+                    if update_plot is True:
+                        if self.reset_selection_check is False:
+                            proj = np.copy(
+                                plot_object["obj"][:, :, frame])
+                        else:
+                            proj = self.plot_dicts[subplot_idx]["proj"]
+                            self.reset_selection_check = False
+                        proj_subet = proj[self.feature_selection]
 
-                    plot_data = self.r.render_proj_inter(
-                        self.data[:, self.feature_selection], proj_subet,
-                        limits=self.limits, half_range=half_range)
-                    # Unpack tour data
-                    data_prj = plot_data["data_prj"]
-                    circle_prj = plot_data["circle"]
-                    x = data_prj.iloc[:, 0]
-                    y = data_prj.iloc[:, 1]
+                        proj_subet[:, 0] = proj_subet[:, 0] / \
+                            np.linalg.norm(proj_subet[:, 0])
+                        proj_subet[:, 1] = gram_schmidt(
+                            proj_subet[:, 0], proj_subet[:, 1])
+                        proj_subet[:, 1] = proj_subet[:, 1] / \
+                            np.linalg.norm(proj_subet[:, 1])
 
-                    if self.initial_loop is True:
-                        self.fc = np.repeat(
-                            np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
-                        for idx, subset in enumerate(self.subselections):
-                            if subset.shape[0] != 0:
-                                self.fc[subset] = self.colors[idx]
-                        scat = self.axs[subplot_idx].scatter(
-                            x, y, animated=True)
-                        scat.set_facecolor(self.fc)
-                        self.original_fc = self.fc.copy()
-                        self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
-                                                   circle_prj.iloc[:, 1], color="grey")
+                        plot_data = self.r.render_proj_inter(
+                            self.data[:, self.feature_selection], proj_subet,
+                            limits=self.limits, half_range=half_range)
+                        # Unpack tour data
+                        data_prj = plot_data["data_prj"]
+                        circle_prj = plot_data["circle"]
+                        x = data_prj.iloc[:, 0]
+                        y = data_prj.iloc[:, 1]
+
+                        if self.initial_loop is True:
+                            self.fc = np.repeat(
+                                np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+                            for idx, subset in enumerate(self.subselections):
+                                if subset.shape[0] != 0:
+                                    self.fc[subset] = self.colors[idx]
+                            scat = self.axs[subplot_idx].scatter(
+                                x, y, animated=True)
+                            scat.set_facecolor(self.fc)
+                            self.original_fc = self.fc.copy()
+                            self.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
+                                                       circle_prj.iloc[:, 1], color="grey")
+                        else:
+                            # clear old arrows and text
+                            for patch_idx, _ in enumerate(self.axs[subplot_idx].patches):
+                                self.axs[subplot_idx].patches[0].remove()
+                                self.axs[subplot_idx].texts[0].remove()
+                            self.plot_dicts[subplot_idx]["draggable_annot"].disconnect(
+                            )
+                            self.plot_dicts[subplot_idx]["selector"].disconnect(
+                            )
+                            # update scatterplot
+                            self.plot_dicts[subplot_idx]["scat"].set_offsets(
+                                np.array([x, y]).T)
+
+                            scat = self.plot_dicts[subplot_idx]["ax"].collections[0]
+                            scat.set_facecolors(
+                                self.plot_dicts[subplot_idx]["fc"])
+                            self.fc = self.plot_dicts[subplot_idx]["fc"]
+
+                        self.axs[subplot_idx].set_xlim(-self.limits *
+                                                       1.1, self.limits*1.1)
+                        self.axs[subplot_idx].set_ylim(-self.limits *
+                                                       1.1, self.limits*1.1)
+                        self.axs[subplot_idx].set_box_aspect(aspect=1)
+                        self.axs[subplot_idx].set_xticks([])
+                        self.axs[subplot_idx].set_yticks([])
+
+                        plot_dict = {"type": "scatter",
+                                     "subtype": "2d_tour",
+                                     "subplot_idx": subplot_idx,
+                                     "ax": self.axs[subplot_idx],
+                                     "data": self.data,
+                                     "scat": scat,
+                                     "feature_selection": self.feature_selection,
+                                     "subselection_vars": self.subselection_vars,
+                                     "subselections": self.subselections,
+                                     "fc": self.fc,
+                                     "proj": proj,
+                                     "update_plot": True
+                                     }
+                        self.plot_dicts[subplot_idx] = plot_dict
+
+                        # start Lasso selector
+                        selector = LassoSelect(
+                            plot_dicts=self.plot_dicts,
+                            subplot_idx=subplot_idx,
+                            colors=self.colors,
+                            n_pts=self.n_pts,
+                            pause_var=self.pause_var)
+                        self.plot_dicts[subplot_idx]["selector"] = selector
+
+                        plot_dict["draggable_annot"] = DraggableAnnotation2d(
+                            self.data,
+                            self.plot_dicts[subplot_idx]["proj"],
+                            self.axs[subplot_idx],
+                            self.plot_dicts[subplot_idx]["scat"],
+                            half_range,
+                            self.feature_selection,
+                            col_names,
+                            self.plot_dicts[subplot_idx],
+                            self.plot_dicts,
+                            subplot_idx,
+                            self.pause_var,
+                            self.canvas_drawn)
+
+                        n_frames = plot_object["obj"].shape[-1]-1
+                        self.axs[subplot_idx].set_title(
+                            f"{self.displayed_tour}\n" +
+                            f"Frame {frame} out of {n_frames}\n" +
+                            f"Press right key for next frame\n" +
+                            f"Press left key for last frame")
                     else:
-                        # clear old arrows and text
-                        for patch_idx, _ in enumerate(self.axs[subplot_idx].patches):
-                            self.axs[subplot_idx].patches[0].remove()
-                            self.axs[subplot_idx].texts[0].remove()
-                        self.plot_dicts[subplot_idx]["draggable_annot"].disconnect(
-                        )
-                        self.plot_dicts[subplot_idx]["selector"].disconnect()
-                        # update scatterplot
-                        self.plot_dicts[subplot_idx]["scat"].set_offsets(
-                            np.array([x, y]).T)
-                        scat = self.plot_dicts[subplot_idx]["ax"].collections[0]
                         scat.set_facecolors(
                             self.plot_dicts[subplot_idx]["fc"])
                         self.fc = self.plot_dicts[subplot_idx]["fc"]
-
-                    self.axs[subplot_idx].set_xlim(-self.limits *
-                                                   1.1, self.limits*1.1)
-                    self.axs[subplot_idx].set_ylim(-self.limits *
-                                                   1.1, self.limits*1.1)
-                    self.axs[subplot_idx].set_box_aspect(aspect=1)
-                    self.axs[subplot_idx].set_xticks([])
-                    self.axs[subplot_idx].set_yticks([])
-
-                    plot_dict = {"type": "scatter",
-                                 "subtype": "2d_tour",
-                                 "subplot_idx": subplot_idx,
-                                 "ax": self.axs[subplot_idx],
-                                 "data": self.data,
-                                 "scat": scat,
-                                 "feature_selection": self.feature_selection,
-                                 "subselection_vars": self.subselection_vars,
-                                 "subselections": self.subselections,
-                                 "fc": self.fc,
-                                 "proj": proj
-                                 }
-                    self.plot_dicts[subplot_idx] = plot_dict
-
-                    # start Lasso selector
-                    selector = LassoSelect(
-                        plot_dicts=self.plot_dicts,
-                        subplot_idx=subplot_idx,
-                        colors=self.colors,
-                        n_pts=self.n_pts,
-                        pause_var=self.pause_var)
-                    self.plot_dicts[subplot_idx]["selector"] = selector
-
-                    plot_dict["draggable_annot"] = DraggableAnnotation2d(
-                        self.data,
-                        self.plot_dicts[subplot_idx]["proj"],
-                        self.axs[subplot_idx],
-                        self.plot_dicts[subplot_idx]["scat"],
-                        half_range,
-                        self.feature_selection,
-                        col_names,
-                        self.plot_dicts[subplot_idx],
-                        self.plot_dicts,
-                        self.pause_var)
-
-                    n_frames = plot_object["obj"].shape[-1]-1
-                    self.axs[subplot_idx].set_title(
-                        f"{self.displayed_tour}\n" +
-                        f"Frame {frame} out of {n_frames}\n" +
-                        f"Press right key for next frame\n" +
-                        f"Press left key for last frame")
+                        self.plot_dicts[subplot_idx]["selector"].pause_var = self.pause_var
 
                 ####### 1d tour #######
 
                 if plot_object["type"] == "1d_tour":
+                    if "update_plot" in self.plot_dicts[subplot_idx]:
+                        update_plot = self.plot_dicts[subplot_idx]["update_plot"]
+                        self.plot_dicts[subplot_idx]["update_plot"] = True
+                    else:
+                        update_plot = True
+
                     frame = int(self.frame_vars[subplot_idx].get())
                     if frame >= plot_object["obj"].shape[-1]-1:
                         frame = plot_object["obj"].shape[-1]-1
                         self.frame_vars[subplot_idx].set(str(frame))
 
-                    proj = np.copy(
-                        plot_object["obj"][:, :, frame])
+                    if update_plot is True:
+                        proj = np.copy(
+                            plot_object["obj"][:, :, frame])
 
-                    data_subset = self.data[:, self.feature_selection]
-                    proj_subet = proj[self.feature_selection][:, 0]
-                    proj_subet = proj_subet / \
-                        np.linalg.norm(proj_subet)
-                    x = np.matmul(data_subset, proj_subet)
-                    x = x/half_range
+                        data_subset = self.data[:, self.feature_selection]
+                        proj_subet = proj[self.feature_selection][:, 0]
+                        proj_subet = proj_subet / \
+                            np.linalg.norm(proj_subet)
+                        x = np.matmul(data_subset, proj_subet)
+                        x = x/half_range
+                    else:
+                        proj = self.plot_dicts[subplot_idx]["proj"]
+                        x = self.plot_dicts[subplot_idx]["x"]
 
                     self.axs[subplot_idx].clear()
 
@@ -608,8 +636,10 @@ class InteractiveTourInterface(ctk.CTk):
                                                  half_range=self.half_range,
                                                  pause_var=self.pause_var)
                     else:
-                        self.plot_dicts[subplot_idx]["arrows"].disconnect()
-                        self.plot_dicts[subplot_idx]["arrows"].remove()
+                        self.plot_dicts[subplot_idx]["draggable_annot"].disconnect(
+                        )
+                        self.plot_dicts[subplot_idx]["draggable_annot"].remove(
+                        )
                         plot_dict = {"type": "hist",
                                      "subtype": "1d_tour",
                                      "subplot_idx": subplot_idx,
@@ -641,7 +671,7 @@ class InteractiveTourInterface(ctk.CTk):
                         col_names,
                         self.pause_var)
 
-                    self.plot_dicts[subplot_idx]["arrows"] = draggable_arrows_1d
+                    self.plot_dicts[subplot_idx]["draggable_annot"] = draggable_arrows_1d
 
                     n_frames = plot_object["obj"].shape[-1]-1
                     self.axs[subplot_idx].set_xticks([])
@@ -980,7 +1010,6 @@ class InteractiveTourInterface(ctk.CTk):
 
                     mosaic(mosaic_data,
                            ax=self.axs[subplot_idx])
-                    print(self.axs[subplot_idx].get_position().bounds, "1")
                     if self.initial_loop is False:
                         new_pos = self.axs[subplot_idx].get_position()
 
@@ -1015,61 +1044,19 @@ class InteractiveTourInterface(ctk.CTk):
                                  "subset_names": self.subset_names}
                     self.plot_dicts[subplot_idx] = plot_dict
 
-            # remove animated elements
-            collections = []
-            patches = []
-            texts = []
-            for ax in fig.get_axes():
-                if ax.collections:
-                    for collection in ax.collections:
-                        collections.append(collection.get_alpha())
-                        collection.set_alpha(0)
-                if ax.patches:
-                    for patch in ax.patches:
-                        patches.append(patch.get_alpha())
-                        patch.set_alpha(0)
-                if ax.texts:
-                    for text in ax.texts:
-                        texts.append(text.get_alpha())
-                        text.set_alpha(0)
-                # for label in ax.get_yticklabels():
-                #    label.set_alpha(0)
-                # for label in ax.get_xticklabels():
-                #    label.set_alpha(0)
-
             fig.canvas.draw()
-            self.blit = fig.canvas.copy_from_bbox(fig.bbox)
 
-            # update plot
-            for ax in fig.get_axes():
-                if ax.collections:
-                    for idx, collection in enumerate(ax.collections):
-                        collection.set_alpha(collections[idx])
-                        ax.draw_artist(collection)
-                if ax.patches:
-                    for idx, patch in enumerate(ax.patches):
-                        patch.set_alpha(patches[idx])
-                        ax.draw_artist(patch)
-                if ax.texts:
-                    for idx, text in enumerate(ax.texts):
-                        text.set_alpha(texts[idx])
-                        ax.draw_artist(text)
-                # for label in ax.get_yticklabels():
-                #    label.set_alpha(1)
-                #    ax.draw_artist(label)
-                # for label in ax.get_xticklabels():
-                #    label.set_alpha(1)
-                #    ax.draw_artist(label)
+            for plot_dict in self.plot_dicts:
+                if "draggable_annot" in plot_dict:
+                    plot_dict["draggable_annot"].get_blit()
 
             # Store blit canvas
             for plot_dict_idx, plot_dict in enumerate(self.plot_dicts):
                 self.plot_dicts[plot_dict_idx]["blit"] = self.blit
-                # if self.plot_dicts[plot_dict_idx]["type"] == "mosaic":
-                #    mosaic_position = self.axs[plot_dict_idx].get_position(
-                #    ).bounds
-                #    self.plot_dicts[plot_dict_idx]["mosaic_position"] = mosaic_position
 
             fig.canvas.blit(fig.bbox)
+
+            self.last_frame = frame
 
             def wait(self):
                 var = tk.IntVar()

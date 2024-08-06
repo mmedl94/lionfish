@@ -23,6 +23,7 @@ def subselection_checkbox_event(self, subselection_idx):
         else:
             self.subselection_vars[i].set(0)
 
-        for plot_dict in self.plot_dicts:
-            if plot_dict["type"] == "cat_clust_interface":
-                self.pause_var.set(0)
+        for plot_idx, _ in enumerate(self.plot_dicts):
+            self.plot_dicts[plot_idx]["update_plot"] = False
+
+    self.pause_var.set(0)
