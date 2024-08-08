@@ -12,7 +12,7 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
 
-  required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter", "statsmodels")
+  required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter", "statsmodels", "seaborn")
 
   if (virtual_env == "anaconda"){
     # check if python environment exists and create new one if not

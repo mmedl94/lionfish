@@ -17,25 +17,29 @@ from helpers import gram_schmidt
 
 
 class LassoSelect:
-    def __init__(self, plot_dicts, subplot_idx, colors, n_pts, pause_var):
+    def __init__(self, parent, plot_dicts, subplot_idx, colors, n_pts, pause_var):
         # initialize arguments
+        self.parent = parent
         self.n_pts = n_pts
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
         self.ax = plot_dicts[subplot_idx]["ax"]
         self.canvas = plot_dicts[subplot_idx]["ax"].figure.canvas
         self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
-        self.fc = self.plot_dicts[0]["fc"]
         self.colors = colors
         self.data = plot_dicts[subplot_idx]["data"]
         self.pause_var = pause_var
 
+    def get_blit(self):
+        self.blit = self.ax.figure.canvas.copy_from_bbox(
+            self.ax.bbox)
         # initialize lasso selector
         self.lasso = LassoSelector(
-            plot_dicts[subplot_idx]["ax"],
+            self.plot_dicts[self.subplot_idx]["ax"],
             onselect=partial(self.onselect),
             button=1,
             useblit=True)
+        self.lasso.background = self.blit
         self.ind = []
 
     # onselect governs what happens with selected data points
@@ -48,27 +52,28 @@ class LassoSelect:
         self.ind = np.nonzero(path.contains_points(xys))[0]
 
         # Check which subset is active
-        for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
+        for col_idx, subselection_var in enumerate(self.parent.subselection_vars):
             # If subset is active
             if subselection_var.get() == 1:
                 # change facecolors
-                self.plot_dicts[0]["fc"][self.ind] = [self.colors[col_idx]]
+                self.parent.fc[self.ind] = [
+                    self.colors[col_idx]]
                 # Change subselections
-                for idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+                for idx, subselection in enumerate(self.parent.subselections):
                     # if the looped over subset isn't the currently selected, remove
                     # newly selected indices from old subsets
                     if col_idx != idx:
                         if set(self.ind) & set(subselection):
                             updated_ind = np.setdiff1d(subselection, self.ind)
-                            self.plot_dicts[0]["subselections"][idx] = updated_ind
+                            self.parent.subselections[idx] = updated_ind
 
                 # get set of old selection and new selection
                 selected_set = list(set(self.ind).union(
-                    set(self.plot_dicts[0]["subselections"][col_idx])))
-                self.plot_dicts[0]["subselections"][col_idx] = np.array(
+                    set(self.parent.subselections[col_idx])))
+                self.parent.subselections[col_idx] = np.array(
                     selected_set)
 
-        self.collection.set_facecolors(self.plot_dicts[0]["fc"])
+        self.collection.set_facecolors(self.parent.fc)
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
         self.pause_var.set(1)
@@ -78,8 +83,9 @@ class LassoSelect:
 
 
 class BarSelect:
-    def __init__(self, plot_dicts, subplot_idx, feature_selection, colors, half_range, pause_var):
+    def __init__(self, parent, plot_dicts, subplot_idx, feature_selection, colors, half_range, pause_var):
         # initialize parameters
+        self.parent = parent
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
         self.plot_dict = self.plot_dicts[self.subplot_idx]
@@ -116,6 +122,9 @@ class BarSelect:
                     self.plot_dicts[subplot_idx]["x"] = plot_dict["data"][:,
                                                                           plot_dict["hist_feature"]]
 
+    def get_blit(self):
+        pass
+
     # onselect governs what happens with selected data points
     # changes alpha of selected data points
     # saves indices of selected data points
@@ -146,27 +155,27 @@ class BarSelect:
             cur_plot_dict["x"] <= max_select))[0].tolist()
 
         # Check which subset is active
-        for col_idx, subselection_var in enumerate(self.plot_dicts[0]["subselection_vars"]):
+        for col_idx, subselection_var in enumerate(self.parent.subselection_vars):
             # If subset is active
             if subselection_var.get() == 1:
                 # add new_ind to old selection
                 merged_selection = list(
-                    self.plot_dicts[0]["subselections"][col_idx]) + list(new_ind)
+                    self.parent.subselections[col_idx]) + list(new_ind)
                 merged_selection = np.array(list(set(merged_selection)))
-                self.plot_dicts[0]["subselections"][col_idx] = merged_selection
+                self.parent.subselections[col_idx] = merged_selection
 
                 # remove new selection from other selections
-                for idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+                for idx, subselection in enumerate(self.parent.subselections):
                     # if the looped over subset isn't the currently selected, remove
                     # newly selected indices from old subsets
                     if col_idx != idx:
                         removed_selection = np.setdiff1d(
                             subselection, new_ind)
-                        self.plot_dicts[0]["subselections"][idx] = removed_selection
+                        self.parent.subselections[idx] = removed_selection
 
-        for col_idx, subselection in enumerate(self.plot_dicts[0]["subselections"]):
+        for col_idx, subselection in enumerate(self.parent.subselections):
             if subselection.shape[0] != 0:
-                self.plot_dicts[0]["fc"][subselection] = self.colors[col_idx]
+                self.parent.fc[subselection] = self.colors[col_idx]
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
         self.pause_var.set(0)
@@ -176,7 +185,8 @@ class BarSelect:
 
 
 class DraggableAnnotation1d:
-    def __init__(self, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels, pause_var):
+    def __init__(self, parent, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels, pause_var):
+        self.parent = parent
         self.data = data
         self.plot_dicts = plot_dicts
         self.subplot_idx = subplot_idx
@@ -233,14 +243,9 @@ class DraggableAnnotation1d:
 
                 label = self.arrow_axs.text(dx, y_0,
                                             labels[axis_id],
-                                            alpha=self.alpha)
+                                            alpha=self.alpha,
+                                            clip_on=True)
 
-                self.cidpress = arr.figure.canvas.mpl_connect(
-                    "button_press_event", self.on_press)
-                self.cidrelease = arr.figure.canvas.mpl_connect(
-                    "button_release_event", self.on_release)
-                self.cidmotion = arr.figure.canvas.mpl_connect(
-                    "motion_notify_event", self.on_motion)
             else:
                 arr = None
                 if len(self.feature_selection) < 10:
@@ -251,8 +256,16 @@ class DraggableAnnotation1d:
                                                 alpha=self.alpha)
                 else:
                     label = None
+
             self.arrs.append(arr)
             self.labels.append(label)
+
+        self.cidpress = arr.figure.canvas.mpl_connect(
+            "button_press_event", self.on_press)
+        self.cidrelease = arr.figure.canvas.mpl_connect(
+            "button_release_event", self.on_release)
+        self.cidmotion = arr.figure.canvas.mpl_connect(
+            "motion_notify_event", self.on_motion)
 
     def on_press(self, event):
         """Check whether mouse is over us; if so, store some data."""
@@ -264,68 +277,68 @@ class DraggableAnnotation1d:
                     if contains:
                         self.press = axis_id
 
-    def get_blit(self):
-        collections = []
-        patches = []
-        texts = []
+    def blend_out(self):
+        self.collections = []
+        self.patches = []
+        self.texts = []
         if self.ax.collections:
             for collection in self.ax.collections:
-                collections.append(collection.get_alpha())
+                self.collections.append(collection.get_alpha())
                 collection.set_alpha(0)
         if self.ax.patches:
             for patch in self.ax.patches:
-                patches.append(patch.get_alpha())
+                self.patches.append(patch.get_alpha())
                 patch.set_alpha(0)
         if self.ax.texts:
             for text in self.ax.texts:
-                texts.append(text.get_alpha())
+                self.texts.append(text.get_alpha())
                 text.set_alpha(0)
 
         if self.arrow_axs.collections:
             for collection in self.arrow_axs.collections:
-                collections.append(collection.get_alpha())
+                self.collections.append(collection.get_alpha())
                 collection.set_alpha(0)
         if self.arrow_axs.patches:
             for patch in self.arrow_axs.patches:
-                patches.append(patch.get_alpha())
+                self.patches.append(patch.get_alpha())
                 patch.set_alpha(0)
         if self.arrow_axs.texts:
             for text in self.arrow_axs.texts:
-                texts.append(text.get_alpha())
+                self.texts.append(text.get_alpha())
                 text.set_alpha(0)
 
-        self.ax.figure.canvas.draw()
-
+    def get_blit(self):
         bbox_mins = self.arrow_axs.bbox.get_points()[0]
         bbox_maxs = self.ax.bbox.get_points()[1]
         self.bbox = Bbox((bbox_mins, bbox_maxs))
 
         self.blit = self.ax.figure.canvas.copy_from_bbox(self.bbox)
 
+    def blend_in(self):
         if self.ax.collections:
             for idx, collection in enumerate(self.ax.collections):
-                collection.set_alpha(collections[idx])
+                collection.set_alpha(self.collections[idx])
                 self.ax.draw_artist(collection)
         if self.ax.patches:
             for idx, patch in enumerate(self.ax.patches):
-                patch.set_alpha(patches[idx])
+                patch.set_alpha(self.patches[idx])
                 self.ax.draw_artist(patch)
         if self.ax.texts:
             for idx, text in enumerate(self.ax.texts):
-                text.set_alpha(texts[idx])
+                text.set_alpha(self.texts[idx])
                 self.ax.draw_artist(text)
 
         if self.arrow_axs.collections:
             for idx, collection in enumerate(self.arrow_axs.collections):
-                collection.set_alpha(collections[idx])
+                collection.set_alpha(self.collections[idx])
                 self.arrow_axs.draw_artist(collection)
         if self.arrow_axs.patches:
             for idx, patch in enumerate(self.arrow_axs.patches):
-                patch.set_alpha(patches[idx])
+                patch.set_alpha(self.patches[idx])
                 self.arrow_axs.draw_artist(patch)
         if self.arrow_axs.texts:
             for idx, text in enumerate(self.arrow_axs.texts):
-                text.set_alpha(texts[idx])
+                text.set_alpha(self.texts[idx])
                 self.arrow_axs.draw_artist(text)
 
     def on_motion(self, event):
@@ -366,7 +379,7 @@ class DraggableAnnotation1d:
                 self.plot_dicts[self.subplot_idx]["proj"] = self.proj
                 # check if there are preselected points and update plot
                 x_subselections = []
-                for subselection in self.plot_dicts[0]["subselections"]:
+                for subselection in self.parent.subselections:
                     if subselection.shape[0] != 0:
                         x_subselections.append(x[subselection])
                     else:
@@ -384,7 +397,8 @@ class DraggableAnnotation1d:
                 self.plot_dicts[self.subplot_idx]["ax"].set_yticks([])
 
                 self.plot_dicts[self.subplot_idx]["selector"].disconnect()
-                bar_selector = BarSelect(plot_dicts=self.plot_dicts,
+                bar_selector = BarSelect(parent=self.parent,
+                                         plot_dicts=self.plot_dicts,
                                          subplot_idx=self.subplot_idx,
                                          feature_selection=self.feature_selection,
                                          colors=self.colors,
@@ -422,9 +436,10 @@ class DraggableAnnotation1d:
 
 
 class DraggableAnnotation2d:
-    def __init__(self, data, proj, ax, scat, half_range,
+    def __init__(self, parent, data, proj, ax, scat, half_range,
                  feature_selection, labels, plot_dict,
-                 plot_dicts, plot_idx, pause_var, canvas_drawn):
+                 plot_dicts, plot_idx, pause_var):
+        self.parent = parent
         self.data = data
         self.feature_selection = feature_selection
         self.proj = proj
@@ -437,7 +452,7 @@ class DraggableAnnotation2d:
         self.plot_dicts = plot_dicts
         self.plot_idx = plot_idx
         self.pause_var = pause_var
-        self.canvas_drawn = canvas_drawn
+        self.blit = None
 
         if sum(self.feature_selection) > 10:
             self.alpha = 0.1
@@ -467,17 +482,12 @@ class DraggableAnnotation2d:
                                      self.proj[axis_id, 1]*2/3,
                                      labels[axis_id],
                                      alpha=self.alpha,
-                                     animated=True)
+                                     animated=True,
+                                     clip_on=True)
 
                 self.ax.draw_artist(arr)
                 self.ax.draw_artist(label)
 
-                self.cidpress = arr.figure.canvas.mpl_connect(
-                    "button_press_event", self.on_press)
-                self.cidrelease = arr.figure.canvas.mpl_connect(
-                    "button_release_event", self.on_release)
-                self.cidmotion = arr.figure.canvas.mpl_connect(
-                    "motion_notify_event", self.on_motion)
             else:
                 arr = None
                 label = None
@@ -485,39 +495,41 @@ class DraggableAnnotation2d:
             self.arrs.append(arr)
             self.labels.append(label)
 
-    def get_blit(self):
-        collections = []
-        patches = []
-        texts = []
+        self.connect()
+
+    def blend_out(self):
+        self.collections = []
+        self.patches = []
+        self.texts = []
         if self.ax.collections:
             for collection in self.ax.collections:
-                collections.append(collection.get_alpha())
+                self.collections.append(collection.get_alpha())
                 collection.set_alpha(0)
         if self.ax.patches:
             for patch in self.ax.patches:
-                patches.append(patch.get_alpha())
+                self.patches.append(patch.get_alpha())
                 patch.set_alpha(0)
         if self.ax.texts:
             for text in self.ax.texts:
-                texts.append(text.get_alpha())
+                self.texts.append(text.get_alpha())
                 text.set_alpha(0)
 
-        self.ax.figure.canvas.draw()
-
+    def get_blit(self):
         self.blit = self.ax.figure.canvas.copy_from_bbox(
             self.ax.bbox)
 
+    def blend_in(self):
         if self.ax.collections:
             for idx, collection in enumerate(self.ax.collections):
-                collection.set_alpha(collections[idx])
+                collection.set_alpha(self.collections[idx])
                 self.ax.draw_artist(collection)
         if self.ax.patches:
             for idx, patch in enumerate(self.ax.patches):
-                patch.set_alpha(patches[idx])
+                patch.set_alpha(self.patches[idx])
                 self.ax.draw_artist(patch)
         if self.ax.texts:
             for idx, text in enumerate(self.ax.texts):
-                text.set_alpha(texts[idx])
+                text.set_alpha(self.texts[idx])
                 self.ax.draw_artist(text)
 
     def on_press(self, event):
@@ -533,9 +545,9 @@ class DraggableAnnotation2d:
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""
-        if event.inaxes != self.ax:
-            return
         if event.button == 1:
+            return
+        if event.inaxes != self.ax:
             return
 
         self.ax.figure.canvas.restore_region(self.blit)
@@ -598,3 +610,11 @@ class DraggableAnnotation2d:
         self.ax.figure.canvas.mpl_disconnect(self.cidpress)
         self.ax.figure.canvas.mpl_disconnect(self.cidrelease)
         self.ax.figure.canvas.mpl_disconnect(self.cidmotion)
+
+    def connect(self):
+        self.cidpress = self.ax.figure.canvas.mpl_connect(
+            "button_press_event", self.on_press)
+        self.cidrelease = self.ax.figure.canvas.mpl_connect(
+            "button_release_event", self.on_release)
+        self.cidmotion = self.ax.figure.canvas.mpl_connect(
+            "motion_notify_event", self.on_motion)
