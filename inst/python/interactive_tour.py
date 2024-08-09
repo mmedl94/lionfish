@@ -22,7 +22,7 @@ import seaborn as sns
 
 
 def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None,
-                     preselection=None, preselection_names=None, n_subsets=3, size=10):
+                     preselection=None, preselection_names=None, n_subsets=3, size=5):
     """Launch InteractiveTourInterface object"""
     app = InteractiveTourInterface(data,
                                    col_names,

@@ -41,7 +41,7 @@
 #'                 n_max_cols=2)
 
 interactive_tour <- function(data, col_names, plot_objects, half_range, n_max_cols, preselection=FALSE,
-                             preselection_names=FALSE, n_subsets=3, size){
+                             preselection_names=FALSE, n_subsets=3, size=5){
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))){

@@ -44,13 +44,14 @@ obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
 
-interactive_tour(data,
-                 col_names,
-                 list(obj1,obj2,obj3,obj4),
-                 half_range,
+interactive_tour(data=data,
+                 col_names=col_names,
+                 plot_objects=list(obj1, obj2, obj3, obj4),
                  n_max_cols=2,
                  preselection=clusters,
+                 preselection_names=flea_subspecies,
                  n_subsets = 5,
-                 preselection_names=flea_subspecies)
+                 half_range = half_range,
+                 size=5)
 
 ```
