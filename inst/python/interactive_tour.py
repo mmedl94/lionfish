@@ -82,6 +82,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.preselection = np.array(preselection, dtype=int)-1
         self.preselection_names = preselection_names
         self.colors = matplotlib.colormaps["tab10"].colors
+        self.colors = [[r, g, b, 1.0] for [r, g, b] in self.colors]
 
         if not isinstance(plot_objects, list):
             plot_objects = [plot_objects]
@@ -143,6 +144,23 @@ class InteractiveTourInterface(ctk.CTk):
 
         ###### Subselections ######
 
+        def update_colors(self, subselection_idx):
+            col_array = np.array(self.colors[subselection_idx])
+            selected_row_idx = np.where(np.all(self.fc[:, :3] == col_array[:3],
+                                               axis=1))
+
+            if self.colors[subselection_idx][-1] == 1:
+                self.colors[subselection_idx][-1] = 0.3
+                self.fc[selected_row_idx, -1] = 0.1
+            else:
+                self.colors[subselection_idx][-1] = 1
+                self.fc[selected_row_idx, -1] = 1
+            for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+                if plot_dict["subtype"] in ["1d_tour", "2d_tour"]:
+                    self.plot_dicts[subplot_idx]["update_plot"] = False
+
+            self.pause_var.set(0)
+
         subselection_frame = ctk.CTkFrame(sidebar)
         subselection_frame.grid(row=1, column=0)
 
@@ -198,14 +216,18 @@ class InteractiveTourInterface(ctk.CTk):
             textbox.grid(row=subselection_idx, column=1,
                          pady=3, padx=0, sticky="w")
 
-            color_box = ctk.CTkEntry(master=subselection_frame,
-                                     placeholder_text="",
-                                     width=24,
-                                     height=24,
-                                     state="disabled",
-                                     fg_color=matplotlib.colors.rgb2hex(self.colors[subselection_idx]))
+            color_box = ctk.CTkButton(master=subselection_frame,
+                                      text="",
+                                      width=24,
+                                      height=24,
+                                      hover=False,
+                                      fg_color=matplotlib.colors.rgb2hex(
+                                          self.colors[subselection_idx]),
+                                      command=partial(update_colors,
+                                                      self,
+                                                      subselection_idx))
             color_box.grid(row=subselection_idx, column=2,
-                           pady=3, padx=5, sticky="w")
+                           pady=3, padx=2, sticky="w")
 
         def reset_selection(self):
             self.subselections = self.orig_subselections.copy()
@@ -896,13 +918,6 @@ class InteractiveTourInterface(ctk.CTk):
                                         int(n_subsets))
                     cat_clust_data = cat_clust_data.flatten()
 
-                    # make cluster color scheme
-                    clust_colors = np.tile(self.colors,
-                                           (len(self.feature_selection), 1))
-                    clust_colors = np.concatenate((clust_colors,
-                                                   np.ones((clust_colors.shape[0], 1))),
-                                                  axis=1)
-
                     clust_ids = np.arange(n_subsets)
                     clust_ids = np.tile(clust_ids, len(self.feature_selection))
 
@@ -911,10 +926,6 @@ class InteractiveTourInterface(ctk.CTk):
                         if subselection_var.get() == 1:
                             selected_cluster = subselection_id
 
-                    not_selected = np.where(
-                        clust_ids != selected_cluster)[0]
-                    clust_colors[not_selected, -1] = 0.2
-
                     feature_selection_bool = np.repeat(
                         self.feature_selection, n_subsets)
 
@@ -922,7 +933,6 @@ class InteractiveTourInterface(ctk.CTk):
                         self.axs[subplot_idx].clear()
 
                     x = cat_clust_data[feature_selection_bool]
-                    fc = clust_colors[feature_selection_bool]
 
                     # Sort to display inter cluster max at the top
                     sort_idx = np.arange(
@@ -936,10 +946,15 @@ class InteractiveTourInterface(ctk.CTk):
                     # flip var_ids so most important is on top
                     var_ids = np.flip(var_ids)
 
+                    # Get coloration scheme
+                    fc = np.tile(self.colors,
+                                 (len(self.feature_selection), 1))
+
                     scat = self.axs[subplot_idx].scatter(
                         x[sorting_helper],
                         var_ids,
-                        c=fc[sorting_helper])
+                        c=fc[sorting_helper]
+                    )
 
                     y_tick_labels = np.array(col_names)[self.feature_selection]
                     y_tick_labels = y_tick_labels[ranked_vars]
