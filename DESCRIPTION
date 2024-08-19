@@ -12,3 +12,4 @@ RoxygenNote: 7.3.1
 Imports: 
     reticulate,
     tourr
+URL: https://mmedl94.github.io/pytourr/
