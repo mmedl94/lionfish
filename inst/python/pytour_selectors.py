@@ -17,25 +17,25 @@ from helpers import gram_schmidt
 
 
 class LassoSelect:
-    def __init__(self, parent, plot_dicts, subplot_idx, colors, n_pts, pause_var):
+    def __init__(self, parent, subplot_idx):
         # initialize arguments
         self.parent = parent
-        self.n_pts = n_pts
-        self.plot_dicts = plot_dicts
+        self.n_pts = parent.n_pts
+        self.plot_dicts = parent.plot_dicts
         self.subplot_idx = subplot_idx
-        self.ax = plot_dicts[subplot_idx]["ax"]
-        self.canvas = plot_dicts[subplot_idx]["ax"].figure.canvas
-        self.collection = plot_dicts[subplot_idx]["ax"].collections[0]
-        self.colors = colors
-        self.data = plot_dicts[subplot_idx]["data"]
-        self.pause_var = pause_var
+        self.ax = parent.axs[subplot_idx]
+        self.canvas = self.ax.figure.canvas
+        self.collection = self.ax.collections[0]
+        self.colors = parent.colors
+        self.data = parent.data
+        self.pause_var = parent.pause_var
 
     def get_blit(self):
         self.blit = self.ax.figure.canvas.copy_from_bbox(
             self.ax.bbox)
         # initialize lasso selector
         self.lasso = LassoSelector(
-            self.plot_dicts[self.subplot_idx]["ax"],
+            self.ax,
             onselect=partial(self.onselect),
             button=1,
             useblit=True)
@@ -83,26 +83,26 @@ class LassoSelect:
 
 
 class BarSelect:
-    def __init__(self, parent, plot_dicts, subplot_idx, feature_selection, colors, half_range, pause_var):
+    def __init__(self, parent, subplot_idx):
         # initialize parameters
         self.parent = parent
-        self.plot_dicts = plot_dicts
+        self.plot_dicts = parent.plot_dicts
         self.subplot_idx = subplot_idx
-        self.plot_dict = self.plot_dicts[self.subplot_idx]
-        self.feature_selection = feature_selection
-        self.half_range = half_range
-        self.ax = plot_dicts[subplot_idx]["ax"]
-        self.data = plot_dicts[subplot_idx]["data"]
-        self.subtype = plot_dicts[subplot_idx]["subtype"]
+        self.plot_dict = parent.plot_dicts[subplot_idx]
+        self.feature_selection = parent.feature_selection
+        self.half_range = parent.half_range
+        self.ax = parent.axs[subplot_idx]
+        self.data = parent.data
+        self.subtype = parent.plot_dicts[subplot_idx]["subtype"]
         if self.subtype == "hist":
-            self.hist_feature = plot_dicts[subplot_idx]["hist_feature"]
+            self.hist_feature = parent.plot_dicts[subplot_idx]["hist_feature"]
 
         self.canvas = self.ax.figure.canvas
         self.collection = self.ax.collections
         self.patches = self.ax.patches
         self.y_lims = self.ax.get_ylim()
-        self.colors = colors
-        self.pause_var = pause_var
+        self.colors = parent.colors
+        self.pause_var = parent.pause_var
 
         self.connection = self.ax.figure.canvas.mpl_connect("pick_event", partial(
             self.onselect))
@@ -115,12 +115,12 @@ class BarSelect:
                     plot_dict["proj"][self.feature_selection, 0] = plot_dict["proj"][self.feature_selection, 0] / \
                         np.linalg.norm(
                             plot_dict["proj"][self.feature_selection, 0])
-                    x = np.matmul(plot_dict["data"][:, self.feature_selection],
+                    x = np.matmul(parent.data[:, self.feature_selection],
                                   plot_dict["proj"][self.feature_selection])/self.half_range
                     self.plot_dicts[subplot_idx]["x"] = x[:, 0]
                 elif plot_dict["subtype"] == "hist":
-                    self.plot_dicts[subplot_idx]["x"] = plot_dict["data"][:,
-                                                                          plot_dict["hist_feature"]]
+                    self.plot_dicts[subplot_idx]["x"] = parent.data[:,
+                                                                    plot_dict["hist_feature"]]
 
     def get_blit(self):
         pass
@@ -132,20 +132,18 @@ class BarSelect:
     def onselect(self, event):
         if event.artist.axes != self.ax:
             return
-        # self.ax.figure.canvas.restore_region(
-        #    self.plot_dicts[self.subplot_idx]["blit"])
 
         min_select = event.artist.get_x()
         max_select = min_select+event.artist.get_width()
 
         cur_plot_dict = self.plot_dicts[self.subplot_idx]
-        feature_selection = self.plot_dicts[self.subplot_idx]["feature_selection"]
+        feature_selection = self.parent.feature_selection
 
         if cur_plot_dict["subtype"] == "1d_tour":
             cur_plot_dict["proj"][feature_selection, 0] = cur_plot_dict["proj"][feature_selection, 0] / \
                 np.linalg.norm(
                     cur_plot_dict["proj"][feature_selection, 0])
-            x = np.matmul(cur_plot_dict["data"][:, feature_selection],
+            x = np.matmul(self.data[:, feature_selection],
                           cur_plot_dict["proj"][feature_selection])/self.half_range
             x = x[:, 0]
             cur_plot_dict["x"] = x
@@ -185,20 +183,20 @@ class BarSelect:
 
 
 class DraggableAnnotation1d:
-    def __init__(self, parent, data, plot_dicts, subplot_idx, hist, half_range, feature_selection, colors, labels, pause_var):
+    def __init__(self, parent, subplot_idx, hist):
         self.parent = parent
-        self.data = data
-        self.plot_dicts = plot_dicts
+        self.data = parent.data
+        self.plot_dicts = parent.plot_dicts
         self.subplot_idx = subplot_idx
-        self.feature_selection = feature_selection
-        self.colors = colors
-        self.proj = plot_dicts[subplot_idx]["proj"]
+        self.feature_selection = parent.feature_selection
+        self.colors = parent.colors
+        self.proj = self.plot_dicts[subplot_idx]["proj"]
         self.proj.setflags(write=True)
         self.press = None
-        self.ax = plot_dicts[subplot_idx]["ax"]
+        self.ax = parent.axs[subplot_idx]
         self.hist = hist
-        self.half_range = half_range
-        self.pause_var = pause_var
+        self.pause_var = parent.pause_var
+        self.half_range = parent.half_range
 
         self.arrs = []
         self.labels = []
@@ -242,7 +240,7 @@ class DraggableAnnotation1d:
                                            length_includes_head=True)
 
                 label = self.arrow_axs.text(dx, y_0,
-                                            labels[axis_id],
+                                            parent.col_names[axis_id],
                                             alpha=self.alpha,
                                             clip_on=True)
 
@@ -252,7 +250,7 @@ class DraggableAnnotation1d:
                     label = self.arrow_axs.text(0,
                                                 axis_id /
                                                 len(self.feature_selection),
-                                                labels[axis_id],
+                                                parent.col_names[axis_id],
                                                 alpha=self.alpha)
                 else:
                     label = None
@@ -260,11 +258,11 @@ class DraggableAnnotation1d:
             self.arrs.append(arr)
             self.labels.append(label)
 
-        self.cidpress = arr.figure.canvas.mpl_connect(
+        self.cidpress = parent.fig.canvas.mpl_connect(
             "button_press_event", self.on_press)
-        self.cidrelease = arr.figure.canvas.mpl_connect(
+        self.cidrelease = parent.fig.canvas.mpl_connect(
             "button_release_event", self.on_release)
-        self.cidmotion = arr.figure.canvas.mpl_connect(
+        self.cidmotion = parent.fig.canvas.mpl_connect(
             "motion_notify_event", self.on_motion)
 
     def on_press(self, event):
@@ -384,26 +382,21 @@ class DraggableAnnotation1d:
                         x_subselections.append(x[subselection])
                     else:
                         x_subselections.append(np.array([]))
-                xlim = self.plot_dicts[self.subplot_idx]["ax"].get_xlim()
-                self.plot_dicts[self.subplot_idx]["ax"].clear()
-                self.plot_dicts[self.subplot_idx]["ax"].hist(
+                xlim = self.ax.get_xlim()
+                self.ax.clear()
+                self.ax.hist(
                     x_subselections,
                     stacked=True,
                     picker=True,
                     color=self.colors[:len(x_subselections)],
                     animated=True)
-                self.plot_dicts[self.subplot_idx]["ax"].set_xlim(xlim)
-                self.plot_dicts[self.subplot_idx]["ax"].set_xticks([])
-                self.plot_dicts[self.subplot_idx]["ax"].set_yticks([])
+                self.ax.set_xlim(xlim)
+                self.ax.set_xticks([])
+                self.ax.set_yticks([])
 
                 self.plot_dicts[self.subplot_idx]["selector"].disconnect()
                 bar_selector = BarSelect(parent=self.parent,
-                                         plot_dicts=self.plot_dicts,
-                                         subplot_idx=self.subplot_idx,
-                                         feature_selection=self.feature_selection,
-                                         colors=self.colors,
-                                         half_range=self.half_range,
-                                         pause_var=self.pause_var)
+                                         subplot_idx=self.subplot_idx)
                 self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
         for collection in self.ax.collections:
@@ -436,22 +429,20 @@ class DraggableAnnotation1d:
 
 
 class DraggableAnnotation2d:
-    def __init__(self, parent, data, proj, ax, scat, half_range,
-                 feature_selection, labels, plot_dict,
-                 plot_dicts, plot_idx, pause_var):
+    def __init__(self, parent, plot_idx):
         self.parent = parent
-        self.data = data
-        self.feature_selection = feature_selection
-        self.proj = proj
+        self.data = parent.data
+        self.feature_selection = parent.feature_selection
+        self.proj = parent.plot_dicts[plot_idx]["proj"]
         self.proj.setflags(write=True)
         self.press = None
-        self.ax = ax
-        self.half_range = half_range
+        self.ax = parent.axs[plot_idx]
+        self.half_range = parent.half_range
         self.pressing = 0
-        self.plot_dict = plot_dict
-        self.plot_dicts = plot_dicts
+        self.plot_dict = parent.plot_dicts[plot_idx]
+        self.plot_dicts = parent.plot_dicts
         self.plot_idx = plot_idx
-        self.pause_var = pause_var
+        self.pause_var = parent.pause_var
         self.blit = None
 
         if sum(self.feature_selection) > 10:
@@ -480,7 +471,7 @@ class DraggableAnnotation2d:
 
                 label = self.ax.text(self.proj[axis_id, 0]*2/3,
                                      self.proj[axis_id, 1]*2/3,
-                                     labels[axis_id],
+                                     parent.col_names[axis_id],
                                      alpha=self.alpha,
                                      animated=True,
                                      clip_on=True)
