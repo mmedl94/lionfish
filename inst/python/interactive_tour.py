@@ -22,6 +22,22 @@ import customtkinter as ctk
 def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None,
                      preselection=None, preselection_names=None, n_subsets=3, size=5):
     """Launch InteractiveTourInterface object"""
+
+    # The suicide argument causes the window to close after inital plotting
+    # Restarting the app massively increases performance
+    # It is unknown why
+    app = InteractiveTourInterface(data,
+                                   col_names,
+                                   plot_objects,
+                                   half_range,
+                                   n_max_cols,
+                                   preselection,
+                                   preselection_names,
+                                   n_subsets,
+                                   size,
+                                   suicide=True)
+    app.mainloop()
+
     app = InteractiveTourInterface(data,
                                    col_names,
                                    plot_objects,
@@ -36,7 +52,7 @@ def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=
 
 class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
-                 preselection, preselection_names, n_subsets, size):
+                 preselection, preselection_names, n_subsets, size, suicide=False):
         super().__init__()
 
         def accept(event):
@@ -44,8 +60,9 @@ class InteractiveTourInterface(ctk.CTk):
                 self.initial_loop = False
 
                 for subplot_idx, _ in enumerate(self.plot_objects):
-                    if "selector" in self.plot_dicts[subplot_idx]:
-                        self.plot_dicts[subplot_idx]["selector"].disconnect()
+
+                    # if "selector" in self.plot_dicts[subplot_idx]:
+                    #    self.plot_dicts[subplot_idx]["selector"].disconnect()
 
                     if self.frame_vars[subplot_idx].get() != "":
                         if event.key == "right":
@@ -58,7 +75,8 @@ class InteractiveTourInterface(ctk.CTk):
                             if last_frame < 0:
                                 last_frame = 0
                             self.frame_vars[subplot_idx].set(str(last_frame))
-                self.pause_var.set(1)
+                self.frame_update = True
+                self.pause_var.set(0)
 
         self.title("Interactive tourr")
         self.data = data
@@ -67,7 +85,6 @@ class InteractiveTourInterface(ctk.CTk):
         self.plot_objects = plot_objects
         self.displayed_tour = "Original tour"
         self.r = r
-        self.reset_selection_check = False
         self.size = size
 
         if preselection is not False:
@@ -234,8 +251,8 @@ class InteractiveTourInterface(ctk.CTk):
             for subplot_idx, _ in enumerate(self.plot_objects):
                 if "selector" in self.plot_dicts[subplot_idx]:
                     self.plot_dicts[subplot_idx]["selector"].disconnect()
+                self.plot_dicts[subplot_idx]["reset_selection_check"] = True
 
-            self.reset_selection_check = True
             self.pause_var.set(0)
 
         reset_selection_button = ctk.CTkButton(master=subselection_frame,
@@ -256,7 +273,7 @@ class InteractiveTourInterface(ctk.CTk):
             textvariable = tk.StringVar(self, "")
 
             label = ctk.CTkLabel(master=frame_selection_frame,
-                                 text=f"Plot #{subplot_idx+1}")
+                                 text=f"Plot #{subplot_idx+1} Frame")
             label.grid(row=subplot_idx, column=0,
                        pady=3, padx=0, sticky="w")
 
@@ -344,7 +361,7 @@ class InteractiveTourInterface(ctk.CTk):
         tour_types = ["Local tour",
                       "Guided tour - holes",
                       "Guided tour - holes - better",
-                      "Guided tour - lda"]
+                      "Guided tour - LDA"]
 
         self.selected_tour_type = ctk.StringVar(
             value="Local tour")
@@ -382,7 +399,7 @@ class InteractiveTourInterface(ctk.CTk):
                             dimension)
                         self.displayed_tour = self.selected_tour_type.get()
 
-                    elif self.selected_tour_type.get() == "Guided tour - lda":
+                    elif self.selected_tour_type.get() == "Guided tour - LDA":
                         subselection_idxs = np.zeros(self.n_pts, dtype=int)
                         for subselection_idx, arr in enumerate(self.subselections):
                             if arr.shape[0] != 0:
@@ -489,7 +506,7 @@ class InteractiveTourInterface(ctk.CTk):
         # resolve while loop in case of window closing
         def cleanup():
             self.frame = self.n_frames
-            self.pause_var.set(1)
+            self.pause_var.set(0)
         self.protocol("WM_DELETE_WINDOW", cleanup)
 
         self.plot_dicts = [{} for i, _ in enumerate(plot_objects)]
@@ -498,41 +515,57 @@ class InteractiveTourInterface(ctk.CTk):
         ###### Plot loop ######
         self.blit = 0
         self.last_frame = -1
+        self.frame_update = True
         while self.frame < self.n_frames:
             self.pause_var = tk.StringVar(value=42)
             for subplot_idx, plot_object in enumerate(plot_objects):
                 frame = self.frame
+                if self.frame_update is False or self.initial_loop is True:
+                    if plot_object["type"] == "2d_tour":
+                        launch_2d_tour(self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "1d_tour":
+                        launch_1d_tour(self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "scatter":
+                        launch_scatterplot(self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "hist":
+                        launch_histogram(self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "cat_clust_interface":
+                        launch_cat_clust_interface(
+                            self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "mosaic":
+                        launch_mosaic(self, plot_object, subplot_idx)
+                    elif plot_object["type"] == "heatmap":
+                        launch_heatmap(self, plot_object, subplot_idx)
+                else:
+                    if plot_object["type"] == "2d_tour":
+                        self.plot_dicts[subplot_idx]["draggable_annot"].update(plot_object,
+                                                                               frame)
+                    elif plot_object["type"] == "1d_tour":
+                        self.plot_dicts[subplot_idx]["draggable_annot"].update(plot_object,
+                                                                               frame)
 
-                if plot_object["type"] == "2d_tour":
-                    launch_2d_tour(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "1d_tour":
-                    launch_1d_tour(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "scatter":
-                    launch_scatterplot(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "hist":
-                    launch_histogram(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "cat_clust_interface":
-                    launch_cat_clust_interface(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "mosaic":
-                    launch_mosaic(self, plot_object, subplot_idx)
-                elif plot_object["type"] == "heatmap":
-                    launch_heatmap(self, plot_object, subplot_idx)
+            if self.frame_update is False or self.initial_loop is True:
+                for plot_dict in self.plot_dicts:
+                    if "draggable_annot" in plot_dict:
+                        plot_dict["draggable_annot"].blend_out()
 
-            for plot_dict in self.plot_dicts:
-                if "draggable_annot" in plot_dict:
-                    plot_dict["draggable_annot"].blend_out()
+                self.fig.canvas.draw()
 
-            self.fig.canvas.draw()
+                for plot_dict in self.plot_dicts:
+                    if "draggable_annot" in plot_dict:
+                        plot_dict["draggable_annot"].get_blit()
+                        plot_dict["draggable_annot"].blend_in()
+                    if "selector" in plot_dict:
+                        plot_dict["selector"].get_blit()
 
-            for plot_dict in self.plot_dicts:
-                if "draggable_annot" in plot_dict:
-                    plot_dict["draggable_annot"].get_blit()
-                    plot_dict["draggable_annot"].blend_in()
-                if "selector" in plot_dict:
-                    plot_dict["selector"].get_blit()
+                self.fig.canvas.draw()
 
-            self.fig.canvas.draw()
             self.last_frame = frame
+            self.frame_update = False
+
+            if suicide == True:
+                self.event_generate("<<WM_DELETE_WINDOW>>")
+                break
 
             def wait(self):
                 var = tk.IntVar()
@@ -544,6 +577,7 @@ class InteractiveTourInterface(ctk.CTk):
             if self.animation_switch.get() == 1:
                 wait(self)
                 self.initial_loop = False
+                self.frame_update = True
                 for subplot_idx, _ in enumerate(self.plot_objects):
                     if "selector" in self.plot_dicts[subplot_idx]:
                         self.plot_dicts[subplot_idx]["selector"].disconnect()

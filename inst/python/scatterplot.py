@@ -8,6 +8,7 @@ def launch_scatterplot(parent, plot_object, subplot_idx):
     col_index_y = parent.col_names.index(plot_object["obj"][1])
     x = parent.data[:, col_index_x]
     y = parent.data[:, col_index_y]
+
     if parent.initial_loop is True:
         parent.fc = np.repeat(
             np.array(parent.colors[0])[:, np.newaxis], parent.n_pts, axis=1).T
@@ -21,6 +22,7 @@ def launch_scatterplot(parent, plot_object, subplot_idx):
         parent.axs[subplot_idx].collections[0].set_facecolors(
             parent.fc)
         parent.plot_dicts[subplot_idx]["selector"].disconnect()
+
     x_lims = parent.axs[subplot_idx].get_xlim()
     y_lims = parent.axs[subplot_idx].get_ylim()
     parent.axs[subplot_idx].set_xlim(x_lims)

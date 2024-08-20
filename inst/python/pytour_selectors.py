@@ -76,7 +76,9 @@ class LassoSelect:
         self.collection.set_facecolors(self.parent.fc)
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
-        self.pause_var.set(1)
+
+        self.parent.frame_update = False
+        self.parent.pause_var.set(0)
 
     def disconnect(self):
         self.lasso.disconnect_events()
@@ -176,7 +178,9 @@ class BarSelect:
                 self.parent.fc[subselection] = self.colors[col_idx]
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
-        self.pause_var.set(0)
+
+        self.parent.frame_update = False
+        self.parent.pause_var.set(0)
 
     def disconnect(self):
         self.canvas.mpl_disconnect(self.connection)
@@ -344,6 +348,8 @@ class DraggableAnnotation1d:
         if event.inaxes != self.arrow_axs:
             return
         self.ax.figure.canvas.restore_region(self.blit)
+        self.proj = self.plot_dicts[self.subplot_idx]["proj"]
+
         if self.press is None:
             if self.alpha != 1:
                 for label_idx, label in enumerate(self.labels):
@@ -373,8 +379,10 @@ class DraggableAnnotation1d:
                 x = np.matmul(self.data[:, self.feature_selection],
                               self.proj[self.feature_selection])/self.half_range
                 x = x[:, 0]
+
                 self.plot_dicts[self.subplot_idx]["x"] = x
                 self.plot_dicts[self.subplot_idx]["proj"] = self.proj
+
                 # check if there are preselected points and update plot
                 x_subselections = []
                 for subselection in self.parent.subselections:
@@ -418,6 +426,74 @@ class DraggableAnnotation1d:
     def on_release(self, event):
         """Clear button press information."""
         self.press = None
+
+    def update(self, plot_object, frame):
+        self.ax.figure.canvas.restore_region(self.blit)
+
+        frame = int(self.parent.frame_vars[self.subplot_idx].get())
+
+        if frame >= plot_object["obj"].shape[-1]-1:
+            frame = plot_object["obj"].shape[-1]-1
+            self.parent.frame_vars[self.subplot_idx].set(str(frame))
+
+        self.proj = np.copy(plot_object["obj"][:, :, frame])
+        self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+            np.linalg.norm(self.proj[self.feature_selection, 0])
+
+        for axis_id, feature_bool in enumerate(self.parent.feature_selection):
+            if feature_bool == True:
+                self.arrs[axis_id].set_data(dx=self.proj[axis_id, 0])
+                if self.labels[axis_id] != None:
+                    # Update labels
+                    self.labels[axis_id].set_x(self.proj[axis_id])
+
+        x = np.matmul(self.data[:, self.feature_selection],
+                      self.proj[self.feature_selection])/self.half_range
+        x = x[:, 0]
+
+        self.plot_dicts[self.subplot_idx]["x"] = x
+        self.plot_dicts[self.subplot_idx]["proj"] = self.proj
+
+        x_subselections = []
+        for subselection in self.parent.subselections:
+            if subselection.shape[0] != 0:
+                x_subselections.append(x[subselection])
+            else:
+                x_subselections.append(np.array([]))
+
+        xlim = self.ax.get_xlim()
+        self.ax.clear()
+        self.ax.hist(
+            x_subselections,
+            stacked=True,
+            picker=True,
+            color=self.colors[:len(x_subselections)],
+            animated=True)
+
+        self.ax.set_xlim(xlim)
+        self.ax.set_xticks([])
+        self.ax.set_yticks([])
+
+        self.plot_dicts[self.subplot_idx]["selector"].disconnect()
+        bar_selector = BarSelect(parent=self.parent,
+                                 subplot_idx=self.subplot_idx)
+        self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
+
+        for collection in self.ax.collections:
+            self.ax.draw_artist(collection)
+        for patch in self.ax.patches:
+            self.ax.draw_artist(patch)
+        for text in self.ax.texts:
+            self.ax.draw_artist(text)
+
+        for collection in self.arrow_axs.collections:
+            self.arrow_axs.draw_artist(collection)
+        for patch in self.arrow_axs.patches:
+            self.arrow_axs.draw_artist(patch)
+        for text in self.arrow_axs.texts:
+            self.arrow_axs.draw_artist(text)
+
+        self.ax.figure.canvas.blit(self.bbox)
 
     def remove(self):
         self.arrow_axs.remove()
@@ -506,8 +582,7 @@ class DraggableAnnotation2d:
                 text.set_alpha(0)
 
     def get_blit(self):
-        self.blit = self.ax.figure.canvas.copy_from_bbox(
-            self.ax.bbox)
+        self.blit = self.ax.figure.canvas.copy_from_bbox(self.ax.bbox)
 
     def blend_in(self):
         if self.ax.collections:
@@ -584,6 +659,8 @@ class DraggableAnnotation2d:
                                      self.proj[self.feature_selection])/self.half_range
                 self.ax.collections[0].set_offsets(new_data)
 
+        self.parent.plot_dicts[self.plot_idx]["proj"] = self.proj
+
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)
         for patch in self.ax.patches:
@@ -596,6 +673,55 @@ class DraggableAnnotation2d:
         """Clear button press information."""
         self.pressing = 0
         self.press = None
+
+    def update(self, plot_object, frame):
+        self.ax.figure.canvas.restore_region(self.blit)
+
+        frame = int(self.parent.frame_vars[self.plot_idx].get())
+
+        if frame >= plot_object["obj"].shape[-1]-1:
+            frame = plot_object["obj"].shape[-1]-1
+            self.parent.frame_vars[self.plot_idx].set(str(frame))
+
+        self.proj = np.copy(plot_object["obj"][:, :, frame])
+
+        # Orthonormalize
+        self.proj[self.feature_selection, 0] = self.proj[self.feature_selection, 0] / \
+            np.linalg.norm(self.proj[self.feature_selection, 0])
+        self.proj[self.feature_selection, 1] = gram_schmidt(
+            self.proj[self.feature_selection, 0], self.proj[self.feature_selection, 1])
+        self.proj[self.feature_selection, 1] = self.proj[self.feature_selection, 1] / \
+            np.linalg.norm(self.proj[self.feature_selection, 1])
+
+        for proj_axis_id, feature_bool in enumerate(self.feature_selection):
+            if feature_bool == True:
+                self.arrs[proj_axis_id].set_data(x=0,
+                                                 y=0,
+                                                 dx=self.proj[proj_axis_id,
+                                                              0]*2/3,
+                                                 dy=self.proj[proj_axis_id,
+                                                              1]*2/3)
+                # Update labels
+                self.labels[proj_axis_id].set_x(
+                    self.proj[proj_axis_id, 0]*2/3)
+                self.labels[proj_axis_id].set_y(
+                    self.proj[proj_axis_id, 1]*2/3)
+
+        # Update scattplot locations
+        new_data = np.matmul(self.data[:, self.feature_selection],
+                             self.proj[self.feature_selection])/self.half_range
+        self.ax.collections[0].set_offsets(new_data)
+
+        self.parent.plot_dicts[self.plot_idx]["proj"] = self.proj
+
+        for collection in self.ax.collections:
+            self.ax.draw_artist(collection)
+        for patch in self.ax.patches:
+            self.ax.draw_artist(patch)
+        for text in self.ax.texts:
+            self.ax.draw_artist(text)
+
+        self.ax.figure.canvas.blit(self.ax.bbox)
 
     def disconnect(self):
         self.ax.figure.canvas.mpl_disconnect(self.cidpress)

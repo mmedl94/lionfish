@@ -9,21 +9,27 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
         frame = 0
     else:
         frame = int(parent.frame_vars[subplot_idx].get())
+
     if frame >= plot_object["obj"].shape[-1]-1:
         frame = plot_object["obj"].shape[-1]-1
         parent.frame_vars[subplot_idx].set(str(frame))
+
     if "update_plot" in parent.plot_dicts[subplot_idx]:
         update_plot = parent.plot_dicts[subplot_idx]["update_plot"]
         parent.plot_dicts[subplot_idx]["update_plot"] = True
     else:
         update_plot = True
+
+    if "reset_selection_check" not in parent.plot_dicts[subplot_idx]:
+        parent.plot_dicts[subplot_idx]["reset_selection_check"] = False
+
     if update_plot is True:
-        if parent.reset_selection_check is False:
-            proj = np.copy(
-                plot_object["obj"][:, :, frame])
+        if parent.plot_dicts[subplot_idx]["reset_selection_check"] is False:
+            proj = np.copy(plot_object["obj"][:, :, frame])
         else:
             proj = parent.plot_dicts[subplot_idx]["proj"]
-            parent.reset_selection_check = False
+            parent.plot_dicts[subplot_idx]["reset_selection_check"] = False
+
         proj_subet = proj[parent.feature_selection]
         proj_subet[:, 0] = proj_subet[:, 0] / \
             np.linalg.norm(proj_subet[:, 0])
@@ -95,12 +101,11 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             subplot_idx
         )
         n_frames = plot_object["obj"].shape[-1]-1
+
         parent.axs[subplot_idx].set_title(
             f"{parent.displayed_tour}\n" +
-            f"Frame {frame} out of {n_frames}\n" +
             "Press right key for next frame\n" +
             "Press left key for last frame")
     else:
-        parent.plot_dicts[subplot_idx]["scat"].set_facecolors(
-            parent.fc)
+        parent.plot_dicts[subplot_idx]["scat"].set_facecolors(parent.fc)
         parent.plot_dicts[subplot_idx]["selector"].pause_var = parent.pause_var

@@ -27,7 +27,8 @@ def launch_heatmap(parent, plot_object, subplot_idx):
             non_empty_sets.append(False)
             heatmap_data[:, subset_idx] = np.zeros(
                 len(parent.feature_selection))
-    # heatmap_data = heatmap_data[parent.feature_selection]
+
+    heatmap_data = heatmap_data[parent.feature_selection]
     heatmap_data = heatmap_data[:, non_empty_sets]
     y_tick_labels = np.array(parent.col_names)[parent.feature_selection]
     x_tick_labels = np.array([subselection_var.get()

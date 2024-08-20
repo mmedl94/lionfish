@@ -67,6 +67,7 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
         cur_metric_var)
     if parent.subselections[selected_cluster].shape[0] == 0:
         fraction_of_total = 0
+        subset_size = 0
     else:
         subset_size = parent.data[parent.subselections[selected_cluster]].shape[0]
         fraction_of_total = (
