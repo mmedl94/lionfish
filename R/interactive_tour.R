@@ -51,7 +51,7 @@
 #'                 n_subsets = 5,
 #'                 display_size=5)
 
-interactive_tour <- function(data, plot_objects, feature_names, half_range,
+interactive_tour <- function(data, plot_objects, feature_names, half_range=FALSE,
                              n_plot_cols, preselection=FALSE,
                              preselection_names=FALSE, n_subsets=3, display_size=5){
 
