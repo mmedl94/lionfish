@@ -18,7 +18,6 @@
 #' @export
 #'
 #' @examples
-#'
 #'library(tourr)
 #'library(reticulate)
 #'library(pytourr)
@@ -49,7 +48,7 @@
 #'                 n_plot_cols=2,
 #'                 preselection=clusters,
 #'                 preselection_names=flea_subspecies,
-#'                 n_subsets = 5
+#'                 n_subsets = 5,
 #'                 display_size=5)
 
 interactive_tour <- function(data, plot_objects, feature_names, half_range,

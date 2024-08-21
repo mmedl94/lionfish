@@ -1,0 +1,160 @@
+---
+title: "Plot objects"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Overview
+
+The pytourr package offers multiple different types of display elements.
+These have to be provided to the interactive_tour function that launches
+the GUI. Each plot object is a list containing a type and an object. The
+type specifies, which kind of display should be generated. The object
+provides additional information required to construct the display. The
+plot objects then have to be stored in a list that can be given to the
+interactive_tour function. Examples for all currently supported displays
+can be found below.
+
+## Setup
+
+```{r setup}
+# Load required libraries
+library(tourr)
+library(reticulate)
+library(pytourr)
+library(flexclust)
+
+# Initialize pytrhon backend
+init_env()
+```
+
+### Dataset 1 - Flea data
+
+```{r Load and prepare flea data}
+# Load dataset
+data("flea")
+
+# Prepare objects for later us
+clusters_flea <- as.numeric(flea$species)
+flea_subspecies <- unique(flea$species)
+feature_names_flea <- colnames(flea)
+
+# Standardize data and calculate half_range
+flea <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+half_range_flea <- max(sqrt(rowSums(flea^2)))
+```
+
+### Dataset 2 - Winter activities data
+
+```{r Load and prepare flea data winter activities data}
+# Load dataset and set seed
+data("winterActiv")
+set.seed(42)
+
+# Perform kmeans clustering 
+clusters_winter <- stepcclust(winterActiv, k=6, nrep=20)
+clusters_winter <- clusters@cluster
+
+# Get the names of our features
+feature_names_winter <- colnames(winterActiv)
+```
+
+## Currently supported display types
+
+### One dimensional tour
+
+To display one dimensional tours they first have to be generated and
+saved using the
+[save_history](https://ggobi.github.io/tourr/reference/save_history.html)
+function of the tourr package. For more information on the available
+types of tours please visit [tour path
+construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-construction).
+
+#### Example plot object
+
+```{r 1d tour}
+guided_tour_flea_1d <- save_history(flea,
+                                    tour_path = guided_tour(holes()),1)
+
+obj_flea_1d_tour <- list(type = "1d_tour",          # type of display
+                         obj = guided_tour_flea_1d) # tour history to be displayed
+```
+
+### Two dimensional tour
+
+To display one dimensional tours they first have to be generated and
+saved using the
+[save_history](https://ggobi.github.io/tourr/reference/save_history.html)
+function of the tourr package. For more information on the available
+types of tours please visit [tour path
+construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-construction).
+
+#### Example plot object
+
+```{r 2d tour}
+grand_tour_flea_2d <- save_history(flea,
+                                   tour_path = grand_tour(d=2))
+
+obj_flea_2d_tour <- list(type = "2d_tour",         # type of display
+                         obj = grand_tour_flea_2d) # tour history to be displayed
+```
+
+### Scatterplot
+
+To display a scatter plot the features to be displayed on the x and y
+axis have to provided in form of a two dimensional vector.
+
+#### Example plot object
+
+```{r scatterplot}
+obj_flea_scatter <- list(type = "scatter",          # type of display
+                         obj = c("tars1", "tars2")) # x and y axis of scatterplot
+```
+
+### Histogram
+
+To display a histogram plot the feature to be displayed on the x axis
+has to provided in form of a two dimensional vector.
+
+#### Example plot object
+
+```{r histogram}
+obj_flea_histogram <- list(type = "hist", # type of display
+                           obj = "head")  # x axis of histogram
+```
+
+### Mosaic
+
+#### Example plot object
+
+```{r mosaic}
+obj_winter_mosaic <- list(type = "mosaic",           # type of display
+                          obj = c("subgroups_on_y")) # whether the subgroups or the features
+                                                     # should be on the y axis
+```
+
+### Heatmap
+
+#### Example plot object
+
+```{r heatmap}
+obj_winter_heatmap <- list(type = "heatmap",          # type of display
+                           obj = c("Total fraction")) # initially shown metric
+```
+
+### Categorical cluster interface
+
+#### Example plot object
+
+```{r categorical cluster interface}
+obj_winter_cat_clust_interface <- list(type = "cat_clust_interface", # type of display
+                                       obj = c("Total fraction"))    # initially shown metric
+```

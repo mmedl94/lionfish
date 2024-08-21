@@ -2,7 +2,7 @@
 #' max(sqrt(rowSums(data^2))) or can be provided as arg
 #'
 #' @param data matrix, or data frame containing numeric columns,
-#'   should be standardised to have mean 0, sd 1
+#'   should be standardized to have mean 0, sd 1
 #' @param prj projection matrix
 #' @param axis_labels of the axes to be displayed
 #' @param obs_labels labels of the observations to be available for interactive mouseover
@@ -15,6 +15,7 @@
 #' @export
 #'
 #' @examples
+#' library(tourr)
 #' data(flea)
 #' flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 #' prj <- basis_random(ncol(flea[,1:6]), 2)
