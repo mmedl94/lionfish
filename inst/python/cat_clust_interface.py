@@ -56,7 +56,7 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
         var_ids,
         c=fc[sorting_helper]
     )
-    y_tick_labels = np.array(parent.col_names)[parent.feature_selection]
+    y_tick_labels = np.array(parent.feature_names)[parent.feature_selection]
     y_tick_labels = y_tick_labels[ranked_vars]
     # flip so that labels agree with var_ids
     y_tick_labels = np.flip(y_tick_labels)

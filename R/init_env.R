@@ -1,18 +1,26 @@
 #' Initialize anaconda environment used for python backend
 #'
-#' @param env_name A string that defines the name of the anaconda environment reticulate uses
+#' @param env_name a string that defines the name of the python environment reticulate uses.
+#' This can be useful if one wants to use a preinstalled python environment.
+#' @param virtual_env either "virtual_env" or "anaconda". "virtual_env" creates
+#' a virtual environment, which has the advantage that the GUI looks much nicer
+#' and no previous python installation is required,but the setup of the
+#' environment can be more error prone. "anaconda" installs the python
+#' environment via Anaconda, which can be more stable, but the GUI looks more
+#' dated.
 #'
 #' @return -
 #' @export
 #'
-#' @examples init_env(env_name="r-pytourr")
+#' @examples init_env(env_name="r-pytourr", virtual_env = "virtual_env")
 #'
 init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FALSE){
 
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
 
-  required_packages <- c("pandas", "numpy", "matplotlib", "customtkinter", "statsmodels", "seaborn")
+  required_packages <- c("pandas", "numpy", "matplotlib",
+                         "customtkinter", "statsmodels", "seaborn")
 
   if (virtual_env == "anaconda"){
     # check if python environment exists and create new one if not

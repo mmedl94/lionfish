@@ -2,12 +2,20 @@
 % Please edit documentation in R/init_env.R
 \name{init_env}
 \alias{init_env}
-\title{Initialize anaconda environement used for python backend}
+\title{Initialize anaconda environment used for python backend}
 \usage{
-init_env(env_name = "r-pytourr")
+init_env(env_name = "r-pytourr", virtual_env = "virtual_env", local = FALSE)
 }
 \arguments{
-\item{env_name}{A string that defines the name of the anaconda environment reticulate uses}
+\item{env_name}{a string that defines the name of the python environment reticulate uses.
+This can be useful if one wants to use a preinstalled python environment.}
+
+\item{virtual_env}{either "virtual_env" or "anaconda". "virtual_env" creates
+a virtual environment, which has the advantage that the GUI looks much nicer
+and no previous python installation is required,but the setup of the
+environment can be more error prone. "anaconda" installs the python
+environment via Anaconda, which can be more stable, but the GUI looks more
+dated.}
 }
 \value{
 \itemize{
@@ -15,9 +23,9 @@ init_env(env_name = "r-pytourr")
 }
 }
 \description{
-Initialize anaconda environement used for python backend
+Initialize anaconda environment used for python backend
 }
 \examples{
-init_env(env_name="r-pytourr")
+init_env(env_name="r-pytourr", virtual_env = "virtual_env")
 
 }

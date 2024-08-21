@@ -3,8 +3,8 @@ from pytour_selectors import BarSelect
 
 
 def launch_histogram(parent, plot_object, subplot_idx):
-    if plot_object["obj"] in parent.col_names:
-        col_index = parent.col_names.index(plot_object["obj"])
+    if plot_object["obj"] in parent.feature_names:
+        col_index = parent.feature_names.index(plot_object["obj"])
         x = parent.data[:, col_index]
         # clear old histogram
         parent.axs[subplot_idx].clear()

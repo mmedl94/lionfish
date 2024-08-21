@@ -19,40 +19,42 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as ctk
 
 
-def interactive_tour(data, col_names, plot_objects, half_range=None, n_max_cols=None,
-                     preselection=None, preselection_names=None, n_subsets=3, size=5):
+def interactive_tour(data, plot_objects, feature_names, half_range=None,
+                     n_plot_cols=None, preselection=None,
+                     preselection_names=None, n_subsets=3, display_size=5):
     """Launch InteractiveTourInterface object"""
 
     # The suicide argument causes the window to close after inital plotting
     # Restarting the app massively increases performance
     # It is unknown why
     app = InteractiveTourInterface(data,
-                                   col_names,
                                    plot_objects,
+                                   feature_names,
                                    half_range,
-                                   n_max_cols,
+                                   n_plot_cols,
                                    preselection,
                                    preselection_names,
                                    n_subsets,
-                                   size,
+                                   display_size,
                                    suicide=True)
     app.mainloop()
 
     app = InteractiveTourInterface(data,
-                                   col_names,
                                    plot_objects,
+                                   feature_names,
                                    half_range,
-                                   n_max_cols,
+                                   n_plot_cols,
                                    preselection,
                                    preselection_names,
                                    n_subsets,
-                                   size)
+                                   display_size)
     app.mainloop()
 
 
 class InteractiveTourInterface(ctk.CTk):
-    def __init__(self, data, col_names, plot_objects, half_range, n_max_cols,
-                 preselection, preselection_names, n_subsets, size, suicide=False):
+    def __init__(self, data, plot_objects, feature_names, half_range=None,
+                 n_plot_cols=None, preselection=None,
+                 preselection_names=None, n_subsets=3, display_size=5, suicide=False):
         super().__init__()
 
         def accept(event):
@@ -80,12 +82,12 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.title("Interactive tourr")
         self.data = data
-        self.col_names = col_names
+        self.feature_names = feature_names
         self.half_range = half_range
         self.plot_objects = plot_objects
         self.displayed_tour = "Original tour"
         self.r = r
-        self.size = size
+        self.display_size = display_size
 
         if preselection is not False:
             if n_subsets < len(set(preselection)):
@@ -113,18 +115,18 @@ class InteractiveTourInterface(ctk.CTk):
         self.obs_idx_ = np.arange(0, self.data.shape[0])
         if len(plot_objects) == 1:
             self.fig, self.axs = plt.subplots(
-                1, 1, figsize=(self.size, self.size))
+                1, 1, figsize=(self.display_size, self.display_size))
             self.axs = [self.axs]
         else:
             n_plots = len(plot_objects)
-            if n_max_cols is None:
-                n_max_cols = 3
-            n_cols = int(min(n_max_cols, n_plots))
+            if n_plot_cols is None:
+                n_plot_cols = 3
+            n_cols = int(min(n_plot_cols, n_plots))
             n_rows = int((n_plots + n_cols - 1) // n_cols)
 
             self.fig, self.axs = plt.subplots(
-                n_rows, n_cols, figsize=(self.size*n_cols,
-                                         self.size*n_rows),
+                n_rows, n_cols, figsize=(self.display_size*n_cols,
+                                         self.display_size*n_rows),
                 layout="compressed")
             self.axs = self.axs.flatten()
             for i in range(n_plots, len(self.axs)):
@@ -144,7 +146,7 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.feature_selection_vars = []
         self.feature_selection = []
-        for feature_idx, feature in enumerate(col_names):
+        for feature_idx, feature in enumerate(feature_names):
             check_var = tk.IntVar(self, 1)
             self.feature_selection_vars.append(check_var)
             self.feature_selection.append(1)
@@ -342,7 +344,7 @@ class InteractiveTourInterface(ctk.CTk):
                     save_df = pd.DataFrame(
                         plot_dict["proj"][self.feature_selection])
                     save_df["original variables"] = np.array(
-                        self.col_names)[self.feature_selection]
+                        self.feature_names)[self.feature_selection]
                     save_df = save_df.set_index("original variables")
                     filename = f"{save_dir}/{now}/projection_object_{idx+1}.csv"
                     save_df.to_csv(filename)

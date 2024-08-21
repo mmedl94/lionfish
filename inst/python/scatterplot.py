@@ -4,8 +4,8 @@ from pytour_selectors import LassoSelect
 
 def launch_scatterplot(parent, plot_object, subplot_idx):
     # get data
-    col_index_x = parent.col_names.index(plot_object["obj"][0])
-    col_index_y = parent.col_names.index(plot_object["obj"][1])
+    col_index_x = parent.feature_names.index(plot_object["obj"][0])
+    col_index_y = parent.feature_names.index(plot_object["obj"][1])
     x = parent.data[:, col_index_x]
     y = parent.data[:, col_index_y]
 

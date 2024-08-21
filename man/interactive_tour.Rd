@@ -4,20 +4,40 @@
 \alias{interactive_tour}
 \title{R wrapper for the interactive_tour function written on python}
 \usage{
-interactive_tour(data, col_names, plot_objects, half_range, n_max_cols)
+interactive_tour(
+  data,
+  plot_objects,
+  feature_names,
+  half_range,
+  n_plot_cols,
+  preselection = FALSE,
+  preselection_names = FALSE,
+  n_subsets = 3,
+  display_size = 5
+)
 }
 \arguments{
 \item{data}{the dataset you want to investigate}
 
-\item{col_names}{the column names of your dataset}
-
 \item{plot_objects}{a named list of objects you want to be displayed. Each entry requires a definition of
-the type of display and a specification of what should be plotted. For tours, a history object, and
-for histograms and scatterplots, the names of the variables to be displayed have to be provided (see example).}
+the type of display and a specification of what should be plotted.}
 
-\item{half_range}{can be specified directly or be calculated done in the tourr package.}
+\item{feature_names}{names of the features of the dataset}
 
-\item{n_max_cols}{specifies the maximal number of columns of the grid of the final display.}
+\item{half_range}{factor that influences the scaling of the displayed tour plots.
+Small values lead to more spread out datapoints (that might not fit the plotting area),
+while large values lead to the data being more compact. If not provided a good estimate
+will be calculated and used.}
+
+\item{n_plot_cols}{specifies the number of columns of the grid of the final display.}
+
+\item{preselection}{a vector that specifies in which subset each datapoint should be put initially.}
+
+\item{preselection_names}{a vector that specifies the names of the preselection subsets}
+
+\item{n_subsets}{the total number of available subsets (up to 10).}
+
+\item{display_size}{rough size of each subplot in inches}
 }
 \value{
 \itemize{
@@ -28,31 +48,37 @@ for histograms and scatterplots, the names of the variables to be displayed have
 R wrapper for the interactive_tour function written on python
 }
 \examples{
+
 library(tourr)
-library(devtools)
 library(reticulate)
 library(pytourr)
-f <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
-guided_tour_history <- save_history(f,
+
+data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+clusters <- as.numeric(flea$species)
+flea_subspecies <- unique(flea$species)
+
+guided_tour_history <- save_history(data,
                                    tour_path = guided_tour(holes()))
-grand_tour_history <- save_history(f,
-                                  tour_path = grand_tour())
-tour_history_1d <- save_history(f,
-                               tour_path = grand_tour(d=1))
+grand_tour_history_1d <- save_history(data,
+                                     tour_path = grand_tour(d=1))
 
 half_range <- max(sqrt(rowSums(f^2)))
-col_names <- colnames(f)
+feature_names <- colnames(f)
 
 init_env()
 
 obj1 <- list(type = "2d_tour", obj = guided_tour_history)
-obj2 <- list(type = "1d_tour", obj = tour_history_1d)
+obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
 
-interactive_tour(f,
-                col_names,
-               list(obj1,obj2,obj3,obj4),
-                half_range,
-                n_max_cols=2)
+interactive_tour(data=data,
+                plot_objects=list(obj1, obj2, obj3, obj4),
+                feature_names=feature_names,
+                half_range = half_range,
+                n_plot_cols=2,
+                preselection=clusters,
+                preselection_names=flea_subspecies,
+                n_subsets = 5
+                display_size=5)
 }

@@ -31,13 +31,15 @@ data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
 
-guided_tour_history <- save_history(data, 
+guided_tour_history <- save_history(data,
                                     tour_path = guided_tour(holes()))
-grand_tour_history_1d <- save_history(data, 
-                                tour_path = grand_tour(d=1))
+grand_tour_history_1d <- save_history(data,
+                                      tour_path = grand_tour(d=1))
 
-half_range <- max(sqrt(rowSums(data^2)))
-col_names <- colnames(data)
+half_range <- max(sqrt(rowSums(f^2)))
+feature_names <- colnames(f)
+
+init_env()
 
 obj1 <- list(type = "2d_tour", obj = guided_tour_history)
 obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
@@ -45,13 +47,12 @@ obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
 
 interactive_tour(data=data,
-                 col_names=col_names,
                  plot_objects=list(obj1, obj2, obj3, obj4),
-                 n_max_cols=2,
+                 feature_names=feature_names,
+                 half_range = half_range,
+                 n_plot_cols=2,
                  preselection=clusters,
                  preselection_names=flea_subspecies,
-                 n_subsets = 5,
-                 half_range = half_range,
-                 size=5)
-
+                 n_subsets = 5
+                 display_size=5)
 ```

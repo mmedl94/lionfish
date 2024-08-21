@@ -244,7 +244,7 @@ class DraggableAnnotation1d:
                                            length_includes_head=True)
 
                 label = self.arrow_axs.text(dx, y_0,
-                                            parent.col_names[axis_id],
+                                            parent.feature_names[axis_id],
                                             alpha=self.alpha,
                                             clip_on=True)
 
@@ -254,7 +254,7 @@ class DraggableAnnotation1d:
                     label = self.arrow_axs.text(0,
                                                 axis_id /
                                                 len(self.feature_selection),
-                                                parent.col_names[axis_id],
+                                                parent.feature_names[axis_id],
                                                 alpha=self.alpha)
                 else:
                     label = None
@@ -547,7 +547,7 @@ class DraggableAnnotation2d:
 
                 label = self.ax.text(self.proj[axis_id, 0]*2/3,
                                      self.proj[axis_id, 1]*2/3,
-                                     parent.col_names[axis_id],
+                                     parent.feature_names[axis_id],
                                      alpha=self.alpha,
                                      animated=True,
                                      clip_on=True)
