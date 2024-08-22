@@ -32,6 +32,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/Plot-objects.html">Plot objects</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
@@ -64,35 +70,37 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/pytourr/">pytourr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then you can display saved tour objects, scatterplots or histograms with interactive_tour()</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(tourr)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">apply</span>(flea[,<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>], <span class="dv">2</span>, <span class="cf">function</span>(x) (x<span class="sc">-</span><span class="fu">mean</span>(x))<span class="sc">/</span><span class="fu">sd</span>(x))</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(flea<span class="sc">$</span>species)</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>flea_subspecies <span class="ot">&lt;-</span> <span class="fu">unique</span>(flea<span class="sc">$</span>species)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>guided_tour_history <span class="ot">&lt;-</span> <span class="fu">save_history</span>(data,</span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>                                    <span class="at">tour_path =</span> <span class="fu">guided_tour</span>(<span class="fu">holes</span>()))</span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>grand_tour_history_1d <span class="ot">&lt;-</span> <span class="fu">save_history</span>(data,</span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>                                      <span class="at">tour_path =</span> <span class="fu">grand_tour</span>(<span class="at">d=</span><span class="dv">1</span>))</span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>half_range <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sqrt</span>(<span class="fu">rowSums</span>(f<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>feature_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(f)</span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">init_env</span>()</span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a>obj1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">"2d_tour"</span>, <span class="at">obj =</span> guided_tour_history)</span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>obj2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">"1d_tour"</span>, <span class="at">obj =</span> grand_tour_history_1d)</span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>obj3 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">"scatter"</span>, <span class="at">obj =</span> <span class="fu">c</span>(<span class="st">"tars1"</span>, <span class="st">"tars2"</span>))</span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a>obj4 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">type =</span> <span class="st">"hist"</span>, <span class="at">obj =</span> <span class="st">"head"</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">interactive_tour</span>(<span class="at">data=</span>data,</span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>                 <span class="at">plot_objects=</span><span class="fu">list</span>(obj1, obj2, obj3, obj4),</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a>                 <span class="at">feature_names=</span>feature_names,</span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a>                 <span class="at">half_range =</span> half_range,</span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a>                 <span class="at">n_plot_cols=</span><span class="dv">2</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>                 <span class="at">preselection=</span>clusters,</span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>                 <span class="at">preselection_names=</span>flea_subspecies,</span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>                 <span class="at">n_subsets =</span> <span class="dv">5</span></span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a>                 <span class="at">display_size=</span><span class="dv">5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span><span class="va">flea_subspecies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"2d_tour"</span>, obj <span class="op">=</span> <span class="va">guided_tour_history</span><span class="op">)</span></span>
+<span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>, obj <span class="op">=</span> <span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
+<span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"scatter"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hist"</span>, obj <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span>
+<span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
+<span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
+<span>                 half_range <span class="op">=</span> <span class="va">half_range</span>,</span>
+<span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                 preselection<span class="op">=</span><span class="va">clusters</span>,</span>
+<span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
+<span>                 n_subsets <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
