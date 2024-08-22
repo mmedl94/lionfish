@@ -33,7 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Plot-objects.html">Plot objects</a></li>
+<li><a class="dropdown-item" href="../articles/General-interactivity.html">General interactivity</a></li>
+    <li><a class="dropdown-item" href="../articles/Plot-objects.html">Plot objects</a></li>
   </ul>
 </li>
       </ul>
@@ -123,7 +124,7 @@ supported displays are:</p>
 <span></span>
 <span><span class="co"># Perform kmeans clustering </span></span>
 <span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="fu">stepcclust</span><span class="op">(</span><span class="va">winterActiv</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
-<span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="va">clusters</span><span class="op">@</span><span class="va">cluster</span></span>
+<span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="va">clusters_winter</span><span class="op">@</span><span class="va">cluster</span></span>
 <span></span>
 <span><span class="co"># Get the names of our features</span></span>
 <span><span class="va">feature_names_winter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span></span></code></pre></div>
@@ -149,8 +150,24 @@ path construction</a>.</p>
 <span></span>
 <span><span class="va">obj_flea_1d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>,          <span class="co"># type of display</span></span>
 <span>                         obj <span class="op">=</span> <span class="va">guided_tour_flea_1d</span><span class="op">)</span> <span class="co"># 1d tour history </span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interactivity">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity"></a>
+</h4>
+<ul>
+<li>Changeing frames of tour: The frames of the current tour can be
+changed by pressing the left arrow-key for the last frame and the right
+arrow-key for the next frame. The current frame is displayed in the
+frame on the left.</li>
+<li>Projection manipulation: the projection can be manipulated clicking
+on one of the arrowheads with the right mouse-button and dragging
+it.</li>
+<li>Subselection: The datapoins within each subset can be changed by
+clicking on one of the bars of the histogram. The datapoints within the
+bar are then moved to the subset currently selected on the left.</li>
+</ul>
 <div class="float">
-<img src="../reference/figures/myimage.png" alt="example of 1d tour"><div class="figcaption">example of 1d tour</div>
+<img src="../reference/figures/1d_tour_demo.gif" alt="1d tour with flea dataset"><div class="figcaption">1d tour with flea dataset</div>
 </div>
 </div>
 </div>
@@ -172,6 +189,26 @@ path construction</a>.</p>
 <span><span class="va">obj_flea_2d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"2d_tour"</span>,         <span class="co"># type of display</span></span>
 <span>                         obj <span class="op">=</span> <span class="va">grand_tour_flea_2d</span><span class="op">)</span> <span class="co"># 2d tour history</span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="interactivity-1">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-1"></a>
+</h4>
+<ul>
+<li>Changeing frames of tour: The frames of the current tour can be
+changed by pressing the left arrow-key for the last frame and the right
+arrow-key for the next frame. The current frame is displayed in the
+frame on the left.</li>
+<li>Projection manipulation: the projection can be manipulated clicking
+on one of the arrowheads with the right mouse-button and dragging
+it.</li>
+<li>Subselection: The datapoins within each subset can be changed by
+pressing the left mouse-button and drawing a lasso around the datapoints
+to be selected. The datapoints within the lasso are then moved to the
+subset currently selected on the left.</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/2d_tour_demo.gif" alt="2d tour with flea dataset"><div class="figcaption">2d tour with flea dataset</div>
+</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="scatterplot">Scatterplot<a class="anchor" aria-label="anchor" href="#scatterplot"></a>
@@ -184,6 +221,20 @@ y axis have to be provided in form of a two dimensional vector.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_flea_scatter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"scatter"</span>,          <span class="co"># type of display</span></span>
 <span>                         obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span> <span class="co"># x and y axis of plot</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interactivity-2">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-2"></a>
+</h4>
+<ul>
+<li>Subselection: The datapoins within each subset can be changed by
+pressing the left mouse-button and drawing a lasso around the datapoints
+to be selected. The datapoints within the lasso are then moved to the
+subset currently selected on the left.</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/scatterplot_demo.gif" alt="Scatterplot with tars1 and tars2 of flea dataset"><div class="figcaption">Scatterplot with tars1 and tars2 of flea
+dataset</div>
+</div>
 </div>
 </div>
 <div class="section level3">
@@ -198,6 +249,18 @@ to be provided in form of a two dimensional vector.</p>
 <code class="sourceCode R"><span><span class="va">obj_flea_histogram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hist"</span>, <span class="co"># type of display</span></span>
 <span>                           obj <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span>  <span class="co"># x axis of histogram</span></span></code></pre></div>
 </div>
+<div class="section level4">
+<h4 id="interactivity-3">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-3"></a>
+</h4>
+<ul>
+<li>Subselection: The datapoins within each subset can be changed by
+clicking on one of the bars of the histogram. The datapoints within the
+bar are then moved to the subset currently selected on the left.</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/histogram_demo.gif" alt="Histogram with head of flea dataset"><div class="figcaption">Histogram with head of flea dataset</div>
+</div>
+</div>
 </div>
 <div class="section level3">
 <h3 id="mosaic">Mosaic<a class="anchor" aria-label="anchor" href="#mosaic"></a>
@@ -211,6 +274,15 @@ subgroups/clusters should be on the x or y axis, either with
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_mosaic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"mosaic"</span>,   <span class="co"># type of display</span></span>
 <span>                  obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span> <span class="co"># whether subgroups x or y axis</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interactivity-4">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-4"></a>
+</h4>
+<p>Currently there is no way of directly interacting with the mosaic
+plot.</p>
+<div class="float">
+<img src="../reference/figures/mosaic_plot_demo.png" alt="Moisaic plot of winter activities dataset"><div class="figcaption">Moisaic plot of winter activities dataset</div>
+</div>
 </div>
 </div>
 <div class="section level3">
@@ -236,7 +308,19 @@ the subgroups/clusters.</p>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>,          <span class="co"># type of display</span></span>
-<span>                           obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span> <span class="co"># initially shown metric</span></span></code></pre></div>
+<span>                           obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span> <span class="co"># initial metric</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interactivity-5">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-5"></a>
+</h4>
+<ul>
+<li>Metric selection: The currently displayed metric can be changed by
+using the dropdown menu within the frame on the left. The details on the
+metrics can be found above.</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/heatmap_demo.gif" alt="Heatmap of winter activities dataset"><div class="figcaption">Heatmap of winter activities dataset</div>
+</div>
 </div>
 </div>
 <div class="section level3">
@@ -262,7 +346,20 @@ the subgroups/clusters.</p>
 </h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_cat_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat_clust_interface"</span>, <span class="co"># type of display</span></span>
-<span>                             obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># initially shown metric</span></span></code></pre></div>
+<span>                             obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># initial metric</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interactivity-6">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-6"></a>
+</h4>
+<ul>
+<li>Metric selection: The currently displayed metric can be changed by
+using the dropdown menu within the frame on the left. The details on the
+metrics can be found above.</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/cat_clust_interface.gif" alt="Categorical cluster interface of winter activities dataset"><div class="figcaption">Categorical cluster interface of winter
+activities dataset</div>
+</div>
 </div>
 </div>
 </div>
@@ -272,14 +369,25 @@ the subgroups/clusters.</p>
 <p>The various plot objects can the be displayed with the <a href="https://mmedl94.github.io/pytourr/reference/interactive_tour.html">interactive_tour</a>
 function.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">flea</span>,</span>
+<code class="sourceCode R"><span><span class="co"># interactive_tour call of flea dataset. Insert plot objects of your liking.</span></span>
+<span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">flea</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_flea</span>,</span>
-<span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_flea_1d_tour</span><span class="op">)</span>,</span>
+<span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_flea_2d_tour</span><span class="op">)</span>,</span>
 <span>                 half_range <span class="op">=</span> <span class="va">half_range_flea</span>,</span>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_flea</span>,</span>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
+<span>                 display_size<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># interactive_tour call of winterActiv dataset. Insert plot objects of your liking.</span></span>
+<span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
+<span>                 feature_names<span class="op">=</span><span class="va">feature_names_winter</span>,</span>
+<span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_winter_cat_clust</span><span class="op">)</span>,</span>
+<span>                 half_range <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                 preselection<span class="op">=</span><span class="va">clusters_winter</span>,</span>
+<span>                 n_subsets <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
