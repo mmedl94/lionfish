@@ -53,8 +53,7 @@ def launch_1d_tour(parent, plot_object, subplot_idx):
         x_subselections,
         stacked=True,
         picker=True,
-        color=parent.colors[:len(x_subselections)],
-        animated=True)
+        color=parent.colors[:len(x_subselections)])
     y_lims = parent.axs[subplot_idx].get_ylim()
     parent.axs[subplot_idx].set_ylim(y_lims)
 
@@ -92,13 +91,9 @@ def launch_1d_tour(parent, plot_object, subplot_idx):
         subplot_idx,
         hist)
     parent.plot_dicts[subplot_idx]["draggable_annot"] = draggable_arrows_1d
-    n_frames = plot_object["obj"].shape[-1]-1
     parent.axs[subplot_idx].set_xticks([])
     parent.axs[subplot_idx].set_yticks([])
     parent.axs[subplot_idx].set_xlim(-1, 1)
-    title = parent.axs[subplot_idx].text(0.5, 1.025, "",
-                                         transform=parent.axs[subplot_idx].transAxes,
-                                         ha="center")
 
     parent.axs[subplot_idx].set_title(
         f"{parent.displayed_tour}\n" +

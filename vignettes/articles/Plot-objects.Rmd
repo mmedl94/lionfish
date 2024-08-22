@@ -21,8 +21,17 @@ the GUI. Each plot object is a list containing a type and an object. The
 type specifies, which kind of display should be generated. The object
 provides additional information required to construct the display. The
 plot objects then have to be stored in a list that can be given to the
-interactive_tour function. Examples for all currently supported displays
-can be found below.
+interactive_tour function. The currently supported displays are:
+
+-   1d tour
+-   2d tour
+-   scatterplot
+-   histogram
+-   mosaic plot
+-   heatmap
+-   categorical cluster interface
+
+Examples for all displays can be found below.
 
 ## Setup
 
@@ -46,10 +55,10 @@ data("flea")
 # Prepare objects for later us
 clusters_flea <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
-feature_names_flea <- colnames(flea)
 
 # Standardize data and calculate half_range
 flea <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+feature_names_flea <- colnames(flea)
 half_range_flea <- max(sqrt(rowSums(flea^2)))
 ```
 
@@ -83,11 +92,13 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 ```{r 1d tour}
 guided_tour_flea_1d <- save_history(flea,
-                                    tour_path = guided_tour(holes()),1)
+                                    tour_path = guided_tour(holes(),1))
 
 obj_flea_1d_tour <- list(type = "1d_tour",          # type of display
                          obj = guided_tour_flea_1d) # 1d tour history 
 ```
+
+![example of 1d tour](../man/figures/myimage.png)
 
 ### Two dimensional tour
 
@@ -191,16 +202,18 @@ obj_winter_cat_clust <- list(type = "cat_clust_interface", # type of display
 
 ## Generating the display
 
-The various plot objects can the be displayed with the [interactive_tour](https://mmedl94.github.io/pytourr/reference/interactive_tour.html) function.
+The various plot objects can the be displayed with the
+[interactive_tour](https://mmedl94.github.io/pytourr/reference/interactive_tour.html)
+function.
 
-```{r categorical cluster interface}
+```{r interactive_tour}
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
-                 plot_objects=list(obj1, obj2, obj3, obj4),
+                 plot_objects=list(obj_flea_1d_tour),
+                 half_range = half_range_flea,
                  n_plot_cols=2,
                  preselection=clusters_flea,
-                 n_subsets = 10,
+                 n_subsets = 3,
                  preselection_names=flea_subspecies,
-                 half_range = half_range,
-                 display_size=5)
+                 display_size=10)
 ```

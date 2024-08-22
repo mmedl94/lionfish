@@ -105,9 +105,8 @@ class InteractiveTourInterface(ctk.CTk):
             plot_objects = [plot_objects]
 
         if half_range is None:
-            print("Using adaptive half_range")
-        else:
-            print(f"Using half_range of {half_range}")
+            self.half_range = np.max(np.sqrt(np.sum(data**2, axis=1)))
+        print(f"Using half_range of {self.half_range}")
 
         self.limits = 1
         self.n_pts = self.data.shape[0]
@@ -557,6 +556,7 @@ class InteractiveTourInterface(ctk.CTk):
                     if "draggable_annot" in plot_dict:
                         plot_dict["draggable_annot"].get_blit()
                         plot_dict["draggable_annot"].blend_in()
+
                     if "selector" in plot_dict:
                         plot_dict["selector"].get_blit()
 

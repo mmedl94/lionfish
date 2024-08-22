@@ -176,6 +176,7 @@ class BarSelect:
         for col_idx, subselection in enumerate(self.parent.subselections):
             if subselection.shape[0] != 0:
                 self.parent.fc[subselection] = self.colors[col_idx]
+
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
 
@@ -283,31 +284,30 @@ class DraggableAnnotation1d:
         self.collections = []
         self.patches = []
         self.texts = []
-        if self.ax.collections:
-            for collection in self.ax.collections:
-                self.collections.append(collection.get_alpha())
-                collection.set_alpha(0)
-        if self.ax.patches:
-            for patch in self.ax.patches:
-                self.patches.append(patch.get_alpha())
-                patch.set_alpha(0)
-        if self.ax.texts:
-            for text in self.ax.texts:
-                self.texts.append(text.get_alpha())
-                text.set_alpha(0)
 
-        if self.arrow_axs.collections:
-            for collection in self.arrow_axs.collections:
-                self.collections.append(collection.get_alpha())
-                collection.set_alpha(0)
-        if self.arrow_axs.patches:
-            for patch in self.arrow_axs.patches:
-                self.patches.append(patch.get_alpha())
-                patch.set_alpha(0)
-        if self.arrow_axs.texts:
-            for text in self.arrow_axs.texts:
-                self.texts.append(text.get_alpha())
-                text.set_alpha(0)
+        for collection in self.ax.collections:
+            self.collections.append(collection.get_alpha())
+            collection.set_alpha(0)
+        for patch in self.ax.patches:
+            self.patches.append(patch.get_alpha())
+            patch.set_alpha(0)
+        for text in self.ax.texts:
+            self.texts.append(text.get_alpha())
+            text.set_alpha(0)
+
+        self.arr_collections = []
+        self.arr_patches = []
+        self.arr_texts = []
+
+        for collection in self.arrow_axs.collections:
+            self.arr_collections.append(collection.get_alpha())
+            collection.set_alpha(0)
+        for patch in self.arrow_axs.patches:
+            self.arr_patches.append(patch.get_alpha())
+            patch.set_alpha(0)
+        for text in self.arrow_axs.texts:
+            self.arr_texts.append(text.get_alpha())
+            text.set_alpha(0)
 
     def get_blit(self):
         bbox_mins = self.arrow_axs.bbox.get_points()[0]
@@ -317,31 +317,26 @@ class DraggableAnnotation1d:
         self.blit = self.ax.figure.canvas.copy_from_bbox(self.bbox)
 
     def blend_in(self):
-        if self.ax.collections:
-            for idx, collection in enumerate(self.ax.collections):
-                collection.set_alpha(self.collections[idx])
-                self.ax.draw_artist(collection)
-        if self.ax.patches:
-            for idx, patch in enumerate(self.ax.patches):
-                patch.set_alpha(self.patches[idx])
-                self.ax.draw_artist(patch)
-        if self.ax.texts:
-            for idx, text in enumerate(self.ax.texts):
-                text.set_alpha(self.texts[idx])
-                self.ax.draw_artist(text)
+        self.ax.figure.canvas.restore_region(self.blit)
+        for idx, collection in enumerate(self.ax.collections):
+            collection.set_alpha(self.collections[idx])
+            self.ax.draw_artist(collection)
+        for idx, patch in enumerate(self.ax.patches):
+            patch.set_alpha(self.patches[idx])
+            self.ax.draw_artist(patch)
+        for idx, text in enumerate(self.ax.texts):
+            text.set_alpha(self.texts[idx])
+            self.ax.draw_artist(text)
 
-        if self.arrow_axs.collections:
-            for idx, collection in enumerate(self.arrow_axs.collections):
-                collection.set_alpha(self.collections[idx])
-                self.arrow_axs.draw_artist(collection)
-        if self.arrow_axs.patches:
-            for idx, patch in enumerate(self.arrow_axs.patches):
-                patch.set_alpha(self.patches[idx])
-                self.arrow_axs.draw_artist(patch)
-        if self.arrow_axs.texts:
-            for idx, text in enumerate(self.arrow_axs.texts):
-                text.set_alpha(self.texts[idx])
-                self.arrow_axs.draw_artist(text)
+        for idx, collection in enumerate(self.arrow_axs.collections):
+            collection.set_alpha(self.arr_collections[idx])
+            self.arrow_axs.draw_artist(collection)
+        for idx, patch in enumerate(self.arrow_axs.patches):
+            patch.set_alpha(self.arr_patches[idx])
+            self.arrow_axs.draw_artist(patch)
+        for idx, text in enumerate(self.arrow_axs.texts):
+            text.set_alpha(self.arr_texts[idx])
+            self.arrow_axs.draw_artist(text)
 
     def on_motion(self, event):
         """Move the rectangle if the mouse is over us."""

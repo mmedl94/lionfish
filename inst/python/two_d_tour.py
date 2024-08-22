@@ -66,10 +66,8 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             for patch_idx, _ in enumerate(parent.axs[subplot_idx].patches):
                 parent.axs[subplot_idx].patches[0].remove()
                 parent.axs[subplot_idx].texts[0].remove()
-            parent.plot_dicts[subplot_idx]["draggable_annot"].disconnect(
-            )
-            parent.plot_dicts[subplot_idx]["selector"].disconnect(
-            )
+            parent.plot_dicts[subplot_idx]["draggable_annot"].disconnect()
+            parent.plot_dicts[subplot_idx]["selector"].disconnect()
             # update scatterplot
             parent.plot_dicts[subplot_idx]["scat"].set_offsets(
                 np.array([x, y]).T)
