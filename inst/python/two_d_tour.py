@@ -50,11 +50,6 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             parent.frame_textboxes[subplot_idx].configure(
                 state="normal",
                 fg_color="white")
-            parent.fc = np.repeat(
-                np.array(parent.colors[0])[:, np.newaxis], parent.n_pts, axis=1).T
-            for idx, subset in enumerate(parent.subselections):
-                if subset.shape[0] != 0:
-                    parent.fc[subset] = parent.colors[idx]
             scat = parent.axs[subplot_idx].scatter(
                 x, y, animated=True)
             scat.set_facecolor(parent.fc)

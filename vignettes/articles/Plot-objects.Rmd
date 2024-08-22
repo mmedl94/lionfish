@@ -71,7 +71,7 @@ set.seed(42)
 
 # Perform kmeans clustering 
 clusters_winter <- stepcclust(winterActiv, k=6, nrep=20)
-clusters_winter <- clusters@cluster
+clusters_winter <- clusters_winter@cluster
 
 # Get the names of our features
 feature_names_winter <- colnames(winterActiv)
@@ -98,7 +98,18 @@ obj_flea_1d_tour <- list(type = "1d_tour",          # type of display
                          obj = guided_tour_flea_1d) # 1d tour history 
 ```
 
-![example of 1d tour](../man/figures/myimage.png)
+#### Interactivity
+
+-   Changeing frames of tour: The frames of the current tour can be changed by
+pressing the left arrow-key for the last frame and the right arrow-key for the
+next frame. The current frame is displayed in the frame on the left. 
+-   Projection manipulation: the projection can be manipulated clicking on one of
+the arrowheads with the right mouse-button and dragging it.
+-   Subselection: The datapoins within each subset can be changed by clicking
+on one of the bars of the histogram. The datapoints within the bar are then
+moved to the subset currently selected on the left.
+
+![1d tour with flea dataset](../man/figures/1d_tour_demo.gif)
 
 ### Two dimensional tour
 
@@ -119,6 +130,20 @@ obj_flea_2d_tour <- list(type = "2d_tour",         # type of display
                          obj = grand_tour_flea_2d) # 2d tour history
 ```
 
+#### Interactivity
+
+-   Changeing frames of tour: The frames of the current tour can be changed by
+pressing the left arrow-key for the last frame and the right arrow-key for the
+next frame. The current frame is displayed in the frame on the left. 
+-   Projection manipulation: the projection can be manipulated clicking on one of
+the arrowheads with the right mouse-button and dragging it.
+-   Subselection: The datapoins within each subset can be changed by pressing
+the left mouse-button and drawing a lasso around the datapoints to be selected.
+The datapoints within the lasso are then moved to the subset currently selected
+on the left.
+
+![2d tour with flea dataset](../man/figures/2d_tour_demo.gif)
+
 ### Scatterplot
 
 To display a scatter plot, the features to be displayed on the x and y
@@ -130,6 +155,15 @@ axis have to be provided in form of a two dimensional vector.
 obj_flea_scatter <- list(type = "scatter",          # type of display
                          obj = c("tars1", "tars2")) # x and y axis of plot
 ```
+
+#### Interactivity
+
+-   Subselection: The datapoins within each subset can be changed by pressing
+the left mouse-button and drawing a lasso around the datapoints to be selected.
+The datapoints within the lasso are then moved to the subset currently selected
+on the left.
+
+![Scatterplot with tars1 and tars2 of flea dataset](../man/figures/scatterplot_demo.gif)
 
 ### Histogram
 
@@ -143,6 +177,14 @@ obj_flea_histogram <- list(type = "hist", # type of display
                            obj = "head")  # x axis of histogram
 ```
 
+#### Interactivity
+
+-   Subselection: The datapoins within each subset can be changed by clicking
+on one of the bars of the histogram. The datapoints within the bar are then
+moved to the subset currently selected on the left.
+
+![Histogram with head of flea dataset](../man/figures/histogram_demo.gif)
+
 ### Mosaic
 
 To display a mosaic plot, one has to provide whether the
@@ -155,6 +197,12 @@ subgroups/clusters should be on the x or y axis, either with
 obj_winter_mosaic <- list(type = "mosaic",   # type of display
                   obj = c("subgroups_on_y")) # whether subgroups x or y axis
 ```
+
+#### Interactivity
+
+Currently there is no way of directly interacting with the mosaic plot.
+
+![Moisaic plot of winter activities dataset](../man/figures/mosaic_plot_demo.png)
 
 ### Heatmap
 
@@ -175,8 +223,16 @@ features and $s$ the subgroups/clusters.
 
 ```{r heatmap}
 obj_winter_heatmap <- list(type = "heatmap",          # type of display
-                           obj = c("Total fraction")) # initially shown metric
+                           obj = c("Total fraction")) # initial metric
 ```
+
+#### Interactivity
+
+-   Metric selection: The currently displayed metric can be changed by using the
+dropdown menu within the frame on the left. The details on the metrics can be
+found above.
+
+![Heatmap of winter activities dataset](../man/figures/heatmap_demo.gif)
 
 ### Categorical cluster interface
 
@@ -197,8 +253,16 @@ features and $s$ the subgroups/clusters.
 
 ```{r categorical cluster interface}
 obj_winter_cat_clust <- list(type = "cat_clust_interface", # type of display
-                             obj = c("Total fraction"))    # initially shown metric
+                             obj = c("Total fraction"))    # initial metric
 ```
+
+#### Interactivity
+
+-   Metric selection: The currently displayed metric can be changed by using the
+dropdown menu within the frame on the left. The details on the metrics can be
+found above.
+
+![Categorical cluster interface of winter activities dataset](../man/figures/cat_clust_interface.gif)
 
 ## Generating the display
 
@@ -206,14 +270,27 @@ The various plot objects can the be displayed with the
 [interactive_tour](https://mmedl94.github.io/pytourr/reference/interactive_tour.html)
 function.
 
-```{r interactive_tour}
+```{r interactive_tour flea}
+# interactive_tour call of flea dataset. Insert plot objects of your liking.
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
-                 plot_objects=list(obj_flea_1d_tour),
+                 plot_objects=list(obj_flea_2d_tour),
                  half_range = half_range_flea,
                  n_plot_cols=2,
                  preselection=clusters_flea,
                  n_subsets = 3,
                  preselection_names=flea_subspecies,
+                 display_size=10)
+```
+
+```{r interactive_tour winterActiv}
+# interactive_tour call of winterActiv dataset. Insert plot objects of your liking.
+interactive_tour(data=winterActiv,
+                 feature_names=feature_names_winter,
+                 plot_objects=list(obj_winter_cat_clust),
+                 half_range = 3,
+                 n_plot_cols=2,
+                 preselection=clusters_winter,
+                 n_subsets = 10,
                  display_size=10)
 ```

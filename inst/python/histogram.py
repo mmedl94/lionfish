@@ -19,8 +19,7 @@ def launch_histogram(parent, plot_object, subplot_idx):
             x_subselections,
             stacked=True,
             picker=True,
-            color=parent.colors[:len(x_subselections)],
-            animated=True)
+            color=parent.colors[:len(x_subselections)])
         y_lims = parent.axs[subplot_idx].get_ylim()
         parent.axs[subplot_idx].set_ylim(y_lims)
         hist_variable_name = plot_object["obj"]

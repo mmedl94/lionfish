@@ -72,8 +72,7 @@ def launch_mosaic(parent, plot_object, subplot_idx):
         if axs.get_position().bounds == remove_pos:
             if axs != parent.axs[subplot_idx]:
                 axs.remove()
-    for patch in parent.axs[subplot_idx].patches:
-        patch.set_animated(True)
+
     for text in parent.axs[subplot_idx].texts:
         text.remove()
     plot_dict = {"type": "mosaic",

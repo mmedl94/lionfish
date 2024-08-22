@@ -175,7 +175,8 @@ class BarSelect:
 
         for col_idx, subselection in enumerate(self.parent.subselections):
             if subselection.shape[0] != 0:
-                self.parent.fc[subselection] = self.colors[col_idx]
+                if self.parent.fc.shape[0] != 0:
+                    self.parent.fc[subselection] = self.colors[col_idx]
 
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False

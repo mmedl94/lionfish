@@ -246,6 +246,14 @@ class InteractiveTourInterface(ctk.CTk):
             color_box.grid(row=subselection_idx, column=2,
                            pady=3, padx=2, sticky="w")
 
+        self.fc = np.repeat(
+            np.array(self.colors[0])[:, np.newaxis], self.n_pts, axis=1).T
+        for idx, subset in enumerate(self.subselections):
+            if subset.shape[0] != 0:
+                self.fc[subset] = self.colors[idx]
+
+        self.original_fc = self.fc.copy()
+
         def reset_selection(self):
             self.subselections = self.orig_subselections.copy()
             self.fc = self.original_fc.copy()
@@ -497,11 +505,12 @@ class InteractiveTourInterface(ctk.CTk):
                 self.metric_vars.append(metric_var)
 
         # Get max number of frames
-        self.n_frames = 0
+        self.n_frames = 1
         for plot_object in plot_objects:
             if isinstance(plot_object["obj"], np.ndarray):
                 if plot_object["obj"].shape[-1] > self.n_frames:
                     self.n_frames = plot_object["obj"].shape[-1]
+
         self.frame = 0
 
         # resolve while loop in case of window closing
