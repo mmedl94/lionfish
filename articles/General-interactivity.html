@@ -64,9 +64,130 @@
 
     
     
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>The pytourr package offers multiple different types of general
+interactivity. The following operations can be performed with the
+elements on the frame on the left.</p>
+<ul>
+<li>Feature selection</li>
+<li>Subset selection and highlighting</li>
+<li>Resetting to the original subsets</li>
+<li>Updating the current display</li>
+<li>Animating the currently loaded tours</li>
+<li>Saving the projections and subsets</li>
+<li>Initiating new tours</li>
+</ul>
+<p>Examples for all displays can be found below.</p>
+</div>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/pytourr/">pytourr</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="co"># Load required libraries</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/pytourr/">pytourr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Initialize python backend</span></span>
+<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="dataset---flea-data">Dataset - Flea data<a class="anchor" aria-label="anchor" href="#dataset---flea-data"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span><span class="va">flea_subspecies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"2d_tour"</span>, obj <span class="op">=</span> <span class="va">guided_tour_history</span><span class="op">)</span></span>
+<span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>, obj <span class="op">=</span> <span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
+<span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"scatter"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hist"</span>, obj <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span>
+<span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
+<span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
+<span>                 half_range <span class="op">=</span> <span class="va">half_range</span>,</span>
+<span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
+<span>                 preselection<span class="op">=</span><span class="va">clusters</span>,</span>
+<span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
+<span>                 n_subsets <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="currently-supported-general-interactivity">Currently supported general interactivity<a class="anchor" aria-label="anchor" href="#currently-supported-general-interactivity"></a>
+</h2>
+<div class="section level3">
+<h3 id="feature-selection">Feature selection<a class="anchor" aria-label="anchor" href="#feature-selection"></a>
+</h3>
+<p>A list of all features can be found on the top left. Each feature has
+a checkbox next to it. The features are selected or deselected by
+checking or unchecking the respective checkboxes.</p>
+<p><img src="../reference/figures/feature_selection_demo.gif" alt="Feature selection demo"> ### Subset selection and
+highlighting</p>
+<p>A list of all subsets can be found below the features. Each subset
+has a checkbox next to it. The subsets are selected checking respective
+checkboxes next to them. When a subset is active, all datapoints that
+are selected with one of the interactive plots will be moved to that
+subset. The colored patches next to the subsets indicate the color of
+the datapoints within the respective subset. The transparency of the
+datapoints of the subsets can be changed by clicking the colored patches
+next to the subset names. The names of the subsets can be changed by
+writing in the textboxes.</p>
+<p><img src="../reference/figures/subset_selection_demo.gif" alt="Subset selection and highlighting demo"> ### Resetting to the
+original subsets</p>
+<p>The current subset selection can easily be reset by clicking the
+“Reset original selection” button.</p>
+<div class="float">
+<img src="../reference/figures/reset_selection_demo.gif" alt="Subset resetting demo"><div class="figcaption">Subset resetting demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="updating-the-current-display">Updating the current display<a class="anchor" aria-label="anchor" href="#updating-the-current-display"></a>
+</h3>
+<p>The current display can be updated by clicking the “Update frames”
+button. This can be useful if some of the plots haven’t updated
+properly, one wants to reset the shown projections to the original
+projections or if one wants to jump to a specific frame that was
+selected in the texboxes above the button.</p>
+<div class="float">
+<img src="../reference/figures/update_frames_demo.gif" alt="Update frames demo"><div class="figcaption">Update frames demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="animating-the-currently-loaded-tours">Animating the currently loaded tours<a class="anchor" aria-label="anchor" href="#animating-the-currently-loaded-tours"></a>
+</h3>
+<p>The currently loaded tours can be animated by checking the checkbox
+below the “Update frames” button. The interval in which the next frames
+will be loaded can be changed in the textbox next to the checkbox.</p>
+<div class="float">
+<img src="../reference/figures/animate_frames_demo.gif" alt="Update frames demo"><div class="figcaption">Update frames demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="saving-the-projections-and-subsets">Saving the projections and subsets<a class="anchor" aria-label="anchor" href="#saving-the-projections-and-subsets"></a>
+</h3>
+<p>The currently displayed projections and subsets can be saved as .csv
+by clicking the “Save projections and subsets” button. This will produce
+a file browser with which one can choose where the .csv file should be
+saved.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
