@@ -4,11 +4,122 @@ title: "General interactivity"
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  eval = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
+## Overview
+
+The pytourr package offers multiple different types of general interactivity.
+The following operations can be performed with the elements on the frame on the
+left.
+
+-   Feature selection
+-   Subset selection and highlighting
+-   Resetting to the original subsets
+-   Updating the current display
+-   Animating the currently loaded tours
+-   Saving the projections and subsets
+-   Initiating new tours
+
+Examples for all displays can be found below.
+
+## Setup
+
 ```{r setup}
+# Load required libraries
+library(tourr)
+library(reticulate)
 library(pytourr)
+
+# Initialize python backend
+init_env()
 ```
+
+### Dataset - Flea data
+
+```{r Load and prepare flea data}
+data("flea")
+data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
+clusters <- as.numeric(flea$species)
+flea_subspecies <- unique(flea$species)
+
+guided_tour_history <- save_history(data,
+                                    tour_path = guided_tour(holes()))
+grand_tour_history_1d <- save_history(data,
+                                      tour_path = grand_tour(d=1))
+
+half_range <- max(sqrt(rowSums(data^2)))
+feature_names <- colnames(data)
+
+init_env()
+
+obj1 <- list(type = "2d_tour", obj = guided_tour_history)
+obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
+obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
+obj4 <- list(type = "hist", obj = "head")
+
+interactive_tour(data=data,
+                 plot_objects=list(obj1, obj2, obj3, obj4),
+                 feature_names=feature_names,
+                 half_range = half_range,
+                 n_plot_cols=2,
+                 preselection=clusters,
+                 preselection_names=flea_subspecies,
+                 n_subsets = 5,
+                 display_size=5)
+```
+
+## Currently supported general interactivity
+
+### Feature selection
+
+A list of all features can be found on the top left. Each feature has a checkbox
+next to it. The features are selected or deselected by checking or unchecking
+the respective checkboxes.
+
+![Feature selection demo](../man/figures/feature_selection_demo.gif)
+### Subset selection and highlighting
+
+A list of all subsets can be found below the features. Each subset has a
+checkbox next to it. The subsets are selected checking respective checkboxes next
+to them. When a subset is active, all datapoints that are selected with one of
+the interactive plots will be moved to that subset. The colored patches next to
+the subsets indicate the color of the datapoints within the respective subset.
+The transparency of the datapoints of the subsets can be changed by clicking the
+colored patches next to the subset names. The names of the subsets can be changed
+by writing in the textboxes.
+
+![Subset selection and highlighting demo](../man/figures/subset_selection_demo.gif)
+### Resetting to the original subsets
+
+The current subset selection can easily be reset by clicking the "Reset original
+selection" button.
+
+![Subset resetting demo](../man/figures/reset_selection_demo.gif)
+
+### Updating the current display
+
+The current display can be updated by clicking the "Update frames" button. This
+can be useful if some of the plots haven't updated properly, one wants to reset
+the shown projections to the original projections or if one wants to jump to a
+specific frame that was selected in the texboxes above the button.
+
+![Update frames demo](../man/figures/update_frames_demo.gif)
+
+### Animating the currently loaded tours
+
+The currently loaded tours can be animated by checking the checkbox below the
+"Update frames" button. The interval in which the next frames will be loaded
+can be changed in the textbox next to the checkbox. 
+
+![Update frames demo](../man/figures/animate_frames_demo.gif)
+
+### Saving the projections and subsets
+
+The currently displayed projections and subsets can be saved as .csv by clicking
+the "Save projections and subsets" button. This will produce a file browser with
+which one can choose where the .csv file should be saved.
+

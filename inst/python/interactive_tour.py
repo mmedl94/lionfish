@@ -10,6 +10,7 @@ import tkinter as tk
 from functools import partial
 from datetime import datetime
 import os
+import time
 
 import numpy as np
 import pandas as pd
