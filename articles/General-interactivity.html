@@ -124,7 +124,7 @@ elements on the frame on the left.</p>
 <span>                 preselection<span class="op">=</span><span class="va">clusters</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                 display_size<span class="op">=</span><span class="fl">4.5</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -136,8 +136,13 @@ elements on the frame on the left.</p>
 <p>A list of all features can be found on the top left. Each feature has
 a checkbox next to it. The features are selected or deselected by
 checking or unchecking the respective checkboxes.</p>
-<p><img src="../reference/figures/feature_selection_demo.gif" alt="Feature selection demo"> ### Subset selection and
-highlighting</p>
+<div class="float">
+<img src="../reference/figures/feature_selection_demo.gif" alt="Feature selection demo"><div class="figcaption">Feature selection demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="subset-selection-and-highlighting">Subset selection and highlighting<a class="anchor" aria-label="anchor" href="#subset-selection-and-highlighting"></a>
+</h3>
 <p>A list of all subsets can be found below the features. Each subset
 has a checkbox next to it. The subsets are selected checking respective
 checkboxes next to them. When a subset is active, all datapoints that
@@ -147,8 +152,13 @@ the datapoints within the respective subset. The transparency of the
 datapoints of the subsets can be changed by clicking the colored patches
 next to the subset names. The names of the subsets can be changed by
 writing in the textboxes.</p>
-<p><img src="../reference/figures/subset_selection_demo.gif" alt="Subset selection and highlighting demo"> ### Resetting to the
-original subsets</p>
+<div class="float">
+<img src="../reference/figures/subset_selection_demo.gif" alt="Subset selection and highlighting demo"><div class="figcaption">Subset selection and highlighting demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="resetting-to-theoriginal-subsets">Resetting to theoriginal subsets<a class="anchor" aria-label="anchor" href="#resetting-to-theoriginal-subsets"></a>
+</h3>
 <p>The current subset selection can easily be reset by clicking the
 “Reset original selection” button.</p>
 <div class="float">
@@ -182,8 +192,32 @@ will be loaded can be changed in the textbox next to the checkbox.</p>
 </h3>
 <p>The currently displayed projections and subsets can be saved as .csv
 by clicking the “Save projections and subsets” button. This will produce
-a file browser with which one can choose where the .csv file should be
-saved.</p>
+a file browser with which one can choose the directory for the files to
+be saved in. The saved files are</p>
+<ul>
+<li>a .png file of the figure</li>
+<li>a .csv file that maps the indices of the datapoints to the
+subsets</li>
+<li>.csv files with the projection matrices of all displayed tours</li>
+</ul>
+<div class="float">
+<img src="../reference/figures/save_demo.gif" alt="Save projections and subsets demo"><div class="figcaption">Save projections and subsets demo</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="initiating-new-tours">Initiating new tours<a class="anchor" aria-label="anchor" href="#initiating-new-tours"></a>
+</h3>
+<p>New tours can be initiated by first choosing what tour one wants to
+compute and then pressing “Run tour”. Currently, local tours and guided
+tours with the indices <a href="https://ggobi.github.io/tourr/reference/holes.html" class="external-link">holes</a> and
+<a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">LDA</a>
+are available. Local tours will be initiated with the currently
+displayed projections. They can therefore be used to further explore
+projections similar to the displayed one. By pressing “Reset original
+tour” one can return to the originally loaded tours.</p>
+<div class="float">
+<img src="../reference/figures/initiate_tours_demo.gif" alt="Save projections and subsets demo"><div class="figcaption">Save projections and subsets demo</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
