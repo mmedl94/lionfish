@@ -339,14 +339,15 @@ class InteractiveTourInterface(ctk.CTk):
             if os.path.isdir(f"{save_dir}/{now}") is False:
                 os.mkdir(f"{save_dir}/{now}")
 
-            save_df = pd.DataFrame(
-                self.subselections.T)
+            save_df = pd.DataFrame(self.subselections, dtype=pd.Int64Dtype()).T
+            save_df = save_df + 1
 
             # Get subselection names
             save_df.columns = [subset_name.get()
                                for subset_name in self.subset_names]
+
             save_df.to_csv(f"{save_dir}/{now}/subselections.csv", index=False)
-            self.fig.savefig(f"{save_dir}/{now}/figure.png")
+            self.fig.savefig(f"{save_dir}/{now}/figure.png", dpi=300)
             for idx, plot_dict in enumerate(self.plot_dicts):
                 if "proj" in plot_dict:
                     save_df = pd.DataFrame(
@@ -356,6 +357,7 @@ class InteractiveTourInterface(ctk.CTk):
                     save_df = save_df.set_index("original variables")
                     filename = f"{save_dir}/{now}/projection_object_{idx+1}.csv"
                     save_df.to_csv(filename)
+            self.pause_var.set(0)
 
         save_button = ctk.CTkButton(master=sidebar,
                                     width=100,

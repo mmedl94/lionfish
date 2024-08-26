@@ -1,5 +1,8 @@
 ---
 title: "General interactivity"
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -12,9 +15,9 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The pytourr package offers multiple different types of general interactivity.
-The following operations can be performed with the elements on the frame on the
-left.
+The pytourr package offers multiple different types of general
+interactivity. The following operations can be performed with the
+elements on the frame on the left.
 
 -   Feature selection
 -   Subset selection and highlighting
@@ -69,57 +72,84 @@ interactive_tour(data=data,
                  preselection=clusters,
                  preselection_names=flea_subspecies,
                  n_subsets = 5,
-                 display_size=5)
+                 display_size=4.5)
 ```
 
 ## Currently supported general interactivity
 
 ### Feature selection
 
-A list of all features can be found on the top left. Each feature has a checkbox
-next to it. The features are selected or deselected by checking or unchecking
-the respective checkboxes.
+A list of all features can be found on the top left. Each feature has a
+checkbox next to it. The features are selected or deselected by checking
+or unchecking the respective checkboxes.
 
 ![Feature selection demo](../man/figures/feature_selection_demo.gif)
+
 ### Subset selection and highlighting
 
 A list of all subsets can be found below the features. Each subset has a
-checkbox next to it. The subsets are selected checking respective checkboxes next
-to them. When a subset is active, all datapoints that are selected with one of
-the interactive plots will be moved to that subset. The colored patches next to
-the subsets indicate the color of the datapoints within the respective subset.
-The transparency of the datapoints of the subsets can be changed by clicking the
-colored patches next to the subset names. The names of the subsets can be changed
-by writing in the textboxes.
+checkbox next to it. The subsets are selected checking respective
+checkboxes next to them. When a subset is active, all datapoints that
+are selected with one of the interactive plots will be moved to that
+subset. The colored patches next to the subsets indicate the color of
+the datapoints within the respective subset. The transparency of the
+datapoints of the subsets can be changed by clicking the colored patches
+next to the subset names. The names of the subsets can be changed by
+writing in the textboxes.
 
-![Subset selection and highlighting demo](../man/figures/subset_selection_demo.gif)
-### Resetting to the original subsets
+![Subset selection and highlighting
+demo](../man/figures/subset_selection_demo.gif)
 
-The current subset selection can easily be reset by clicking the "Reset original
-selection" button.
+### Resetting to theoriginal subsets
+
+The current subset selection can easily be reset by clicking the "Reset
+original selection" button.
 
 ![Subset resetting demo](../man/figures/reset_selection_demo.gif)
 
 ### Updating the current display
 
-The current display can be updated by clicking the "Update frames" button. This
-can be useful if some of the plots haven't updated properly, one wants to reset
-the shown projections to the original projections or if one wants to jump to a
-specific frame that was selected in the texboxes above the button.
+The current display can be updated by clicking the "Update frames"
+button. This can be useful if some of the plots haven't updated
+properly, one wants to reset the shown projections to the original
+projections or if one wants to jump to a specific frame that was
+selected in the texboxes above the button.
 
 ![Update frames demo](../man/figures/update_frames_demo.gif)
 
 ### Animating the currently loaded tours
 
-The currently loaded tours can be animated by checking the checkbox below the
-"Update frames" button. The interval in which the next frames will be loaded
-can be changed in the textbox next to the checkbox. 
+The currently loaded tours can be animated by checking the checkbox
+below the "Update frames" button. The interval in which the next frames
+will be loaded can be changed in the textbox next to the checkbox.
 
 ![Update frames demo](../man/figures/animate_frames_demo.gif)
 
 ### Saving the projections and subsets
 
-The currently displayed projections and subsets can be saved as .csv by clicking
-the "Save projections and subsets" button. This will produce a file browser with
-which one can choose where the .csv file should be saved.
+The currently displayed projections and subsets can be saved as .csv by
+clicking the "Save projections and subsets" button. This will produce a
+file browser with which one can choose the directory for the files to be
+saved in. The saved files are
+
+-   a .png file of the figure
+-   a .csv file that maps the indices of the datapoints to the subsets
+-   .csv files with the projection matrices of all displayed tours
+
+![Save projections and subsets demo](../man/figures/save_demo.gif)
+
+### Initiating new tours
+
+New tours can be initiated by first choosing what tour one wants to
+compute and then pressing "Run tour". Currently, local tours and guided
+tours with the indices
+[holes](https://ggobi.github.io/tourr/reference/holes.html) and
+[LDA](https://ggobi.github.io/tourr/reference/lda_pp.html) are
+available. Local tours will be initiated with the currently displayed
+projections. They can therefore be used to further explore projections
+similar to the displayed one. By pressing "Reset original tour" one can
+return to the originally loaded tours.
+
+![Save projections and subsets demo](../man/figures/initiate_tours_demo.gif)
+
 
