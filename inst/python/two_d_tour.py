@@ -93,7 +93,6 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             parent,
             subplot_idx
         )
-        n_frames = plot_object["obj"].shape[-1]-1
 
         parent.axs[subplot_idx].set_title(
             f"{parent.displayed_tour}\n" +
@@ -101,4 +100,3 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             "Press left key for last frame")
     else:
         parent.plot_dicts[subplot_idx]["scat"].set_facecolors(parent.fc)
-        parent.plot_dicts[subplot_idx]["selector"].pause_var = parent.pause_var

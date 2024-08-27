@@ -28,7 +28,6 @@ class LassoSelect:
         self.collection = self.ax.collections[0]
         self.colors = parent.colors
         self.data = parent.data
-        self.pause_var = parent.pause_var
 
     def get_blit(self):
         self.blit = self.ax.figure.canvas.copy_from_bbox(
@@ -76,9 +75,10 @@ class LassoSelect:
         self.collection.set_facecolors(self.parent.fc)
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
-
         self.parent.frame_update = False
-        self.parent.pause_var.set(0)
+
+        # Start new plot loop
+        self.parent.after(10, self.parent.plot_loop)
 
     def disconnect(self):
         self.lasso.disconnect_events()
@@ -104,7 +104,6 @@ class BarSelect:
         self.patches = self.ax.patches
         self.y_lims = self.ax.get_ylim()
         self.colors = parent.colors
-        self.pause_var = parent.pause_var
 
         self.connection = self.ax.figure.canvas.mpl_connect("pick_event", partial(
             self.onselect))
@@ -182,7 +181,7 @@ class BarSelect:
             self.plot_dicts[plot_idx]["update_plot"] = False
 
         self.parent.frame_update = False
-        self.parent.pause_var.set(0)
+        self.parent.plot_loop()
 
     def disconnect(self):
         self.canvas.mpl_disconnect(self.connection)
@@ -201,7 +200,6 @@ class DraggableAnnotation1d:
         self.press = None
         self.ax = parent.axs[subplot_idx]
         self.hist = hist
-        self.pause_var = parent.pause_var
         self.half_range = parent.half_range
 
         self.arrs = []
@@ -514,7 +512,6 @@ class DraggableAnnotation2d:
         self.plot_dict = parent.plot_dicts[plot_idx]
         self.plot_dicts = parent.plot_dicts
         self.plot_idx = plot_idx
-        self.pause_var = parent.pause_var
         self.blit = None
 
         if sum(self.feature_selection) > 10:
