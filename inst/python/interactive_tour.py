@@ -200,7 +200,8 @@ class InteractiveTourInterface(ctk.CTk):
                           sticky="w")
 
             # Textbox for the subset name
-            textvariable = tk.StringVar(self, f"Subset {subselection_idx + 1}")
+            subset_name = self.get_subselection_name(subselection_idx)
+            textvariable = tk.StringVar(self, subset_name)
             self.subset_names.append(textvariable)
 
             textbox = ctk.CTkEntry(
@@ -237,37 +238,6 @@ class InteractiveTourInterface(ctk.CTk):
             columnspan=3,
             pady=10,
             sticky="n")
-
-    def create_subselection(self, subselection_idx):
-        """Create subselection widgets and initialize data."""
-        if self.preselection is not None:
-            check_var, subset = self.initialize_preselection(subselection_idx)
-        else:
-            check_var, subset = self.initialize_default_selection(
-                subselection_idx)
-
-        textvariable = tk.StringVar(
-            self, self.get_subselection_name(subselection_idx))
-        checkbox = ctk.CTkCheckBox(
-            master=self, text="", width=24,
-            command=partial(subselection_checkbox_event,
-                            self, subselection_idx),
-            variable=check_var, onvalue=1, offvalue=0
-        )
-        checkbox.grid(row=subselection_idx, column=0, pady=3, padx=0)
-        textbox = ctk.CTkEntry(master=self, textvariable=textvariable)
-        textbox.grid(row=subselection_idx, column=1,
-                     pady=3, padx=0, sticky="w")
-
-        color_box = ctk.CTkButton(
-            master=self, text="", width=24, height=24, hover=False,
-            fg_color=matplotlib.colors.rgb2hex(self.colors[subselection_idx]),
-            command=partial(self.update_colors, subselection_idx)
-        )
-        color_box.grid(row=subselection_idx, column=2,
-                       pady=3, padx=2, sticky="w")
-
-        return check_var, subset, textvariable
 
     def update_colors(self, subselection_idx):
         """Update the color of the selected subset."""
@@ -323,10 +293,11 @@ class InteractiveTourInterface(ctk.CTk):
 
     def get_subselection_name(self, subselection_idx):
         """Get the name for a given subselection."""
-        if not self.preselection_names or subselection_idx + 1 > len(self.preselection_names):
-            return f"Subset {subselection_idx + 1}"
-        else:
+        # Ensure preselection_names is populated and check if the index is within bounds
+        if self.preselection_names and subselection_idx < len(self.preselection_names):
             return self.preselection_names[subselection_idx]
+        else:
+            return f"Subset {subselection_idx + 1}"
 
     def initialize_color_array(self):
         """Initialize the color array based on the selections."""
