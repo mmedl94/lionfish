@@ -15,6 +15,55 @@ install.packages("remotes")
 remotes::install_github("mmedl94/pytourr")
 ```
 
+###  Complications for windows users
+
+Running the example code below might result in the following error
+``` r
+Error: Required version of NumPy not available: incompatible NumPy binary version 33554432 (expecting version 16777225)
+```
+
+To resolve this, we have to delete the erroneous virtual environment, build a new one with an older Python version and
+provide the direcories to our tcl and tk installations.
+
+``` r
+# Delete the old enironment, might require a restart of R
+reticulate::virtualenv_remove("r-pytourr")
+
+# Install the stable Python version
+reticulate::install_python(version="3.8.10")
+
+# Build new virtual environment
+reticulate::virtualenv_create(envname = "r-pytourr", version="3.8.10")
+
+# Initiate Python environment as usual
+init_env()
+```
+
+Running the example will now probably throw:
+``` r
+Error in py_call_impl(callable, call_args$unnamed, call_args$named) : 
+  _tkinter.TclError: Can't find a usable init.tcl in the following directories:
+    C:/some/directory/
+
+This probably means that Tcl wasn't installed properly.
+```
+This means that tkinter cannot find your tk and tcl installations. So we have to provide the correct directories manually.
+
+They should be located somewhere here (please modify according to your system!)
+``` r
+# tcl location
+C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tcl/tcl8.6
+
+# tk location
+C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tk/tk8.6
+```
+Once you have located them please run (please modify according to your system!)
+``` r
+Sys.setenv(TCL_LIBRARY = "C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tcl/tcl8.6")
+Sys.setenv(TK_LIBRARY = "C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tk/tk8.6")
+```
+The directories to the tcl and tk installations have to be set anew for each R session.
+
 ## Example
 
 To run an interactive tour you will first have to initialize the python backend with 
