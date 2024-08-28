@@ -62,12 +62,13 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mmedl94/pytourr"</span><span class="op">)</span></span></code></pre></div>
+<p>Make sure you have git installed. You can download and install git from <a href="https://git-scm.com/downloads" class="external-link">https://git-scm.com/downloads</a> if you don’t have it installed.</p>
 <div class="section level3">
 <h3 id="complications-for-windows-users">Complications for windows users<a class="anchor" aria-label="anchor" href="#complications-for-windows-users"></a>
 </h3>
 <p>Running the example code below might result in the following error</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>Error<span class="sc">:</span> Required version of NumPy not available<span class="sc">:</span> incompatible NumPy binary version <span class="dv">33554432</span> (expecting version <span class="dv">16777225</span>)</span></code></pre></div>
-<p>To resolve this, we have to delete the erroneous virtual environment, build a new one with an older Python version and provide the direcories to our tcl and tk installations.</p>
+<p>To resolve this, we have to delete the erroneous virtual environment, build a new one with an older Python version and provide the directories to our tcl and tk installations.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Delete the old enironment, might require a restart of R</span></span>
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_remove</a></span><span class="op">(</span><span class="st">"r-pytourr"</span><span class="op">)</span></span>
@@ -97,7 +98,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>TCL_LIBRARY <span class="op">=</span> <span class="st">"C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tcl/tcl8.6"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>TK_LIBRARY <span class="op">=</span> <span class="st">"C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tk/tk8.6"</span><span class="op">)</span></span></code></pre></div>
-<p>The directories to the tcl and tk installations have to be set anew for each R session.</p>
+<p>The directories to the tcl and tk installations have to be set anew at the beginning of each R session.</p>
 </div>
 </div>
 <div class="section level2">
