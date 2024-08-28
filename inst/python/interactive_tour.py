@@ -482,7 +482,8 @@ class InteractiveTourInterface(ctk.CTk):
     def setup_metric_menu(self, sidebar):
         """Setup the metric selection menu if needed."""
         metrics = ["Intra cluster fraction",
-                   "Intra feature fraction", "Total fraction"]
+                   "Intra feature fraction",
+                   "Total fraction"]
         plot_types_w_metric = ["heatmap", "cat_clust_interface"]
 
         # Check if any plot requires a metric selection

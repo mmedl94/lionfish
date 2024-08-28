@@ -242,7 +242,7 @@ and plotted has to be selected. One can choose between "Total fraction",
 
 $\text{total fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n$
 
-$\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{i}$
+$\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n_{i}$
 
 $\text{intra feature fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{j}$
 

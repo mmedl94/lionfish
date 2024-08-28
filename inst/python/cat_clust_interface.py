@@ -8,22 +8,24 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
         (len(parent.feature_selection), int(parent.n_subsets)))
     cur_metric_var = parent.metric_vars[subplot_idx].get()
     # get ratios
-    all_pos = np.sum(parent.data, axis=0)
+    all_pos_feature = np.sum(parent.data, axis=0)
+    all_pos_subset = np.sum(parent.data, axis=0)
     for subset_idx, subset in enumerate(parent.subselections):
         if subset.shape[0] != 0:
-            all_pos_subset = np.sum(parent.data[subset], axis=0)
+            all_pos_feat_subset = np.sum(parent.data[subset], axis=0)
             if cur_metric_var == "Intra cluster fraction":
                 cat_clust_data[:,
-                               subset_idx] = all_pos_subset/parent.data[subset].shape[0]
+                               subset_idx] = all_pos_feat_subset/parent.data[subset].shape[0]
             elif cur_metric_var == "Intra feature fraction":
                 cat_clust_data[:,
-                               subset_idx] = all_pos_subset/all_pos
+                               subset_idx] = all_pos_feat_subset/all_pos_feature
             elif cur_metric_var == "Total fraction":
                 cat_clust_data[:,
-                               subset_idx] = all_pos_subset/parent.data.shape[0]
+                               subset_idx] = all_pos_feat_subset/parent.data.shape[0]
         else:
             cat_clust_data[:, subset_idx] = np.zeros(
                 len(parent.feature_selection))
+
     var_ids = np.repeat(np.arange(sum(parent.feature_selection)),
                         int(parent.n_subsets))
     cat_clust_data = cat_clust_data.flatten()
