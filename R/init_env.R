@@ -79,16 +79,23 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
 
   # set directory of tcl/tk installation for windows users
   if (.Platform$OS.type == "windows"){
-    home_dir <- Sys.getenv("USERPROFILE")
-    py_version <- reticulate::py_config()$version
+    home_dir <- gsub("\\\\", "/", Sys.getenv("USERPROFILE"))
+
+    sys <- import("sys")
+    full_python_version <- sys$version
+    py_version <- strsplit(full_python_version, " ")[[1]][1]
+
     py_dir <- "/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/"
     tk <- "/tk/tk8.6"
     tcl <- "/tcl/tcl8.6"
 
-    tcl_dir <- base::paste0(home_dir, py_version, tcl)
-    tk_dir <-  base::paste0(home_dir, py_version, tk)
+    tcl_dir <- base::paste0(home_dir,py_dir, py_version, tcl)
+    tk_dir <-  base::paste0(home_dir,py_dir, py_version, tk)
 
     Sys.setenv(TCL_LIBRARY = tcl_dir)
     Sys.setenv(TK_LIBRARY = tk_dir)
+
+    cat("tcl directory", tcl_dir, "\n")
+    cat("tk directory", tk_dir, "\n")
   }
 }
