@@ -1,17 +1,6 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # pytourr: extension of the tourr package tour for interactive display
 
-This package is an extension of the
-[tourr](https://github.com/ggobi/tourr) R-package. For a general
-overview of the tourr package please refer to the [tourr
-documentation](https://ggobi.github.io/tourr/). pytourr adds interactive
-displays to the functionality of tourr allowing users to direct the path
-of the tours.
+This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package. For a general overview of the tourr package please refer to the [tourr documentation](https://ggobi.github.io/tourr/). pytourr adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.
 
 ## Installation
 
@@ -22,8 +11,7 @@ install.packages("remotes")
 remotes::install_github("mmedl94/pytourr")
 ```
 
-Make sure you have git installed. You can download and install git from
-<https://git-scm.com/downloads> if you don't have it installed.
+Make sure you have git installed. You can download and install git from <https://git-scm.com/downloads>.
 
 ### Complications for windows users
 
@@ -33,8 +21,7 @@ Running the example code below might result in the following error
 Error: Required version of NumPy not available: incompatible NumPy binary version 33554432 (expecting version 16777225)
 ```
 
-To resolve this, we have to delete the erroneous virtual environment and
-build a new one with an older Python version.
+To resolve this, we have to delete the erroneous virtual environment and build a new one with an older Python version.
 
 ``` r
 # Delete the old enironment, might require a restart of R
@@ -52,16 +39,14 @@ init_env()
 
 ## Example
 
-To run an interactive tour you will first have to initialize the python
-backend with
+To run an interactive tour you will first have to initialize the python backend with
 
 ``` r
 library(pytourr)
 init_env()
 ```
 
-Then you can display saved tour objects, scatterplots or histograms with
-interactive_tour()
+Then you can display saved tour objects, scatterplots or histograms with interactive_tour()
 
 ``` r
 library(tourr)
