@@ -62,13 +62,13 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mmedl94/pytourr"</span><span class="op">)</span></span></code></pre></div>
-<p>Make sure you have git installed. You can download and install git from <a href="https://git-scm.com/downloads" class="external-link">https://git-scm.com/downloads</a> if you don’t have it installed.</p>
+<p>Make sure you have git installed. You can download and install git from <a href="https://git-scm.com/downloads" class="external-link uri">https://git-scm.com/downloads</a> if you don’t have it installed.</p>
 <div class="section level3">
 <h3 id="complications-for-windows-users">Complications for windows users<a class="anchor" aria-label="anchor" href="#complications-for-windows-users"></a>
 </h3>
 <p>Running the example code below might result in the following error</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>Error<span class="sc">:</span> Required version of NumPy not available<span class="sc">:</span> incompatible NumPy binary version <span class="dv">33554432</span> (expecting version <span class="dv">16777225</span>)</span></code></pre></div>
-<p>To resolve this, we have to delete the erroneous virtual environment, build a new one with an older Python version and provide the directories to our tcl and tk installations.</p>
+<p>To resolve this, we have to delete the erroneous virtual environment and build a new one with an older Python version.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Delete the old enironment, might require a restart of R</span></span>
 <span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_remove</a></span><span class="op">(</span><span class="st">"r-pytourr"</span><span class="op">)</span></span>
@@ -81,35 +81,17 @@
 <span></span>
 <span><span class="co"># Initiate Python environment as usual</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Running the example will now probably throw:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Error <span class="cf">in</span> <span class="fu">py_call_impl</span>(callable, call_args<span class="sc">$</span>unnamed, call_args<span class="sc">$</span>named) <span class="sc">:</span> </span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  _tkinter.TclError<span class="sc">:</span> Can<span class="st">'t find a usable init.tcl in the following directories:</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="st">    C:/some/directory/</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="st">This probably means that Tcl wasn'</span>t installed properly.</span></code></pre></div>
-<p>This means that tkinter cannot find your tk and tcl installations. So we have to provide the correct directories manually.</p>
-<p>They should be located somewhere here (please modify according to your system!)</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># tcl location</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>C<span class="sc">:</span><span class="er">/</span>Users<span class="sc">/</span>user<span class="sc">/</span>AppData<span class="sc">/</span>Local<span class="sc">/</span>r<span class="sc">-</span>reticulate<span class="sc">/</span>r<span class="sc">-</span>reticulate<span class="sc">/</span>pyenv<span class="sc">/</span>pyenv<span class="sc">-</span>win<span class="sc">/</span>versions<span class="sc">/</span><span class="dv">3</span>.<span class="fl">8.10</span><span class="sc">/</span>tcl<span class="sc">/</span>tcl8<span class="fl">.6</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># tk location</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>C<span class="sc">:</span><span class="er">/</span>Users<span class="sc">/</span>user<span class="sc">/</span>AppData<span class="sc">/</span>Local<span class="sc">/</span>r<span class="sc">-</span>reticulate<span class="sc">/</span>r<span class="sc">-</span>reticulate<span class="sc">/</span>pyenv<span class="sc">/</span>pyenv<span class="sc">-</span>win<span class="sc">/</span>versions<span class="sc">/</span><span class="dv">3</span>.<span class="fl">8.10</span><span class="sc">/</span>tk<span class="sc">/</span>tk8<span class="fl">.6</span></span></code></pre></div>
-<p>Once you have located them please run (please modify according to your system!)</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>TCL_LIBRARY <span class="op">=</span> <span class="st">"C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tcl/tcl8.6"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>TK_LIBRARY <span class="op">=</span> <span class="st">"C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tk/tk8.6"</span><span class="op">)</span></span></code></pre></div>
-<p>The directories to the tcl and tk installations have to be set anew at the beginning of each R session.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>To run an interactive tour you will first have to initialize the python backend with</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/pytourr/">pytourr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then you can display saved tour objects, scatterplots or histograms with interactive_tour()</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
