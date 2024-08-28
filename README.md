@@ -15,6 +15,11 @@ install.packages("remotes")
 remotes::install_github("mmedl94/pytourr")
 ```
 
+Make sure you have git installed. You can download and install git 
+from [https://git-scm.com/downloads](https://git-scm.com/downloads) if you
+don't have it installed.
+
+
 ###  Complications for windows users
 
 Running the example code below might result in the following error
@@ -23,7 +28,7 @@ Error: Required version of NumPy not available: incompatible NumPy binary versio
 ```
 
 To resolve this, we have to delete the erroneous virtual environment, build a new one with an older Python version and
-provide the direcories to our tcl and tk installations.
+provide the directories to our tcl and tk installations.
 
 ``` r
 # Delete the old enironment, might require a restart of R
@@ -62,7 +67,8 @@ Once you have located them please run (please modify according to your system!)
 Sys.setenv(TCL_LIBRARY = "C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tcl/tcl8.6")
 Sys.setenv(TK_LIBRARY = "C:/Users/user/AppData/Local/r-reticulate/r-reticulate/pyenv/pyenv-win/versions/3.8.10/tk/tk8.6")
 ```
-The directories to the tcl and tk installations have to be set anew for each R session.
+The directories to the tcl and tk installations have to be set anew 
+at the beginning of each R session.
 
 ## Example
 
