@@ -51,8 +51,8 @@
 #'                 n_subsets = 5,
 #'                 display_size=5)
 
-interactive_tour <- function(data, plot_objects, feature_names, half_range=NULL,
-                             n_plot_cols, preselection=FALSE,
+interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=NULL,
+                             n_plot_cols=2, preselection=FALSE,
                              preselection_names=FALSE, n_subsets=3, display_size=5){
 
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
@@ -63,6 +63,11 @@ interactive_tour <- function(data, plot_objects, feature_names, half_range=NULL,
     pytourr_dir <- base::paste(pytourr_dir,"/python", sep = "")
   }
   req_py_func <- "/interactive_tour.py"
+
+  if (is.null(feature_names)){
+    feature_names <- paste("feature", 1:ncol(data))
+  }
+
 
   func_loc <- base::paste(pytourr_dir,req_py_func, sep = "")
   reticulate::source_python(func_loc)

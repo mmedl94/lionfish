@@ -43,6 +43,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.title("Interactive Tour")
         self.r = r
         self.data = data
+        self.n_pts = self.data.shape[0]
         self.feature_names = feature_names
         self.half_range = half_range or self.calculate_half_range(data)
         self.plot_objects = plot_objects if isinstance(
@@ -65,7 +66,6 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.limits = 1
         self.n_frames = 1
-        self.n_pts = self.data.shape[0]
         self.obs_idx_ = np.arange(0, self.data.shape[0])
         self.displayed_tour = "Original tour"
 
