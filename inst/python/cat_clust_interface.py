@@ -7,9 +7,13 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
     cat_clust_data = np.empty(
         (len(parent.feature_selection), int(parent.n_subsets)))
     cur_metric_var = parent.metric_vars[subplot_idx].get()
+    if cur_metric_var not in ["Intra feature fraction",
+                              "Intra cluster fraction",
+                              "Total fraction"]:
+        cur_metric_var = "Intra cluster fraction"
+        parent.metric_vars[subplot_idx].set(cur_metric_var)
     # get ratios
     all_pos_feature = np.sum(parent.data, axis=0)
-    all_pos_subset = np.sum(parent.data, axis=0)
     for subset_idx, subset in enumerate(parent.subselections):
         if subset.shape[0] != 0:
             all_pos_feat_subset = np.sum(parent.data[subset], axis=0)
