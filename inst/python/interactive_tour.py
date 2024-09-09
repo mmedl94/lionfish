@@ -117,7 +117,11 @@ class InteractiveTourInterface(ctk.CTk):
                                           figsize=(
                                               self.display_size * n_cols, self.display_size * n_rows),
                                           layout="compressed")
-        self.axs = self.axs.flatten()[:n_plots]
+        if n_plots == 1:
+            self.axs = [self.axs]
+        else:
+            self.axs = self.axs.flatten()[:n_plots]
+
         canvas = FigureCanvasTkAgg(self.fig, self)
         canvas.get_tk_widget().grid(row=0, column=1, sticky="n")
 

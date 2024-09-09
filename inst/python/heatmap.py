@@ -15,7 +15,7 @@ def launch_heatmap(parent, plot_object, subplot_idx):
         parent.metric_vars[subplot_idx].set(cur_metric_var)
     # get ratios
     all_pos_feature = np.sum(parent.data, axis=0)
-    print()
+
     non_empty_sets = []
     for subset_idx, subset in enumerate(parent.subselections):
         if subset.shape[0] != 0:
@@ -47,6 +47,10 @@ def launch_heatmap(parent, plot_object, subplot_idx):
                 ax=parent.axs[subplot_idx],
                 yticklabels=y_tick_labels,
                 xticklabels=x_tick_labels)
+    parent.axs[subplot_idx].set_xticks(parent.axs[subplot_idx].get_xticks(),
+                                       parent.axs[subplot_idx].get_xticklabels(),
+                                       rotation=90,
+                                       ha="center")
     plot_dict = {"type": "heatmap",
                  "subtype": "heatmap",
                  "subplot_idx": subplot_idx}
