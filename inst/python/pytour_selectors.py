@@ -205,7 +205,7 @@ class DraggableAnnotation1d:
         self.arrs = []
         self.labels = []
 
-        if sum(self.feature_selection) > 10:
+        if sum(self.feature_selection) > self.parent.hover_cutoff:
             self.alpha = 0.1
         else:
             self.alpha = 1
@@ -226,7 +226,7 @@ class DraggableAnnotation1d:
         true_counter = 0
         for axis_id, feature_bool in enumerate(self.feature_selection):
             if feature_bool == True:
-                if len(self.feature_selection) < 10:
+                if len(self.feature_selection) < self.parent.hover_cutoff:
                     x_0 = 0
                     y_0 = axis_id/len(self.feature_selection)
                     dx = self.proj[axis_id, 0]
@@ -246,16 +246,18 @@ class DraggableAnnotation1d:
                 label = self.arrow_axs.text(dx, y_0,
                                             parent.feature_names[axis_id],
                                             alpha=self.alpha,
-                                            clip_on=True)
+                                            clip_on=True,
+                                            size=self.parent.label_size)
 
             else:
                 arr = None
-                if len(self.feature_selection) < 10:
+                if len(self.feature_selection) < self.parent.hover_cutoff:
                     label = self.arrow_axs.text(0,
                                                 axis_id /
                                                 len(self.feature_selection),
                                                 parent.feature_names[axis_id],
-                                                alpha=self.alpha)
+                                                alpha=self.alpha,
+                                                size=self.parent.label_size)
                 else:
                     label = None
 
@@ -373,6 +375,7 @@ class DraggableAnnotation1d:
                 x = np.matmul(self.data[:, self.feature_selection],
                               self.proj[self.feature_selection])/self.half_range
                 x = x[:, 0]
+                x = x - np.mean(x)
 
                 self.plot_dicts[self.subplot_idx]["x"] = x
                 self.plot_dicts[self.subplot_idx]["proj"] = self.proj
@@ -391,7 +394,9 @@ class DraggableAnnotation1d:
                     stacked=True,
                     picker=True,
                     color=self.colors[:len(x_subselections)],
-                    animated=True)
+                    animated=True,
+                    bins=np.linspace(-1, 1, 26))
+
                 self.ax.set_xlim(xlim)
                 self.ax.set_xticks([])
                 self.ax.set_yticks([])
@@ -444,6 +449,7 @@ class DraggableAnnotation1d:
         x = np.matmul(self.data[:, self.feature_selection],
                       self.proj[self.feature_selection])/self.half_range
         x = x[:, 0]
+        x = x-np.mean(x)
 
         self.plot_dicts[self.subplot_idx]["x"] = x
         self.plot_dicts[self.subplot_idx]["proj"] = self.proj
@@ -514,7 +520,7 @@ class DraggableAnnotation2d:
         self.plot_idx = plot_idx
         self.blit = None
 
-        if sum(self.feature_selection) > 10:
+        if sum(self.feature_selection) > self.parent.hover_cutoff:
             self.alpha = 0.1
         else:
             self.alpha = 1
@@ -543,7 +549,8 @@ class DraggableAnnotation2d:
                                      parent.feature_names[axis_id],
                                      alpha=self.alpha,
                                      animated=True,
-                                     clip_on=True)
+                                     clip_on=True,
+                                     size=self.parent.label_size)
 
                 self.ax.draw_artist(arr)
                 self.ax.draw_artist(label)
@@ -650,6 +657,7 @@ class DraggableAnnotation2d:
                 # Update scattplot locations
                 new_data = np.matmul(self.data[:, self.feature_selection],
                                      self.proj[self.feature_selection])/self.half_range
+                new_data = new_data - np.mean(new_data, axis=0)
                 self.ax.collections[0].set_offsets(new_data)
 
         self.parent.plot_dicts[self.plot_idx]["proj"] = self.proj
@@ -703,6 +711,7 @@ class DraggableAnnotation2d:
         # Update scattplot locations
         new_data = np.matmul(self.data[:, self.feature_selection],
                              self.proj[self.feature_selection])/self.half_range
+        new_data = new_data - np.mean(new_data, axis=0)
         self.ax.collections[0].set_offsets(new_data)
 
         self.parent.plot_dicts[self.plot_idx]["proj"] = self.proj

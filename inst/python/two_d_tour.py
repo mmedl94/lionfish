@@ -40,6 +40,7 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
         plot_data = parent.r.render_proj_inter(
             parent.data[:, parent.feature_selection], proj_subet,
             limits=parent.limits, half_range=parent.half_range)
+
         # Unpack tour data
         data_prj = plot_data["data_prj"]
         circle_prj = plot_data["circle"]
@@ -50,8 +51,13 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             parent.frame_textboxes[subplot_idx].configure(
                 state="normal",
                 fg_color="white")
+            centered_offsets = np.column_stack((x, y))
+            centered_offsets = centered_offsets - \
+                np.mean(centered_offsets, axis=0, keepdims=True)
             scat = parent.axs[subplot_idx].scatter(
-                x, y, animated=True)
+                centered_offsets[:, 0],
+                centered_offsets[:, 1],
+                animated=True)
             scat.set_facecolor(parent.fc)
             parent.original_fc = parent.fc.copy()
             parent.axs[subplot_idx].plot(circle_prj.iloc[:, 0],
@@ -64,8 +70,11 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             parent.plot_dicts[subplot_idx]["draggable_annot"].disconnect()
             parent.plot_dicts[subplot_idx]["selector"].disconnect()
             # update scatterplot
+            centered_offsets = np.column_stack((x, y))
+            centered_offsets = centered_offsets - \
+                np.mean(centered_offsets, axis=0, keepdims=True)
             parent.plot_dicts[subplot_idx]["scat"].set_offsets(
-                np.array([x, y]).T)
+                centered_offsets)
             scat = parent.axs[subplot_idx].collections[0]
             scat.set_facecolors(parent.fc)
         parent.axs[subplot_idx].set_xlim(-parent.limits *

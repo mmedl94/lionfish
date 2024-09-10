@@ -22,7 +22,8 @@ from heatmap import launch_heatmap
 
 def interactive_tour(data, plot_objects, feature_names, half_range=None,
                      n_plot_cols=None, preselection=None,
-                     preselection_names=None, n_subsets=3, display_size=5):
+                     preselection_names=None, n_subsets=3, display_size=5,
+                     hover_cutoff=10, label_size=15):
     """Launch InteractiveTourInterface for interactive plotting."""
 
     if matplotlib.get_backend() != "TkAgg":
@@ -30,14 +31,15 @@ def interactive_tour(data, plot_objects, feature_names, half_range=None,
 
     app = InteractiveTourInterface(data, plot_objects, feature_names, half_range,
                                    n_plot_cols, preselection, preselection_names,
-                                   n_subsets, display_size)
+                                   n_subsets, display_size, hover_cutoff, label_size)
     app.mainloop()
 
 
 class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, plot_objects, feature_names, half_range=None,
                  n_plot_cols=None, preselection=None,
-                 preselection_names=None, n_subsets=3, display_size=5):
+                 preselection_names=None, n_subsets=3, display_size=5,
+                 hover_cutoff=10, label_size=15):
         super().__init__()
 
         self.title("Interactive Tour")
@@ -70,6 +72,8 @@ class InteractiveTourInterface(ctk.CTk):
         self.displayed_tour = "Original tour"
 
         self.fc = self.initialize_color_array()
+        self.hover_cutoff = hover_cutoff
+        self.label_size = label_size
         self.plot_dicts = [{} for _ in self.plot_objects]
         self.frame = 0
         self.last_frame = -1
@@ -381,7 +385,7 @@ class InteractiveTourInterface(ctk.CTk):
     def save_event(self):
         """Handle saving projections and subsets to files."""
         save_dir = ctk.filedialog.askdirectory()
-        now = datetime.now().strftime("%d_%m_%Y_%H_%M")
+        now = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
         save_path = os.path.join(save_dir, now)
 
         if not os.path.isdir(save_path):
@@ -393,7 +397,14 @@ class InteractiveTourInterface(ctk.CTk):
         save_df.columns = [subset_name.get()
                            for subset_name in self.subset_names]
         save_df.to_csv(os.path.join(
-            save_path, "subselections.csv"), index=False)
+            save_path, "subset_selection.csv"), index=False)
+
+        # save feature selection
+        active_features = np.array(self.feature_names)[self.feature_selection]
+        feature_df = pd.DataFrame(active_features, columns=["features"])
+        feature_df.to_csv(os.path.join(save_path, "feature_selection.csv"),
+                          index=False,
+                          header=False)
 
         # Save the figure
         self.fig.savefig(os.path.join(save_path, "figure.png"),
@@ -409,6 +420,10 @@ class InteractiveTourInterface(ctk.CTk):
                 proj_df.set_index("original variables", inplace=True)
                 proj_df.to_csv(os.path.join(
                     save_path, f"projection_object_{idx + 1}.csv"))
+        # prevent projection from resetting
+        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+            if plot_dict.get("subtype") in ["1d_tour", "2d_tour"]:
+                self.plot_dicts[subplot_idx]["update_plot"] = False
 
         self.plot_loop()
 

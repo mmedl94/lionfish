@@ -13,6 +13,9 @@
 #' @param preselection_names a vector that specifies the names of the preselection subsets
 #' @param n_subsets the total number of available subsets (up to 10).
 #' @param display_size rough size of each subplot in inches
+#' @param hover_cutoff number of features at which the switch from intransparent
+#' to transparent labels that can be hovered over to make them intransparent occurs
+#' @param label_size size of the labels of the feature names of 1d and 2d tours
 #'
 #' @return -
 #' @export
@@ -53,7 +56,8 @@
 
 interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=NULL,
                              n_plot_cols=2, preselection=FALSE,
-                             preselection_names=FALSE, n_subsets=3, display_size=5){
+                             preselection_names=FALSE, n_subsets=3, display_size=5,
+                             hover_cutoff=10, label_size=15){
 
   pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
 
@@ -73,7 +77,8 @@ interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=
   reticulate::source_python(func_loc)
   reticulate::py$interactive_tour(data, plot_objects, feature_names, half_range,
                                   n_plot_cols, preselection,
-                                  preselection_names, n_subsets, display_size)
+                                  preselection_names, n_subsets, display_size,
+                                  hover_cutoff, label_size)
 }
 
 
