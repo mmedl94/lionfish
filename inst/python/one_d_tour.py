@@ -23,22 +23,20 @@ def launch_1d_tour(parent, plot_object, subplot_idx):
     if "reset_selection_check" not in parent.plot_dicts[subplot_idx]:
         parent.plot_dicts[subplot_idx]["reset_selection_check"] = False
 
-    if update_plot is True:
-        if parent.plot_dicts[subplot_idx]["reset_selection_check"] is False:
-            proj = np.copy(plot_object["obj"][:, :, frame])
-        else:
+    proj = np.copy(plot_object["obj"][:, :, frame])
+
+    if update_plot:
+        if parent.plot_dicts[subplot_idx].get("reset_selection_check", False):
             proj = parent.plot_dicts[subplot_idx]["proj"]
             parent.plot_dicts[subplot_idx]["reset_selection_check"] = False
-        data_subset = parent.data[:, parent.feature_selection]
-        proj_subet = proj[parent.feature_selection][:, 0]
-        proj_subet = proj_subet / \
-            np.linalg.norm(proj_subet)
-        x = np.matmul(data_subset, proj_subet)
-        x = x/parent.half_range
-        x = x-np.mean(x)
     else:
         proj = parent.plot_dicts[subplot_idx]["proj"]
-        x = parent.plot_dicts[subplot_idx]["x"]
+    data_subset = parent.data[:, parent.feature_selection]
+    proj_subset = proj[parent.feature_selection][:, 0]
+    proj_subset /= np.linalg.norm(proj_subset)
+
+    x = np.matmul(data_subset, proj_subset) / parent.half_range
+    x -= np.mean(x)
 
     parent.axs[subplot_idx].clear()
     # check if there are preselected points and update plot

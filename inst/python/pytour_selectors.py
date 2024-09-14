@@ -103,25 +103,10 @@ class BarSelect:
         self.collection = self.ax.collections
         self.patches = self.ax.patches
         self.y_lims = self.ax.get_ylim()
-        self.colors = parent.colors
 
         self.connection = self.ax.figure.canvas.mpl_connect("pick_event", partial(
             self.onselect))
         self.ind = []
-
-        # transform x if necessary and save transform. Do we need this???
-        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            if len(plot_dict) != 0:
-                if plot_dict["subtype"] == "1d_tour":
-                    plot_dict["proj"][self.feature_selection, 0] = plot_dict["proj"][self.feature_selection, 0] / \
-                        np.linalg.norm(
-                            plot_dict["proj"][self.feature_selection, 0])
-                    x = np.matmul(parent.data[:, self.feature_selection],
-                                  plot_dict["proj"][self.feature_selection])/self.half_range
-                    self.plot_dicts[subplot_idx]["x"] = x[:, 0]
-                elif plot_dict["subtype"] == "hist":
-                    self.plot_dicts[subplot_idx]["x"] = parent.data[:,
-                                                                    plot_dict["hist_feature"]]
 
     def get_blit(self):
         pass
@@ -147,6 +132,7 @@ class BarSelect:
             x = np.matmul(self.data[:, feature_selection],
                           cur_plot_dict["proj"][feature_selection])/self.half_range
             x = x[:, 0]
+            x = x-np.mean(x)
             cur_plot_dict["x"] = x
 
         new_ind = np.where(np.logical_and(
@@ -175,7 +161,10 @@ class BarSelect:
         for col_idx, subselection in enumerate(self.parent.subselections):
             if subselection.shape[0] != 0:
                 if self.parent.fc.shape[0] != 0:
-                    self.parent.fc[subselection] = self.colors[col_idx]
+                    color = self.parent.colors[col_idx].copy()
+                    if color[-1] != 1:
+                        color[-1] = 0.1
+                    self.parent.fc[subselection] = color
 
         for plot_idx, _ in enumerate(self.plot_dicts):
             self.plot_dicts[plot_idx]["update_plot"] = False
@@ -468,7 +457,8 @@ class DraggableAnnotation1d:
             stacked=True,
             picker=True,
             color=self.colors[:len(x_subselections)],
-            animated=True)
+            animated=True,
+            bins=np.linspace(-1, 1, 26))
 
         self.ax.set_xlim(xlim)
         self.ax.set_xticks([])

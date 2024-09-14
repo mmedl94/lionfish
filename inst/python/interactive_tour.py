@@ -2,6 +2,7 @@ import tkinter as tk
 from functools import partial
 from datetime import datetime
 import os
+import pickle as pkl
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -20,10 +21,42 @@ from mosaic import launch_mosaic
 from heatmap import launch_heatmap
 
 
+def load_interactive_tour(data, directory_to_save, feature_names, half_range=None,
+                          n_plot_cols=None, preselection=None,
+                          preselection_names=None, n_subsets=3, display_size=5,
+                          hover_cutoff=10, label_size=15):
+
+    with open(os.path.join(directory_to_save, "attributes.pkl"), "rb") as f:
+        attributes = pkl.load(f)
+    plot_objects = attributes["plot_objects"]
+
+    if half_range == None:
+        half_range = attributes["half_range"]
+    if n_plot_cols == None:
+        n_plot_cols = attributes["n_plot_cols"]
+    if preselection == None:
+        preselection = attributes["preselection"]
+    if n_subsets == None:
+        n_subsets = attributes["n_subsets"]
+    if display_size == None:
+        display_size = attributes["display_size"]
+    if hover_cutoff == None:
+        hover_cutoff = attributes["hover_cutoff"]
+    if label_size == None:
+        label_size = attributes["label_size"]
+
+    interactive_tour(data, plot_objects, feature_names, half_range,
+                     n_plot_cols, preselection,
+                     preselection_names, n_subsets, display_size,
+                     hover_cutoff, label_size, load=True,
+                     directory_to_save=directory_to_save)
+
+
 def interactive_tour(data, plot_objects, feature_names, half_range=None,
                      n_plot_cols=None, preselection=None,
                      preselection_names=None, n_subsets=3, display_size=5,
-                     hover_cutoff=10, label_size=15):
+                     hover_cutoff=10, label_size=15, load=False,
+                     directory_to_save=False):
     """Launch InteractiveTourInterface for interactive plotting."""
 
     if matplotlib.get_backend() != "TkAgg":
@@ -31,7 +64,8 @@ def interactive_tour(data, plot_objects, feature_names, half_range=None,
 
     app = InteractiveTourInterface(data, plot_objects, feature_names, half_range,
                                    n_plot_cols, preselection, preselection_names,
-                                   n_subsets, display_size, hover_cutoff, label_size)
+                                   n_subsets, display_size, hover_cutoff, label_size,
+                                   load, directory_to_save)
     app.mainloop()
 
 
@@ -39,7 +73,8 @@ class InteractiveTourInterface(ctk.CTk):
     def __init__(self, data, plot_objects, feature_names, half_range=None,
                  n_plot_cols=None, preselection=None,
                  preselection_names=None, n_subsets=3, display_size=5,
-                 hover_cutoff=10, label_size=15):
+                 hover_cutoff=10, label_size=15, load=False,
+                 directory_to_save=False):
         super().__init__()
 
         self.title("Interactive Tour")
@@ -81,6 +116,10 @@ class InteractiveTourInterface(ctk.CTk):
         self.initial_loop = True
 
         self.bind_all("<KeyPress>", self.accept)
+
+        self.load = load
+        self.directory_to_save = directory_to_save
+
         self.plot_loop()
 
     def calculate_half_range(self, data):
@@ -139,6 +178,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.setup_frame_controls(sidebar)
         self.setup_animation_controls(sidebar)
         self.setup_save_button(sidebar)
+        self.setup_load_button(sidebar)
         self.setup_tour_controls(sidebar)
         self.setup_metric_menu(sidebar)
 
@@ -276,29 +316,6 @@ class InteractiveTourInterface(ctk.CTk):
         # Re-run the plot loop to apply color changes
         self.plot_loop()
 
-    def initialize_preselection(self, subselection_idx):
-        """Initialize preselection based on provided data."""
-        if subselection_idx == 0:
-            check_var = tk.IntVar(self, 1)
-            subset = np.where(self.preselection == subselection_idx)[0]
-        elif subselection_idx < len(set(self.preselection)):
-            check_var = tk.IntVar(self, 0)
-            subset = np.where(self.preselection == subselection_idx)[0]
-        else:
-            check_var = tk.IntVar(self, 0)
-            subset = np.array([])
-        return check_var, subset
-
-    def initialize_default_selection(self, subselection_idx):
-        """Initialize default selection if no preselection is provided."""
-        if subselection_idx == 0:
-            check_var = tk.IntVar(self, 1)
-            subset = np.arange(self.data.shape[0])
-        else:
-            check_var = tk.IntVar(self, 0)
-            subset = np.array([])
-        return check_var, subset
-
     def get_subselection_name(self, subselection_idx):
         """Get the name for a given subselection."""
         # Ensure preselection_names is populated and check if the index is within bounds
@@ -382,6 +399,80 @@ class InteractiveTourInterface(ctk.CTk):
         )
         save_button.grid(row=4, column=0, pady=(3, 3), sticky="n")
 
+    def setup_load_button(self, sidebar):
+        """Setup the load button for recovering a saved state."""
+        load_button = ctk.CTkButton(
+            master=sidebar, width=100, height=32, border_width=0, corner_radius=8,
+            text="Load projections \n and subsets", command=partial(self.load_event)
+        )
+        load_button.grid(row=5, column=0, pady=(3, 3), sticky="n")
+
+    def load_event(self):
+        if self.load is True:
+            load_dir = self.directory_to_save
+        else:
+            load_dir = ctk.filedialog.askdirectory()
+
+        with open(os.path.join(load_dir, "attributes.pkl"), "rb") as f:
+            attributes = pkl.load(f)
+
+        # drop these attributes if we load from scratch
+        if self.load is True:
+            attributes_to_drop = ["half_range",
+                                  "preselection",
+                                  "n_subsets",
+                                  "display_size",
+                                  "hover_cutoff",
+                                  "label_size",
+                                  "initial_loop"]
+            for attribute_to_drop in attributes_to_drop:
+                del attributes[attribute_to_drop]
+        self.__dict__.update(attributes)
+
+        def set_tk_states(saved_vars, var_list):
+            for idx, value in enumerate(saved_vars):
+                var_list[idx].set(value)
+
+        set_tk_states(attributes["frame_vars_"], self.frame_vars)
+        set_tk_states(attributes["feature_selection_vars_"],
+                      self.feature_selection_vars)
+        set_tk_states(attributes["subselection_vars_"], self.subselection_vars)
+        set_tk_states(attributes["metric_vars_"], self.metric_vars)
+
+        self.plot_dicts_ = [{} for _ in self.plot_objects]
+        # restore projections
+        projections = attributes["projections"]
+        for idx, plot_dict in enumerate(self.plot_dicts):
+            if str(idx) in projections:
+                self.plot_dicts[idx]["proj"] = projections[str(idx)]
+                if self.load is True:
+                    self.plot_dicts_[idx]["proj"] = projections[str(idx)]
+
+        with open(os.path.join(load_dir, "tkinter_states.pkl"), "rb") as f:
+            tkinter_states = pkl.load(f)
+
+        for var_name, value in tkinter_states.items():
+            if hasattr(self, var_name):
+                var = getattr(self, var_name)
+                if isinstance(var, (tk.IntVar, tk.StringVar, tk.BooleanVar, tk.DoubleVar)):
+                    var.set(value)
+
+        for subplot_idx in range(len(self.plot_objects)):
+            self.plot_dicts[subplot_idx]["reset_selection_check"] = True
+
+        if self.load is True:
+            self.load = False
+
+        self.plot_loop()
+
+    def is_picklable(self, obj):
+        """Check if attribute is picklable"""
+        try:
+            pkl.dumps(obj)  # Attempt to pickle the object
+            return True
+        except (pkl.PicklingError, TypeError):  # Catch exceptions related to pickling
+            return False
+
     def save_event(self):
         """Handle saving projections and subsets to files."""
         save_dir = ctk.filedialog.askdirectory()
@@ -396,12 +487,80 @@ class InteractiveTourInterface(ctk.CTk):
         save_df = save_df + 1
         save_df.columns = [subset_name.get()
                            for subset_name in self.subset_names]
+        restructured_data = []
+        for subset in save_df.columns:
+            subset_idx = subset.split(" ")[1]
+            for observation in save_df[subset].dropna():
+                restructured_data.append([subset_idx, observation])
+        save_df = pd.DataFrame(restructured_data, columns=[
+                               "subset", "observation_index"])
         save_df.to_csv(os.path.join(
             save_path, "subset_selection.csv"), index=False)
 
+        # Save attributes
+        attributes_to_save = {
+            k: v for k, v in self.__dict__.items()
+            if k != 'r' and self.is_picklable(v)
+        }
+        # Drop attributes that should not be saved
+        attributes_to_drop = ["fig",
+                              "axs",
+                              "data",
+                              "load",
+                              "_CTkAppearanceModeBaseClass__appearance_mode",
+                              "_CTkScalingBaseClass__scaling_type",
+                              "_tclCommands",
+                              "master",
+                              "_tkloaded",
+                              "_CTkScalingBaseClass__window_scaling",
+                              "_current_width",
+                              "_current_height",
+                              "_min_width",
+                              "_min_height",
+                              "_max_width",
+                              "_max_height",
+                              "_last_resizable_args",
+                              "_iconbitmap_method_called",
+                              "_state_before_windows_set_titlebar_color",
+                              "_window_exists",
+                              "_withdraw_called_before_window_exists",
+                              "_iconify_called_before_window_exists",
+                              "_block_update_dimensions_event",
+                              "focused_widget_before_widthdraw"]
+
+        for attribute in attributes_to_drop:
+            del attributes_to_save[attribute]
+
+        projections = {}
+        for idx, plot_dict in enumerate(self.plot_dicts):
+            if "proj" in plot_dict:
+                projections[str(idx)] = plot_dict["proj"]
+
+        def get_tk_states(var_list):
+            return [var.get() for var in var_list]
+
+        attributes_to_save.update({
+            "frame_vars_": get_tk_states(self.frame_vars),
+            "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
+            "subselection_vars_": get_tk_states(self.subselection_vars),
+            "metric_vars_": get_tk_states(self.metric_vars),
+            "projections": projections
+        })
+
+        with open(os.path.join(save_path, "attributes.pkl"), "wb") as f:
+            pkl.dump(attributes_to_save, f)
+
+        # save additional tkinter states
+        tkinter_states = {}
+        for var_name, var in self.__dict__.items():
+            if isinstance(var, (tk.IntVar, tk.StringVar, tk.BooleanVar, tk.DoubleVar)):
+                tkinter_states[var_name] = var.get()
+        with open(os.path.join(save_path, "tkinter_states.pkl"), "wb") as f:
+            pkl.dump(tkinter_states, f)
+
         # save feature selection
-        active_features = np.array(self.feature_names)[self.feature_selection]
-        feature_df = pd.DataFrame(active_features, columns=["features"])
+        features = np.array([self.feature_names, self.feature_selection*1]).T
+        feature_df = pd.DataFrame(features, columns=["features", "selected"])
         feature_df.to_csv(os.path.join(save_path, "feature_selection.csv"),
                           index=False,
                           header=False)
@@ -420,7 +579,8 @@ class InteractiveTourInterface(ctk.CTk):
                 proj_df.set_index("original variables", inplace=True)
                 proj_df.to_csv(os.path.join(
                     save_path, f"projection_object_{idx + 1}.csv"))
-        # prevent projection from resetting
+
+        # prevent projections from resetting
         for subplot_idx, plot_dict in enumerate(self.plot_dicts):
             if plot_dict.get("subtype") in ["1d_tour", "2d_tour"]:
                 self.plot_dicts[subplot_idx]["update_plot"] = False
@@ -435,17 +595,17 @@ class InteractiveTourInterface(ctk.CTk):
         self.selected_tour_type = ctk.StringVar(value="Local tour")
         tour_menu = ctk.CTkComboBox(
             master=sidebar, values=tour_types, variable=self.selected_tour_type)
-        tour_menu.grid(row=5, column=0, pady=(3, 3), sticky="n")
+        tour_menu.grid(row=6, column=0, pady=(3, 3), sticky="n")
 
         run_tour_button = ctk.CTkButton(
             master=sidebar, text="Run tour", command=partial(self.run_tour)
         )
-        run_tour_button.grid(row=6, column=0, pady=(3, 3), sticky="n")
+        run_tour_button.grid(row=7, column=0, pady=(3, 3), sticky="n")
 
         reset_tour_button = ctk.CTkButton(
             master=sidebar, text="Reset original tour", command=partial(self.reset_original_tour)
         )
-        reset_tour_button.grid(row=7, column=0, pady=(3, 3), sticky="n")
+        reset_tour_button.grid(row=8, column=0, pady=(3, 3), sticky="n")
 
     def run_tour(self):
         """Run a new tour based on the selected tour type."""
@@ -530,7 +690,7 @@ class InteractiveTourInterface(ctk.CTk):
                 metric_selection_menu = ctk.CTkComboBox(
                     master=metric_selection_frame,
                     values=metrics,
-                    command=self.plot_loop,
+                    command=self.metric_selection_event,
                     variable=metric_var
                 )
                 metric_selection_menu.grid(
@@ -542,6 +702,11 @@ class InteractiveTourInterface(ctk.CTk):
                         fg_color="grey")
 
                 self.metric_vars.append(metric_var)
+
+    def metric_selection_event(self, event=None):
+        for plot_idx, _ in enumerate(self.plot_dicts):
+            self.plot_dicts[plot_idx]["update_plot"] = False
+        self.plot_loop()
 
     def plot_loop(self, event=None):
         """Main loop to handle plotting and animation."""
@@ -561,6 +726,9 @@ class InteractiveTourInterface(ctk.CTk):
             self.animate_plots()
         else:
             self.initial_loop = False
+
+        if self.load is True:
+            self.load_event()
 
     def launch_plot(self, subplot_idx, plot_object):
         """Launch the appropriate plot based on the plot type."""
@@ -620,6 +788,7 @@ class InteractiveTourInterface(ctk.CTk):
     def reset_selection(self, event=None):
         """Reset to the original selection of subsets."""
         self.subselections = self.orig_subselections.copy()
+        self.colors = self.get_colors()
         self.fc = self.original_fc.copy()
 
         for subplot_idx in range(len(self.plot_objects)):
