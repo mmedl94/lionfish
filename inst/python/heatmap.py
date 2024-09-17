@@ -43,14 +43,21 @@ def launch_heatmap(parent, plot_object, subplot_idx):
     x_tick_labels = x_tick_labels[non_empty_sets]
     if parent.initial_loop == False:
         parent.axs[subplot_idx].collections[-1].colorbar.remove()
+
     sns.heatmap(data=heatmap_data,
                 ax=parent.axs[subplot_idx],
                 yticklabels=y_tick_labels,
                 xticklabels=x_tick_labels)
     parent.axs[subplot_idx].set_xticks(parent.axs[subplot_idx].get_xticks(),
                                        parent.axs[subplot_idx].get_xticklabels(),
-                                       rotation=90,
-                                       ha="center")
+                                       rotation=25,
+                                       ha="right")
+
+    for label in parent.axs[subplot_idx].get_yticklabels():
+        label.set_rotation(25)
+        label.set_ha("right")
+        label.set_rotation_mode("anchor")
+
     plot_dict = {"type": "heatmap",
                  "subtype": "heatmap",
                  "subplot_idx": subplot_idx}

@@ -63,7 +63,13 @@ def launch_mosaic(parent, plot_object, subplot_idx):
            gap=0.01)
     xlabels = parent.axs[subplot_idx].get_xticklabels()
     parent.axs[subplot_idx].set_xticklabels(xlabels,
-                                            rotation=90)
+                                            rotation=25,
+                                            ha="right")
+
+    ylabels = parent.axs[subplot_idx].get_yticklabels()
+    parent.axs[subplot_idx].set_yticklabels(ylabels,
+                                            rotation=25,
+                                            ha="right")
     # remove extra plots
     twinaxs = parent.axs[subplot_idx].twinx()
     remove_pos = twinaxs.get_position().bounds

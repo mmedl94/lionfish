@@ -66,11 +66,13 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
     y_tick_labels = y_tick_labels[ranked_vars]
     # flip so that labels agree with var_ids
     y_tick_labels = np.flip(y_tick_labels)
+
     parent.axs[subplot_idx].set_yticks(
         np.arange(0, sum(parent.feature_selection)))
-    parent.axs[subplot_idx].set_yticklabels(y_tick_labels)
-    parent.axs[subplot_idx].set_xlabel(
-        cur_metric_var)
+    parent.axs[subplot_idx].set_yticklabels(y_tick_labels,
+                                            rotation=25,
+                                            ha="right")
+    parent.axs[subplot_idx].set_xlabel(cur_metric_var)
     if parent.subselections[selected_cluster].shape[0] == 0:
         fraction_of_total = 0
         subset_size = 0
