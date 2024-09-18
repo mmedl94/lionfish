@@ -80,7 +80,7 @@ def launch_cat_clust_interface(parent, plot_object, subplot_idx):
         subset_size = parent.data[parent.subselections[selected_cluster]].shape[0]
         fraction_of_total = (
             subset_size/parent.data.shape[0])*100
-    title = f"{subset_size} obersvations - ({fraction_of_total:.2f}%)"
+    title = f"{subset_size} obsersvations - ({fraction_of_total:.2f}%)"
     parent.axs[subplot_idx].set_title(title)
     plot_dict = {"type": "cat_clust_interface",
                  "subtype": cur_metric_var,

@@ -96,9 +96,11 @@ class InteractiveTourInterface(ctk.CTk):
         self.subselections = self.initialize_subselections()
         self.orig_subselections = self.subselections.copy()
         self.colors = self.get_colors()
+        self.n_bins = tk.StringVar(self, "26")
 
         self.setup_cleanup()
         self.setup_plot_layout(n_plot_cols)
+        self.sidebar_row_tracker = 0
         self.setup_sidebar()
 
         self.limits = 1
@@ -176,6 +178,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.setup_feature_selection(sidebar)
         self.setup_subselection(sidebar)
         self.setup_frame_controls(sidebar)
+        self.setup_histogram_controls(sidebar)
         self.setup_animation_controls(sidebar)
         self.setup_save_button(sidebar)
         self.setup_load_button(sidebar)
@@ -196,7 +199,10 @@ class InteractiveTourInterface(ctk.CTk):
     def setup_feature_selection(self, sidebar):
         """Setup the feature selection checkboxes."""
         feature_selection_frame = ctk.CTkFrame(sidebar)
-        feature_selection_frame.grid(row=0, column=0, sticky="n")
+        feature_selection_frame.grid(row=self.sidebar_row_tracker,
+                                     column=0,
+                                     sticky="n")
+        self.sidebar_row_tracker += 1
 
         self.feature_selection_vars = []
         self.feature_selection = []
@@ -218,7 +224,9 @@ class InteractiveTourInterface(ctk.CTk):
         """Setup the subselection checkboxes and textboxes."""
         subselection_frame = ctk.CTkFrame(sidebar)
         # Add padding for spacing
-        subselection_frame.grid(row=1, column=0, padx=10, pady=10, sticky="n")
+        subselection_frame.grid(row=self.sidebar_row_tracker,
+                                column=0, padx=10, pady=10, sticky="n")
+        self.sidebar_row_tracker += 1
 
         self.subselection_vars = []
         self.subset_names = []
@@ -336,7 +344,8 @@ class InteractiveTourInterface(ctk.CTk):
     def setup_frame_controls(self, sidebar):
         """Setup controls for frame selection."""
         frame_selection_frame = ctk.CTkFrame(sidebar)
-        frame_selection_frame.grid(row=2, column=0)
+        frame_selection_frame.grid(row=self.sidebar_row_tracker, column=0)
+        self.sidebar_row_tracker += 1
         self.frame_vars = []
         self.frame_textboxes = []
 
@@ -360,18 +369,43 @@ class InteractiveTourInterface(ctk.CTk):
             self.frame_textboxes.append(textbox)
 
         # Button to update frames
-        update_frames_button = ctk.CTkButton(
+        update_button = ctk.CTkButton(
             master=frame_selection_frame,
-            text="Update frames",
+            text="Update",
             command=self.plot_loop
         )
-        update_frames_button.grid(
+        update_button.grid(
             row=len(self.plot_objects), column=0, columnspan=2, pady=(3, 3), sticky="n")
+
+    def setup_histogram_controls(self, sidebar):
+        plot_types_w_hist = ["histogram", "1d_tour"]
+
+        need_hist_control = any(
+            plot_object["type"] in plot_types_w_hist for plot_object in self.plot_objects)
+
+        if need_hist_control is False:
+            return
+
+        histogram_controls_frame = ctk.CTkFrame(sidebar)
+        histogram_controls_frame.grid(row=self.sidebar_row_tracker, column=0)
+        self.sidebar_row_tracker += 1
+
+        label = ctk.CTkLabel(master=histogram_controls_frame,
+                             text="Number of bins of histograms")
+        label.grid(row=0, column=0,
+                   pady=3, padx=0, sticky="w")
+
+        textbox = ctk.CTkEntry(
+            master=histogram_controls_frame,
+            textvariable=self.n_bins, width=40)
+        textbox.grid(row=0, column=1,
+                     pady=3, padx=0, sticky="w")
 
     def setup_animation_controls(self, sidebar):
         """Setup animation control widgets."""
         animation_frame = ctk.CTkFrame(sidebar)
-        animation_frame.grid(row=3, column=0)
+        animation_frame.grid(row=self.sidebar_row_tracker, column=0)
+        self.sidebar_row_tracker += 1
 
         self.animation_switch = tk.IntVar(self, 0)
         animation_checkbox = ctk.CTkCheckBox(
@@ -397,7 +431,9 @@ class InteractiveTourInterface(ctk.CTk):
             master=sidebar, width=100, height=32, border_width=0, corner_radius=8,
             text="Save projections \n and subsets", command=partial(self.save_event)
         )
-        save_button.grid(row=4, column=0, pady=(3, 3), sticky="n")
+        save_button.grid(row=self.sidebar_row_tracker,
+                         column=0, pady=(3, 3), sticky="n")
+        self.sidebar_row_tracker += 1
 
     def setup_load_button(self, sidebar):
         """Setup the load button for recovering a saved state."""
@@ -405,7 +441,9 @@ class InteractiveTourInterface(ctk.CTk):
             master=sidebar, width=100, height=32, border_width=0, corner_radius=8,
             text="Load projections \n and subsets", command=partial(self.load_event)
         )
-        load_button.grid(row=5, column=0, pady=(3, 3), sticky="n")
+        load_button.grid(row=self.sidebar_row_tracker,
+                         column=0, pady=(3, 3), sticky="n")
+        self.sidebar_row_tracker += 1
 
     def load_event(self):
         if self.load is True:
@@ -595,17 +633,23 @@ class InteractiveTourInterface(ctk.CTk):
         self.selected_tour_type = ctk.StringVar(value="Local tour")
         tour_menu = ctk.CTkComboBox(
             master=sidebar, values=tour_types, variable=self.selected_tour_type)
-        tour_menu.grid(row=6, column=0, pady=(3, 3), sticky="n")
+        tour_menu.grid(row=self.sidebar_row_tracker,
+                       column=0, pady=(3, 3), sticky="n")
+        self.sidebar_row_tracker += 1
 
         run_tour_button = ctk.CTkButton(
             master=sidebar, text="Run tour", command=partial(self.run_tour)
         )
-        run_tour_button.grid(row=7, column=0, pady=(3, 3), sticky="n")
+        run_tour_button.grid(row=self.sidebar_row_tracker,
+                             column=0, pady=(3, 3), sticky="n")
+        self.sidebar_row_tracker += 1
 
         reset_tour_button = ctk.CTkButton(
             master=sidebar, text="Reset original tour", command=partial(self.reset_original_tour)
         )
-        reset_tour_button.grid(row=8, column=0, pady=(3, 3), sticky="n")
+        reset_tour_button.grid(row=self.sidebar_row_tracker,
+                               column=0, pady=(3, 3), sticky="n")
+        self.sidebar_row_tracker += 1
 
     def run_tour(self):
         """Run a new tour based on the selected tour type."""
@@ -669,39 +713,43 @@ class InteractiveTourInterface(ctk.CTk):
         need_metric = any(
             plot_object["type"] in plot_types_w_metric for plot_object in self.plot_objects)
 
-        if need_metric:
-            metric_selection_frame = ctk.CTkFrame(sidebar)
-            metric_selection_frame.grid(row=8, column=0)
+        if need_metric is False:
+            return
 
-            self.metric_vars = []
+        metric_selection_frame = ctk.CTkFrame(sidebar)
+        metric_selection_frame.grid(row=self.sidebar_row_tracker, column=0)
+        self.sidebar_row_tracker += 1
+        self.metric_vars = []
 
-            for subplot_idx, plot_object in enumerate(self.plot_objects):
-                metric_var = tk.StringVar()
-                if plot_object["type"] in plot_types_w_metric:
-                    metric_var.set(plot_object.get(
-                        "obj", "Intra cluster fraction of positive"))
-                else:
-                    metric_var.set(metrics[0])
+        for subplot_idx, plot_object in enumerate(self.plot_objects):
+            metric_var = tk.StringVar()
 
-                label = ctk.CTkLabel(
-                    master=metric_selection_frame, text=f"Plot #{subplot_idx + 1}")
-                label.grid(row=subplot_idx, column=0, pady=(3, 3), sticky="n")
+            if plot_object["type"] in plot_types_w_metric:
+                metric_var.set(plot_object.get(
+                    "obj", "Intra cluster fraction of positive"))
+            else:
+                metric_var.set(metrics[0])
 
-                metric_selection_menu = ctk.CTkComboBox(
-                    master=metric_selection_frame,
-                    values=metrics,
-                    command=self.metric_selection_event,
-                    variable=metric_var
-                )
-                metric_selection_menu.grid(
-                    row=subplot_idx, column=1, pady=(3, 3), sticky="n")
+            label = ctk.CTkLabel(
+                master=metric_selection_frame, text=f"Plot #{subplot_idx + 1}")
+            label.grid(row=subplot_idx, column=0, pady=(3, 3), sticky="n")
 
-                if plot_object["type"] not in plot_types_w_metric:
-                    metric_selection_menu.configure(
-                        state="disabled",
-                        fg_color="grey")
+            metric_selection_menu = ctk.CTkComboBox(
+                master=metric_selection_frame,
+                values=metrics,
+                command=self.metric_selection_event,
+                variable=metric_var
+            )
 
-                self.metric_vars.append(metric_var)
+            metric_selection_menu.grid(
+                row=subplot_idx, column=1, pady=(3, 3), sticky="n")
+
+            if plot_object["type"] not in plot_types_w_metric:
+                metric_selection_menu.configure(
+                    state="disabled",
+                    fg_color="grey")
+
+            self.metric_vars.append(metric_var)
 
     def metric_selection_event(self, event=None):
         for plot_idx, _ in enumerate(self.plot_dicts):

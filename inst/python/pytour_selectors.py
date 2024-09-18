@@ -384,7 +384,7 @@ class DraggableAnnotation1d:
                     picker=True,
                     color=self.colors[:len(x_subselections)],
                     animated=True,
-                    bins=np.linspace(-1, 1, 26))
+                    bins=np.linspace(-1, 1, int(self.parent.n_bins.get())))
 
                 self.ax.set_xlim(xlim)
                 self.ax.set_xticks([])
@@ -458,7 +458,7 @@ class DraggableAnnotation1d:
             picker=True,
             color=self.colors[:len(x_subselections)],
             animated=True,
-            bins=np.linspace(-1, 1, 26))
+            bins=np.linspace(-1, 1, int(self.parent.n_bins.get())))
 
         self.ax.set_xlim(xlim)
         self.ax.set_xticks([])

@@ -53,7 +53,7 @@ def launch_1d_tour(parent, plot_object, subplot_idx):
         stacked=True,
         picker=True,
         color=parent.colors[:len(x_subselections)],
-        bins=np.linspace(-1, 1, 26))
+        bins=np.linspace(-1, 1, int(parent.n_bins.get())))
     y_lims = parent.axs[subplot_idx].get_ylim()
     parent.axs[subplot_idx].set_ylim(y_lims)
 
