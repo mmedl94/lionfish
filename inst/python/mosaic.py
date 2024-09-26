@@ -37,7 +37,8 @@ def launch_mosaic(parent, plot_object, subplot_idx):
     if parent.initial_loop is False:
         parent.axs[subplot_idx].clear()
         parent.axs[subplot_idx].set_in_layout(True)
-    mosaic_colors = np.array(parent.colors)[non_empty_sets]
+    mosaic_colors = np.array(parent.colors[:int(parent.n_subsets)])[
+        non_empty_sets]
     color_dict = {}
     if plot_object["obj"] == "subgroups_on_y":
         unique_levels = mosaic_data.index.get_level_values(

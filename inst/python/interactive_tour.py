@@ -455,16 +455,17 @@ class InteractiveTourInterface(ctk.CTk):
             attributes = pkl.load(f)
 
         # drop these attributes if we load from scratch
-        if self.load is True:
-            attributes_to_drop = ["half_range",
-                                  "preselection",
-                                  "n_subsets",
-                                  "display_size",
-                                  "hover_cutoff",
-                                  "label_size",
-                                  "initial_loop"]
-            for attribute_to_drop in attributes_to_drop:
-                del attributes[attribute_to_drop]
+
+        attributes_to_drop = ["half_range",
+                              "preselection",
+                              "n_subsets",
+                              "display_size",
+                              "hover_cutoff",
+                              "label_size",
+                              "initial_loop"]
+        for attribute_to_drop in attributes_to_drop:
+            del attributes[attribute_to_drop]
+
         self.__dict__.update(attributes)
 
         def set_tk_states(saved_vars, var_list):
