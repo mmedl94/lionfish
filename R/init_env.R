@@ -12,9 +12,9 @@
 #' @return -
 #' @export
 #'
-#' @examples init_env(env_name="r-pytourr", virtual_env = "virtual_env")
+#' @examples init_env(env_name="r-lionfish", virtual_env = "virtual_env")
 #'
-init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FALSE){
+init_env <- function(env_name="r-lionfish", virtual_env = "virtual_env", local=FALSE){
 
   # Check if python is available
   reticulate::py_available(initialize = FALSE)
@@ -67,7 +67,7 @@ init_env <- function(env_name="r-pytourr", virtual_env = "virtual_env", local=FA
   base::cat(base::sprintf('Python environment "%s" successfully loaded', env_name), "\n")
 
   # Check accessibility of python functions
-  pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
+  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))){
     check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")

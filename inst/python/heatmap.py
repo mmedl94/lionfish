@@ -34,10 +34,8 @@ def launch_heatmap(parent, plot_object, subplot_idx):
 
     if cur_metric_var == "Intra feature fraction":
         heatmap_data = heatmap_data/np.sum(heatmap_data, axis=1, keepdims=True)
-        heatmap_data = heatmap_data/subset_sizes
     elif cur_metric_var == "Intra cluster fraction":
         heatmap_data = heatmap_data/subset_sizes
-        heatmap_data = heatmap_data/np.sum(heatmap_data, axis=1, keepdims=True)
     elif cur_metric_var == "Total fraction":
         heatmap_data = heatmap_data/parent.data.shape[0]
 

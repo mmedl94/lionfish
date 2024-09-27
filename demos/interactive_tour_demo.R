@@ -1,7 +1,7 @@
 #library(tourr)
 #library(devtools)
 #library(reticulate)
-#library(pytourr)
+#library(lionfish)
 #f <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 #guided_tour_history <- save_history(f, 
 #                                    tour_path = guided_tour(holes()))

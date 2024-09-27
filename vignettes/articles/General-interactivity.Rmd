@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The pytourr package offers multiple different types of general
+The lionfish package offers multiple different types of general
 interactivity. The following operations can be performed with the
 elements on the frame on the left.
 
@@ -35,7 +35,7 @@ Examples for all displays can be found below.
 # Load required libraries
 library(tourr)
 library(reticulate)
-library(pytourr)
+library(lionfish)
 
 # Initialize python backend
 init_env()

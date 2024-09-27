@@ -23,7 +23,7 @@
 #' @examples
 #'library(tourr)
 #'library(reticulate)
-#'library(pytourr)
+#'library(lionfish)
 #'
 #'data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 #'clusters <- as.numeric(flea$species)
@@ -59,7 +59,7 @@ interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=
                              preselection_names=FALSE, n_subsets=3, display_size=5,
                              hover_cutoff=10, label_size=15){
 
-  pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
+  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))){
     pytourr_dir <- base::paste(pytourr_dir,"/inst/python", sep = "")

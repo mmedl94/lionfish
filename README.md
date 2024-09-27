@@ -1,10 +1,10 @@
 # lionfish: an expLoratory Interactive tOol for dyNamic visualization and identiFicatIon multidimenSional mecHanisms
 
-This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package. For a general overview of the tourr package please refer to the [tourr documentation](https://ggobi.github.io/tourr/). pytourr adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.
+This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package. For a general overview of the tourr package please refer to the [tourr documentation](https://ggobi.github.io/tourr/). lionfish adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.
 
 ## Installation
 
-You can install the development version of pytourr from github with:
+You can install the development version of lionfish from github with:
 
 ``` r
 install.packages("remotes")
@@ -42,7 +42,7 @@ init_env()
 To run an interactive tour you will first have to initialize the python backend with
 
 ``` r
-library(pytourr)
+library(lionfish)
 init_env()
 ```
 

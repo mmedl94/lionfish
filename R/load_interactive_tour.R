@@ -25,7 +25,7 @@ load_interactive_tour <- function(data, directory_to_save,
                                   display_size=5,hover_cutoff=10,
                                   label_size=15){
 
-  pytourr_dir <- find.package("pytourr", lib.loc=NULL, quiet = TRUE)
+  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))){
     pytourr_dir <- base::paste(pytourr_dir,"/inst/python", sep = "")

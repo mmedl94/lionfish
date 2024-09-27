@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The pytourr package offers multiple different types of display elements.
+The lionfish package offers multiple different types of display elements.
 These have to be provided to the interactive_tour function that launches
 the GUI. Each plot object is a list containing a type and an object. The
 type specifies, which kind of display should be generated. The object
@@ -39,7 +39,7 @@ Examples for all displays can be found below.
 # Load required libraries
 library(tourr)
 library(reticulate)
-library(pytourr)
+library(lionfish)
 library(flexclust)
 
 # Initialize python backend
@@ -267,7 +267,7 @@ found above.
 ## Generating the display
 
 The various plot objects can the be displayed with the
-[interactive_tour](https://mmedl94.github.io/pytourr/reference/interactive_tour.html)
+[interactive_tour](https://mmedl94.github.io/lionfish/reference/interactive_tour.html)
 function.
 
 ```{r interactive_tour flea}
