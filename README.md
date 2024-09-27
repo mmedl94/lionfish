@@ -1,4 +1,4 @@
-# pytourr: extension of the tourr package tour for interactive display
+# lionfish: an expLoratory Interactive tOol for dyNamic visualization and identiFicatIon multidimenSional mecHanisms
 
 This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package. For a general overview of the tourr package please refer to the [tourr documentation](https://ggobi.github.io/tourr/). pytourr adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.
 
@@ -8,7 +8,7 @@ You can install the development version of pytourr from github with:
 
 ``` r
 install.packages("remotes")
-remotes::install_github("mmedl94/pytourr")
+remotes::install_github("mmedl94/lionfish")
 ```
 
 Make sure you have git installed. You can download and install git from <https://git-scm.com/downloads>.
@@ -25,13 +25,13 @@ To resolve this, we have to delete the erroneous virtual environment and build a
 
 ``` r
 # Delete the old enironment, might require a restart of R
-reticulate::virtualenv_remove("r-pytourr")
+reticulate::virtualenv_remove("r-lionfish")
 
 # Install the stable Python version
 reticulate::install_python(version="3.8.10")
 
 # Build new virtual environment
-reticulate::virtualenv_create(envname = "r-pytourr", version="3.8.10")
+reticulate::virtualenv_create(envname = "r-lionfish", version="3.8.10")
 
 # Initiate Python environment as usual
 init_env()
