@@ -4,7 +4,7 @@
 \alias{init_env}
 \title{Initialize anaconda environment used for python backend}
 \usage{
-init_env(env_name = "r-pytourr", virtual_env = "virtual_env", local = FALSE)
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env", local = FALSE)
 }
 \arguments{
 \item{env_name}{a string that defines the name of the python environment reticulate uses.
@@ -26,6 +26,6 @@ dated.}
 Initialize anaconda environment used for python backend
 }
 \examples{
-init_env(env_name="r-pytourr", virtual_env = "virtual_env")
+init_env(env_name="r-lionfish", virtual_env = "virtual_env")
 
 }

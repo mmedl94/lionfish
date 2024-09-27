@@ -7,13 +7,15 @@
 interactive_tour(
   data,
   plot_objects,
-  feature_names,
-  half_range,
-  n_plot_cols,
+  feature_names = NULL,
+  half_range = NULL,
+  n_plot_cols = 2,
   preselection = FALSE,
   preselection_names = FALSE,
   n_subsets = 3,
-  display_size = 5
+  display_size = 5,
+  hover_cutoff = 10,
+  label_size = 15
 )
 }
 \arguments{
@@ -38,6 +40,11 @@ will be calculated and used.}
 \item{n_subsets}{the total number of available subsets (up to 10).}
 
 \item{display_size}{rough size of each subplot in inches}
+
+\item{hover_cutoff}{number of features at which the switch from intransparent
+to transparent labels that can be hovered over to make them intransparent occurs}
+
+\item{label_size}{size of the labels of the feature names of 1d and 2d tours}
 }
 \value{
 \itemize{
@@ -48,10 +55,9 @@ will be calculated and used.}
 R wrapper for the interactive_tour function written on python
 }
 \examples{
-
 library(tourr)
 library(reticulate)
-library(pytourr)
+library(lionfish)
 
 data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 clusters <- as.numeric(flea$species)
@@ -79,6 +85,6 @@ interactive_tour(data=data,
                 n_plot_cols=2,
                 preselection=clusters,
                 preselection_names=flea_subspecies,
-                n_subsets = 5
+                n_subsets = 5,
                 display_size=5)
 }

@@ -17,7 +17,7 @@ render_proj_inter(
 }
 \arguments{
 \item{data}{matrix, or data frame containing numeric columns,
-should be standardised to have mean 0, sd 1}
+should be standardized to have mean 0, sd 1}
 
 \item{prj}{projection matrix}
 
@@ -39,6 +39,7 @@ Modification of the render_proj() function of tourr so that the half_range is ca
 max(sqrt(rowSums(data^2))) or can be provided as arg
 }
 \examples{
+library(tourr)
 data(flea)
 flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 prj <- basis_random(ncol(flea[,1:6]), 2)
