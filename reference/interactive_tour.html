@@ -45,13 +45,15 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">interactive_tour</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">plot_objects</span>,</span>
-<span>  <span class="va">feature_names</span>,</span>
-<span>  <span class="va">half_range</span>,</span>
-<span>  <span class="va">n_plot_cols</span>,</span>
+<span>  feature_names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  half_range <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  n_plot_cols <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  preselection <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  preselection_names <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  n_subsets <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  display_size <span class="op">=</span> <span class="fl">5</span></span>
+<span>  display_size <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  hover_cutoff <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  label_size <span class="op">=</span> <span class="fl">15</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -98,6 +100,15 @@ will be calculated and used.</p></dd>
 <dt id="arg-display-size">display_size<a class="anchor" aria-label="anchor" href="#arg-display-size"></a></dt>
 <dd><p>rough size of each subplot in inches</p></dd>
 
+
+<dt id="arg-hover-cutoff">hover_cutoff<a class="anchor" aria-label="anchor" href="#arg-hover-cutoff"></a></dt>
+<dd><p>number of features at which the switch from intransparent
+to transparent labels that can be hovered over to make them intransparent occurs</p></dd>
+
+
+<dt id="arg-label-size">label_size<a class="anchor" aria-label="anchor" href="#arg-label-size"></a></dt>
+<dd><p>size of the labels of the feature names of 1d and 2d tours</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -107,7 +118,122 @@ will be calculated and used.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">flea_subspecies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>                                   tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  0.993   15.8 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.080   8.8 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.097   1.6 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.119   1.9 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.121   0.2 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.125   0.3 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.132   0.6 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.144   1.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.147   0.2 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.150   0.3 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.151   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.153   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.155   0.2 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.156   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.160   0.4 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.163   0.3 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.164   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.166   0.2 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.191   2.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.200   0.8 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.211   0.9 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.220   0.7 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.241   1.7 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.248   0.6 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.254   0.4 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.259   0.4 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.266   0.5 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.270   0.3 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.272   0.2 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.274   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.275   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.276   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.1 % better  - NEW BASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.278   0.1 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Value  1.277   0.0 % better </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No better bases found after 25 tries.  Giving up.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final projection: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.326  -0.602  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.566  0.026  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.335  0.167  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.511  0.355  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.342  -0.538  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.290  0.441  </span>
+<span class="r-in"><span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>                                     tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">f</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'f' not found</span>
+<span class="r-in"><span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'f' not found</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Python environment "r-lionfish" successfully loaded </span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> Unable to open file '/home/runner/work/_temp/Library/lionfish/python/check_backend.py.py'</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"2d_tour"</span>, obj <span class="op">=</span> <span class="va">guided_tour_history</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>, obj <span class="op">=</span> <span class="va">grand_tour_history_1d</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"scatter"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hist"</span>, obj <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">interactive_tour</span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span></span>
+<span class="r-in"><span>                plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                feature_names<span class="op">=</span><span class="va">feature_names</span>,</span></span>
+<span class="r-in"><span>                half_range <span class="op">=</span> <span class="va">half_range</span>,</span></span>
+<span class="r-in"><span>                n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span></span>
+<span class="r-in"><span>                preselection<span class="op">=</span><span class="va">clusters</span>,</span></span>
+<span class="r-in"><span>                preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span></span>
+<span class="r-in"><span>                n_subsets <span class="op">=</span> <span class="fl">5</span>,</span></span>
+<span class="r-in"><span>                display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'feature_names' not found</span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
