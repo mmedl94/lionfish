@@ -1,7 +1,7 @@
 import numpy as np
 
 from helpers import gram_schmidt
-from pytour_selectors import DraggableAnnotation1d, DraggableAnnotation2d, LassoSelect
+from interactive_selectors import DraggableAnnotation1d, DraggableAnnotation2d, LassoSelect
 
 
 def feature_checkbox_event(self, feature_idx):

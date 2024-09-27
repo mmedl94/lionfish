@@ -1,5 +1,5 @@
 import numpy as np
-from pytour_selectors import BarSelect, DraggableAnnotation1d
+from interactive_selectors import BarSelect, DraggableAnnotation1d
 
 
 def launch_1d_tour(parent, plot_object, subplot_idx):

@@ -67,15 +67,15 @@ init_env <- function(env_name="r-lionfish", virtual_env = "virtual_env", local=F
   base::cat(base::sprintf('Python environment "%s" successfully loaded', env_name), "\n")
 
   # Check accessibility of python functions
-  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
+  lionfish_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
-  if (dir.exists(file.path(pytourr_dir, "/inst"))){
-    check_dir <- base::paste(pytourr_dir,"/inst/python/check_pytour.py", sep = "")
+  if (dir.exists(file.path(lionfish_dir, "/inst"))){
+    check_dir <- base::paste(lionfish_dir,"/inst/python/check_backend.py", sep = "")
   } else {
-    check_dir <- base::paste(pytourr_dir,"/python/check_pytour.py", sep = "")
+    check_dir <- base::paste(lionfish_dir,"/python/check_backend.py.py", sep = "")
   }
   reticulate::source_python(check_dir)
-  reticulate::py$check_pytour()
+  reticulate::py$check_backend()
 
   # set directory of tcl/tk installation for windows users
   if (.Platform$OS.type == "windows"){

@@ -1,6 +1,6 @@
 import numpy as np
 from helpers import gram_schmidt
-from pytour_selectors import LassoSelect, DraggableAnnotation2d
+from interactive_selectors import LassoSelect, DraggableAnnotation2d
 
 
 def launch_2d_tour(parent, plot_object, subplot_idx):

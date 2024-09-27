@@ -1,5 +1,5 @@
 import numpy as np
-from pytour_selectors import LassoSelect
+from interactive_selectors import LassoSelect
 
 
 def launch_scatterplot(parent, plot_object, subplot_idx):

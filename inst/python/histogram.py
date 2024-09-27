@@ -1,5 +1,5 @@
 import numpy as np
-from pytour_selectors import BarSelect
+from interactive_selectors import BarSelect
 
 
 def launch_histogram(parent, plot_object, subplot_idx):
