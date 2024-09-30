@@ -72,7 +72,7 @@ init_env <- function(env_name="r-lionfish", virtual_env = "virtual_env", local=F
   if (dir.exists(file.path(lionfish_dir, "/inst"))){
     check_dir <- base::paste(lionfish_dir,"/inst/python/check_backend.py", sep = "")
   } else {
-    check_dir <- base::paste(lionfish_dir,"/python/check_backend.py.py", sep = "")
+    check_dir <- base::paste(lionfish_dir,"/python/check_backend.py", sep = "")
   }
   reticulate::source_python(check_dir)
   reticulate::py$check_backend()
