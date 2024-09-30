@@ -38,6 +38,18 @@ load_interactive_tour <- function(data, directory_to_save,
     feature_names <- paste("feature", 1:ncol(data))
   }
 
+  if (file.exists(paste0(directory_to_save,"/attributes.pkl"))){
+    print(paste0("loading from ", directory_to_save))
+  } else if(file.exists(paste0(getwd(), directory_to_save,"/attributes.pkl"))){
+    directory_to_save <- paste0(getwd(), directory_to_save)
+    print(paste0("loading from ", directory_to_save))
+  } else if(file.exists(paste0(getwd(),"/", directory_to_save,"/attributes.pkl"))){
+    directory_to_save <- paste0(getwd(),"/", directory_to_save)
+    print(paste0("loading from ", directory_to_save))
+  } else {
+    print(paste0("loading from ",getwd(), directory_to_save))
+  }
+
   func_loc <- base::paste(pytourr_dir,req_py_func, sep = "")
   reticulate::source_python(func_loc)
   reticulate::py$load_interactive_tour(data, directory_to_save, feature_names,
