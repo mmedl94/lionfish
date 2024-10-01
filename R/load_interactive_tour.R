@@ -23,7 +23,7 @@ load_interactive_tour <- function(data, directory_to_save,
                                   n_plot_cols=2, preselection=FALSE,
                                   preselection_names=FALSE, n_subsets=FALSE,
                                   display_size=5,hover_cutoff=10,
-                                  label_size=15){
+                                  label_size=15, axes_blendout_threshhold=1){
 
   pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
@@ -55,5 +55,6 @@ load_interactive_tour <- function(data, directory_to_save,
   reticulate::py$load_interactive_tour(data, directory_to_save, feature_names,
                                        half_range, n_plot_cols, preselection,
                                        preselection_names, n_subsets,
-                                       display_size,hover_cutoff, label_size)
+                                       display_size,hover_cutoff, label_size,
+                                       axes_blendout_threshhold)
   }

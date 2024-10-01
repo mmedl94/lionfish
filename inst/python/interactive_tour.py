@@ -24,7 +24,7 @@ from heatmap import launch_heatmap
 def load_interactive_tour(data, directory_to_save, feature_names, half_range=None,
                           n_plot_cols=None, preselection=None,
                           preselection_names=None, n_subsets=None, display_size=5,
-                          hover_cutoff=10, label_size=15):
+                          hover_cutoff=10, label_size=15, axes_blendout_threshhold=1):
 
     with open(os.path.join(directory_to_save, "attributes.pkl"), "rb") as f:
         attributes = pkl.load(f)
@@ -51,14 +51,15 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
                      n_plot_cols, preselection,
                      preselection_names, n_subsets, display_size,
                      hover_cutoff, label_size, load=True,
-                     directory_to_save=directory_to_save)
+                     directory_to_save=directory_to_save,
+                     axes_blendout_threshhold=axes_blendout_threshhold)
 
 
 def interactive_tour(data, plot_objects, feature_names, half_range=None,
                      n_plot_cols=None, preselection=None,
                      preselection_names=None, n_subsets=3, display_size=5,
                      hover_cutoff=10, label_size=15, load=False,
-                     directory_to_save=False):
+                     directory_to_save=False, axes_blendout_threshhold=1):
     """Launch InteractiveTourInterface for interactive plotting."""
 
     if matplotlib.get_backend() != "TkAgg":
@@ -67,7 +68,7 @@ def interactive_tour(data, plot_objects, feature_names, half_range=None,
     app = InteractiveTourInterface(data, plot_objects, feature_names, half_range,
                                    n_plot_cols, preselection, preselection_names,
                                    n_subsets, display_size, hover_cutoff, label_size,
-                                   load, directory_to_save)
+                                   load, directory_to_save, axes_blendout_threshhold)
     app.mainloop()
 
 
@@ -76,7 +77,7 @@ class InteractiveTourInterface(ctk.CTk):
                  n_plot_cols=None, preselection=None,
                  preselection_names=None, n_subsets=3, display_size=5,
                  hover_cutoff=10, label_size=15, load=False,
-                 directory_to_save=False):
+                 directory_to_save=False, axes_blendout_threshhold=1):
         super().__init__()
 
         self.title("Interactive Tour")
@@ -94,6 +95,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.preselection = np.array(
             preselection, dtype=int) - 1 if preselection else None
         self.preselection_names = preselection_names
+        self.axes_blendout_threshhold = axes_blendout_threshhold
 
         self.subselections = self.initialize_subselections()
         self.orig_subselections = self.subselections.copy()
@@ -182,6 +184,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.setup_frame_controls(sidebar)
         self.setup_histogram_controls(sidebar)
         self.setup_animation_controls(sidebar)
+        self.setup_blendout_projection(sidebar)
         self.setup_save_button(sidebar)
         self.setup_load_button(sidebar)
         self.setup_tour_controls(sidebar)
@@ -427,6 +430,32 @@ class InteractiveTourInterface(ctk.CTk):
         label = ctk.CTkLabel(master=animation_frame, text="seconds")
         label.grid(row=0, column=2, pady=3)
 
+    def setup_blendout_projection(self, sidebar):
+        blendout_projection_frame = ctk.CTkFrame(sidebar)
+        blendout_projection_frame.grid(row=self.sidebar_row_tracker, column=0)
+        self.sidebar_row_tracker += 1
+
+        self.blendout_projection_switch = tk.IntVar(self, 0)
+        blendout_projection_checkbox = ctk.CTkCheckBox(
+            master=blendout_projection_frame,
+            text="", width=24,
+            variable=self.blendout_projection_switch,
+            command=self.plot_loop,
+            onvalue=1, offvalue=0
+        )
+        blendout_projection_checkbox.grid(row=0, column=0, pady=3)
+
+        label = ctk.CTkLabel(master=blendout_projection_frame,
+                             text="Blend out projection threshold")
+        label.grid(row=0, column=1, pady=3)
+
+        self.blendout_projection_variable = tk.StringVar(self,
+                                                         str(self.axes_blendout_threshhold))
+        blendout_projection_textbox = ctk.CTkEntry(
+            master=blendout_projection_frame, width=40,
+            textvariable=self.blendout_projection_variable)
+        blendout_projection_textbox.grid(row=0, column=2, pady=3)
+
     def setup_save_button(self, sidebar):
         """Setup the save button for saving projections and subsets."""
         save_button = ctk.CTkButton(
@@ -465,6 +494,7 @@ class InteractiveTourInterface(ctk.CTk):
                               "hover_cutoff",
                               "label_size",
                               "initial_loop"]
+
         for attribute_to_drop in attributes_to_drop:
             del attributes[attribute_to_drop]
 

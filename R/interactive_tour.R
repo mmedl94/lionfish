@@ -57,7 +57,7 @@
 interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=NULL,
                              n_plot_cols=2, preselection=FALSE,
                              preselection_names=FALSE, n_subsets=3, display_size=5,
-                             hover_cutoff=10, label_size=15){
+                             hover_cutoff=10, label_size=15, axes_blendout_threshhold=1){
 
   pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
 
@@ -78,7 +78,7 @@ interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=
   reticulate::py$interactive_tour(data, plot_objects, feature_names, half_range,
                                   n_plot_cols, preselection,
                                   preselection_names, n_subsets, display_size,
-                                  hover_cutoff, label_size)
+                                  hover_cutoff, label_size, axes_blendout_threshhold)
 }
 
 

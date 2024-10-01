@@ -253,6 +253,18 @@ class DraggableAnnotation1d:
             self.arrs.append(arr)
             self.labels.append(label)
 
+        if self.parent.blendout_projection_switch.get():
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    axes_blendout_threshold = float(
+                        self.parent.blendout_projection_variable.get())
+                    if (self.proj[axis_id] < axes_blendout_threshold) and \
+                            (self.proj[axis_id] > -axes_blendout_threshold):
+                        self.labels[axis_id].set_alpha(0)
+                        self.arrs[axis_id].set_alpha(0)
+                    else:
+                        self.arrs[axis_id].set_alpha(1)
+
         self.cidpress = parent.fig.canvas.mpl_connect(
             "button_press_event", self.on_press)
         self.cidrelease = parent.fig.canvas.mpl_connect(
@@ -335,17 +347,7 @@ class DraggableAnnotation1d:
         self.ax.figure.canvas.restore_region(self.blit)
         self.proj = self.plot_dicts[self.subplot_idx]["proj"]
 
-        if self.press is None:
-            if self.alpha != 1:
-                for label_idx, label in enumerate(self.labels):
-                    if label:
-                        label_pos = label.get_position()
-                        if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
-                                (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                            self.labels[label_idx].set_alpha(1)
-                        else:
-                            self.labels[label_idx].set_alpha(0.1)
-        else:
+        if self.press is not None:
             axis_id = self.press
             if event.xdata and event.ydata is not False:
                 # Update projections
@@ -394,6 +396,32 @@ class DraggableAnnotation1d:
                 bar_selector = BarSelect(parent=self.parent,
                                          subplot_idx=self.subplot_idx)
                 self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
+
+        if self.alpha != 1:
+            for label_idx, label in enumerate(self.labels):
+                if label:
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        self.labels[label_idx].set_alpha(1)
+                    else:
+                        self.labels[label_idx].set_alpha(0.1)
+
+        if self.parent.blendout_projection_switch.get():
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    axes_blendout_threshold = float(
+                        self.parent.blendout_projection_variable.get())
+                    if (self.proj[axis_id] < axes_blendout_threshold) and \
+                            (self.proj[axis_id] > -axes_blendout_threshold):
+                        self.labels[axis_id].set_alpha(0)
+                        self.arrs[axis_id].set_alpha(0)
+                    else:
+                        self.arrs[axis_id].set_alpha(1)
+        else:
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    self.arrs[axis_id].set_alpha(1)
 
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)
@@ -552,6 +580,19 @@ class DraggableAnnotation2d:
             self.arrs.append(arr)
             self.labels.append(label)
 
+        if self.parent.blendout_projection_switch.get():
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    axes_blendout_threshold = float(
+                        self.parent.blendout_projection_variable.get())
+                    proj_length = np.linalg.norm(self.proj[axis_id])
+                    if (proj_length < axes_blendout_threshold) and \
+                            (proj_length > -axes_blendout_threshold):
+                        self.labels[axis_id].set_alpha(0)
+                        self.arrs[axis_id].set_alpha(0)
+                    else:
+                        self.arrs[axis_id].set_alpha(1)
+
         self.connect()
 
     def blend_out(self):
@@ -651,6 +692,19 @@ class DraggableAnnotation2d:
                 self.ax.collections[0].set_offsets(new_data)
 
         self.parent.plot_dicts[self.plot_idx]["proj"] = self.proj
+
+        if self.parent.blendout_projection_switch.get():
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    axes_blendout_threshold = float(
+                        self.parent.blendout_projection_variable.get())
+                    proj_length = np.linalg.norm(self.proj[axis_id])
+                    if (proj_length < axes_blendout_threshold) and \
+                            (proj_length > -axes_blendout_threshold):
+                        self.labels[axis_id].set_alpha(0)
+                        self.arrs[axis_id].set_alpha(0)
+                    else:
+                        self.arrs[axis_id].set_alpha(1)
 
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)
