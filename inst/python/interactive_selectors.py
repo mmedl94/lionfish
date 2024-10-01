@@ -397,16 +397,6 @@ class DraggableAnnotation1d:
                                          subplot_idx=self.subplot_idx)
                 self.plot_dicts[self.subplot_idx]["selector"] = bar_selector
 
-        if self.alpha != 1:
-            for label_idx, label in enumerate(self.labels):
-                if label:
-                    label_pos = label.get_position()
-                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
-                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                        self.labels[label_idx].set_alpha(1)
-                    else:
-                        self.labels[label_idx].set_alpha(0.1)
-
         if self.parent.blendout_projection_switch.get():
             for axis_id, feature_bool in enumerate(self.feature_selection):
                 if feature_bool == True:
@@ -418,10 +408,19 @@ class DraggableAnnotation1d:
                         self.arrs[axis_id].set_alpha(0)
                     else:
                         self.arrs[axis_id].set_alpha(1)
-        else:
-            for axis_id, feature_bool in enumerate(self.feature_selection):
-                if feature_bool == True:
-                    self.arrs[axis_id].set_alpha(1)
+                        self.labels[axis_id].set_alpha(1)
+
+        if self.alpha != 1:
+            for label_idx, label in enumerate(self.labels):
+                if label:
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        if self.labels[label_idx].get_alpha() != 0:
+                            self.labels[label_idx].set_alpha(1)
+                    else:
+                        if self.labels[label_idx].get_alpha() != 0:
+                            self.labels[label_idx].set_alpha(0.1)
 
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)
@@ -649,16 +648,6 @@ class DraggableAnnotation2d:
 
         self.ax.figure.canvas.restore_region(self.blit)
 
-        if self.alpha != 1:
-            for label_idx, label in enumerate(self.labels):
-                if label:
-                    label_pos = label.get_position()
-                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
-                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                        self.labels[label_idx].set_alpha(1)
-                    else:
-                        self.labels[label_idx].set_alpha(0.1)
-
         axis_id = self.press
 
         if self.press is not None:
@@ -704,7 +693,20 @@ class DraggableAnnotation2d:
                         self.labels[axis_id].set_alpha(0)
                         self.arrs[axis_id].set_alpha(0)
                     else:
+                        self.labels[axis_id].set_alpha(1)
                         self.arrs[axis_id].set_alpha(1)
+
+        if self.alpha != 1:
+            for label_idx, label in enumerate(self.labels):
+                if label:
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        if self.labels[label_idx].get_alpha() != 0:
+                            self.labels[label_idx].set_alpha(1)
+                    else:
+                        if self.labels[label_idx].get_alpha() != 0:
+                            self.labels[label_idx].set_alpha(0.1)
 
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)
@@ -718,6 +720,40 @@ class DraggableAnnotation2d:
         """Clear button press information."""
         self.pressing = 0
         self.press = None
+
+    def blendout_update(self):
+        self.ax.figure.canvas.restore_region(self.blit)
+
+        if self.alpha != 1:
+            for label_idx, label in enumerate(self.labels):
+                if label:
+                    label_pos = label.get_position()
+                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
+                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
+                        self.labels[label_idx].set_alpha(1)
+                    else:
+                        self.labels[label_idx].set_alpha(0.1)
+
+        if self.parent.blendout_projection_switch.get():
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    axes_blendout_threshold = float(
+                        self.parent.blendout_projection_variable.get())
+                    proj_length = np.linalg.norm(self.proj[axis_id])
+                    if (proj_length < axes_blendout_threshold) and \
+                            (proj_length > -axes_blendout_threshold):
+                        self.labels[axis_id].set_alpha(0)
+                        self.arrs[axis_id].set_alpha(0)
+                    else:
+                        self.arrs[axis_id].set_alpha(1)
+
+        for collection in self.ax.collections:
+            self.ax.draw_artist(collection)
+        for patch in self.ax.patches:
+            self.ax.draw_artist(patch)
+        for text in self.ax.texts:
+            self.ax.draw_artist(text)
+        self.ax.figure.canvas.blit(self.ax.bbox)
 
     def update(self, plot_object, frame):
         self.ax.figure.canvas.restore_region(self.blit)

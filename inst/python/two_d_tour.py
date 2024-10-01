@@ -109,3 +109,4 @@ def launch_2d_tour(parent, plot_object, subplot_idx):
             "Press left key for last frame")
     else:
         parent.plot_dicts[subplot_idx]["scat"].set_facecolors(parent.fc)
+        parent.plot_dicts[subplot_idx]["draggable_annot"].blendout_update()

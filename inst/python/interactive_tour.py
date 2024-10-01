@@ -440,7 +440,7 @@ class InteractiveTourInterface(ctk.CTk):
             master=blendout_projection_frame,
             text="", width=24,
             variable=self.blendout_projection_switch,
-            command=self.plot_loop,
+            command=self.blendout_event,
             onvalue=1, offvalue=0
         )
         blendout_projection_checkbox.grid(row=0, column=0, pady=3)
@@ -455,6 +455,11 @@ class InteractiveTourInterface(ctk.CTk):
             master=blendout_projection_frame, width=40,
             textvariable=self.blendout_projection_variable)
         blendout_projection_textbox.grid(row=0, column=2, pady=3)
+
+    def blendout_event(self, event=None):
+        for plot_idx, _ in enumerate(self.plot_dicts):
+            self.plot_dicts[plot_idx]["update_plot"] = False
+        self.plot_loop()
 
     def setup_save_button(self, sidebar):
         """Setup the save button for saving projections and subsets."""
