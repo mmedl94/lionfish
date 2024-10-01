@@ -21,7 +21,7 @@
 load_interactive_tour <- function(data, directory_to_save,
                                   feature_names=NULL, half_range=NULL,
                                   n_plot_cols=2, preselection=FALSE,
-                                  preselection_names=FALSE, n_subsets=3,
+                                  preselection_names=FALSE, n_subsets=FALSE,
                                   display_size=5,hover_cutoff=10,
                                   label_size=15){
 

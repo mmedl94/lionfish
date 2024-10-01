@@ -23,7 +23,7 @@ from heatmap import launch_heatmap
 
 def load_interactive_tour(data, directory_to_save, feature_names, half_range=None,
                           n_plot_cols=None, preselection=None,
-                          preselection_names=None, n_subsets=3, display_size=5,
+                          preselection_names=None, n_subsets=None, display_size=5,
                           hover_cutoff=10, label_size=15):
 
     with open(os.path.join(directory_to_save, "attributes.pkl"), "rb") as f:
@@ -36,7 +36,9 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
         n_plot_cols = attributes["n_plot_cols"]
     if preselection == None:
         preselection = attributes["preselection"]
-    if n_subsets == None:
+    if n_subsets == None or n_subsets == False:
+        n_subsets = attributes["n_subsets"]
+    elif n_subsets < attributes["n_subsets"]:
         n_subsets = attributes["n_subsets"]
     if display_size == None:
         display_size = attributes["display_size"]
@@ -475,6 +477,9 @@ class InteractiveTourInterface(ctk.CTk):
         set_tk_states(attributes["frame_vars_"], self.frame_vars)
         set_tk_states(attributes["feature_selection_vars_"],
                       self.feature_selection_vars)
+        while len(attributes["subselection_vars_"]) < len(self.subselection_vars):
+            attributes["subselection_vars_"].append(0)
+            attributes["subselections"].append(np.array([], dtype=int))
         set_tk_states(attributes["subselection_vars_"], self.subselection_vars)
         set_tk_states(attributes["metric_vars_"], self.metric_vars)
 

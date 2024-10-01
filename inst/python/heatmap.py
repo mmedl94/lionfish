@@ -18,6 +18,9 @@ def launch_heatmap(parent, plot_object, subplot_idx):
     # get matrix of summed counts
     non_empty_sets = []
     for subset_idx, subset in enumerate(parent.subselections):
+        # ensure subsets are coded as int
+        if np.issubdtype(subset.dtype, float):
+            subset = subset.astype(int)
         subset_sizes[subset_idx] = parent.data[subset].shape[0]
         if subset.shape[0] != 0:
             non_empty_sets.append(True)
