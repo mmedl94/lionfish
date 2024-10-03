@@ -72,7 +72,6 @@ interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=
     feature_names <- paste("feature", 1:ncol(data))
   }
 
-
   func_loc <- base::paste(pytourr_dir,req_py_func, sep = "")
   reticulate::source_python(func_loc)
   reticulate::py$interactive_tour(data, plot_objects, feature_names, half_range,

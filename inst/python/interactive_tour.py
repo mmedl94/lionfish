@@ -412,6 +412,11 @@ class InteractiveTourInterface(ctk.CTk):
         animation_frame.grid(row=self.sidebar_row_tracker, column=0)
         self.sidebar_row_tracker += 1
 
+        label = ctk.CTkLabel(master=animation_frame,
+                             text="Animate")
+        label.grid(row=0, column=0,
+                   pady=3, padx=3, sticky="w")
+
         self.animation_switch = tk.IntVar(self, 0)
         animation_checkbox = ctk.CTkCheckBox(
             master=animation_frame,
@@ -420,15 +425,15 @@ class InteractiveTourInterface(ctk.CTk):
             command=self.plot_loop,
             onvalue=1, offvalue=0
         )
-        animation_checkbox.grid(row=0, column=0, pady=3)
+        animation_checkbox.grid(row=0, column=1, pady=3)
 
         self.fps_variable = tk.StringVar(self, "1")
         fps_textbox = ctk.CTkEntry(
             master=animation_frame, width=40, textvariable=self.fps_variable)
-        fps_textbox.grid(row=0, column=1, pady=3)
+        fps_textbox.grid(row=0, column=2, pady=3)
 
         label = ctk.CTkLabel(master=animation_frame, text="seconds")
-        label.grid(row=0, column=2, pady=3)
+        label.grid(row=0, column=3, pady=3)
 
     def setup_blendout_projection(self, sidebar):
         blendout_projection_frame = ctk.CTkFrame(sidebar)
@@ -617,14 +622,21 @@ class InteractiveTourInterface(ctk.CTk):
 
         def get_tk_states(var_list):
             return [var.get() for var in var_list]
-
-        attributes_to_save.update({
-            "frame_vars_": get_tk_states(self.frame_vars),
-            "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
-            "subselection_vars_": get_tk_states(self.subselection_vars),
-            "metric_vars_": get_tk_states(self.metric_vars),
-            "projections": projections
-        })
+        try:
+            attributes_to_save.update({
+                "frame_vars_": get_tk_states(self.frame_vars),
+                "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
+                "subselection_vars_": get_tk_states(self.subselection_vars),
+                "metric_vars_": get_tk_states(self.metric_vars),
+                "projections": projections
+            })
+        except AttributeError:
+            attributes_to_save.update({
+                "frame_vars_": get_tk_states(self.frame_vars),
+                "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
+                "subselection_vars_": get_tk_states(self.subselection_vars),
+                "projections": projections
+            })
 
         with open(os.path.join(save_path, "attributes.pkl"), "wb") as f:
             pkl.dump(attributes_to_save, f)
