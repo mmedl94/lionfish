@@ -146,10 +146,10 @@ path construction</a>.</p>
 </h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">guided_tour_flea_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">flea</span>,</span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>                                    tour_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">obj_flea_1d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>,          <span class="co"># type of display</span></span>
-<span>                         obj <span class="op">=</span> <span class="va">guided_tour_flea_1d</span><span class="op">)</span> <span class="co"># 1d tour history </span></span></code></pre></div>
+<span><span class="va">obj_flea_1d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>,          <span class="co"># type of display</span></span>
+<span>                         obj<span class="op">=</span><span class="va">guided_tour_flea_1d</span><span class="op">)</span> <span class="co"># 1d tour history </span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity"></a>
@@ -186,8 +186,8 @@ path construction</a>.</p>
 <code class="sourceCode R"><span><span class="va">grand_tour_flea_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">flea</span>,</span>
 <span>                                   tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">obj_flea_2d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"2d_tour"</span>,         <span class="co"># type of display</span></span>
-<span>                         obj <span class="op">=</span> <span class="va">grand_tour_flea_2d</span><span class="op">)</span> <span class="co"># 2d tour history</span></span></code></pre></div>
+<span><span class="va">obj_flea_2d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>,         <span class="co"># type of display</span></span>
+<span>                         obj<span class="op">=</span><span class="va">grand_tour_flea_2d</span><span class="op">)</span> <span class="co"># 2d tour history</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-1">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-1"></a>
@@ -219,8 +219,8 @@ y axis have to be provided in form of a two dimensional vector.</p>
 <h4 id="example-plot-object-2">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-2"></a>
 </h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_flea_scatter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"scatter"</span>,          <span class="co"># type of display</span></span>
-<span>                         obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span> <span class="co"># x and y axis of plot</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">obj_flea_scatter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"scatter"</span>,          <span class="co"># type of display</span></span>
+<span>                         obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span> <span class="co"># x and y axis of plot</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-2">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-2"></a>
@@ -246,8 +246,8 @@ to be provided in form of a two dimensional vector.</p>
 <h4 id="example-plot-object-3">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-3"></a>
 </h4>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_flea_histogram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"hist"</span>, <span class="co"># type of display</span></span>
-<span>                           obj <span class="op">=</span> <span class="st">"head"</span><span class="op">)</span>  <span class="co"># x axis of histogram</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">obj_flea_histogram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"hist"</span>, <span class="co"># type of display</span></span>
+<span>                           obj<span class="op">=</span><span class="st">"head"</span><span class="op">)</span>  <span class="co"># x axis of histogram</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-3">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-3"></a>
@@ -272,8 +272,8 @@ subgroups/clusters should be on the x or y axis, either with
 <h4 id="example-plot-object-4">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-4"></a>
 </h4>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_winter_mosaic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"mosaic"</span>,   <span class="co"># type of display</span></span>
-<span>                  obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span> <span class="co"># whether subgroups x or y axis</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">obj_winter_mosaic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"mosaic"</span>,   <span class="co"># type of display</span></span>
+<span>                  obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span> <span class="co"># whether subgroups x or y axis</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-4">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-4"></a>
@@ -291,24 +291,38 @@ plot.</p>
 <p>To display a heatmap, the metric to be calculated and plotted has to
 be selected. One can choose between “Total fraction”, “Intra cluster
 fraction” and “Intra feature fraction”.</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">total fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\text{total fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">intra cluster fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><msub><mi>c</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{i}</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">intra feature fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><msub><mi>c</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\text{intra feature fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{j}</annotation></semantics></math></p>
-<p>with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-being the total number of observations,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
-the counts,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
-the features and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
-the subgroups/clusters.</p>
+<p>Consider the matrix
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mn>12</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mrow><mn>1</mn><mi>p</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mn>21</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mn>22</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mrow><mn>2</mn><mi>p</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd><mtd columnalign="center" style="text-align: center"><mo>⋱</mo></mtd><mtd columnalign="center" style="text-align: center"><mi>⋮</mi></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mrow><mi>k</mi><mn>1</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mrow><mi>k</mi><mn>2</mn></mrow></msub></mtd><mtd columnalign="center" style="text-align: center"><mi>…</mi></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>c</mi><mrow><mi>k</mi><mi>p</mi></mrow></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+C = \left[ \begin{array}{cccc} c_{11} &amp; c_{12} &amp; \dots &amp; c_{1p} \\
+                                              c_{21} &amp; c_{22} &amp; \dots &amp; c_{2p} \\
+                                              \vdots &amp;  \vdots &amp; \ddots &amp;  \vdots \\
+                                              c_{k1} &amp; c_{k2} &amp; \dots &amp; c_{kp}
+                                              \end{array} \right]
+</annotation></semantics></math></p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>,</mo><mi>i</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">c_{ij}, i=1, ..., k</annotation></semantics></math>
+(number of clusters);
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><mi>p</mi></mrow><annotation encoding="application/x-tex">j=1, ..., p</annotation></semantics></math>
+(number of features) are a summary of each feature in each cluster. In
+case of binary data
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">c_{ij}</annotation></semantics></math>
+are the positive counts of the cluster/feature combination.</p>
+<p>Then the total fraction is calculated by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>o</mi></msubsup><mo>=</mo><mfrac><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>n</mi></mfrac></mrow><annotation encoding="application/x-tex">f_{ij}^{o} = \frac{c_{ij}}{n}</annotation></semantics></math></p>
+<p>the intra cluster fraction by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>c</mi></msubsup><mo>=</mo><mfrac><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>n</mi><mi>i</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">f_{ij}^{c} = \frac{c_{ij}}{n_{i}}</annotation></semantics></math>
+and</p>
+<p>the intra feature fraction by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>f</mi></msubsup><mo>=</mo><mfrac><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><msub><mi>n</mi><mi>j</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">f_{ij}^{f} = \frac{c_{ij}}{n_{j}}</annotation></semantics></math>,</p>
+<p>where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>i</mi></msub><mo>,</mo><msub><mi>n</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">n_i, n_j</annotation></semantics></math>
+are the row and column totals.</p>
 <div class="section level4">
 <h4 id="example-plot-object-5">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-5"></a>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_winter_heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>,          <span class="co"># type of display</span></span>
-<span>                           obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span> <span class="co"># initial metric</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">obj_winter_heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"heatmap"</span>,          <span class="co"># type of display</span></span>
+<span>                           obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span> <span class="co"># initial metric</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-5">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-5"></a>
@@ -328,25 +342,14 @@ metrics can be found above.</li>
 </h3>
 <p>To display a categorical cluster interface, the metric to be
 calculated and plotted has to be selected. One can choose between “Total
-fraction”, “Intra cluster fraction” and “Intra feature fraction”.</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">total fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">\text{total fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">intra cluster fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><msub><mi>n</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n_{i}</annotation></semantics></math></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">intra feature fraction</mtext><mo>=</mo><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>s</mi></msubsup><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>p</mi></msubsup><msub><mi>c</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>/</mi><msub><mi>c</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\text{intra feature fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{j}</annotation></semantics></math></p>
-<p>with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
-being the total number of observations,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
-the counts,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
-the features and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
-the subgroups/clusters.</p>
+fraction”, “Intra cluster fraction” and “Intra feature fraction”. For
+details see “Heatmap”</p>
 <div class="section level4">
 <h4 id="example-plot-object-6">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-6"></a>
 </h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">obj_winter_cat_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"cat_clust_interface"</span>, <span class="co"># type of display</span></span>
-<span>                             obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># initial metric</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">obj_winter_cat_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"cat_clust_interface"</span>, <span class="co"># type of display</span></span>
+<span>                             obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># initial metric</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="interactivity-6">Interactivity<a class="anchor" aria-label="anchor" href="#interactivity-6"></a>
@@ -364,7 +367,7 @@ activities dataset</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="generating-the-display">Generating the display<a class="anchor" aria-label="anchor" href="#generating-the-display"></a>
+<h2 id="generating-the-displays">Generating the displays<a class="anchor" aria-label="anchor" href="#generating-the-displays"></a>
 </h2>
 <p>The various plot objects can the be displayed with the <a href="https://mmedl94.github.io/lionfish/reference/interactive_tour.html">interactive_tour</a>
 function.</p>
@@ -373,22 +376,22 @@ function.</p>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">flea</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_flea</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_flea_2d_tour</span><span class="op">)</span>,</span>
-<span>                 half_range <span class="op">=</span> <span class="va">half_range_flea</span>,</span>
+<span>                 half_range<span class="op">=</span><span class="va">half_range_flea</span>,</span>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_flea</span>,</span>
-<span>                 n_subsets <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
-<span>                 display_size<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interactive_tour call of winterActiv dataset. Insert plot objects of your liking.</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_winter</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_winter_cat_clust</span><span class="op">)</span>,</span>
-<span>                 half_range <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>                 half_range<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_winter</span>,</span>
-<span>                 n_subsets <span class="op">=</span> <span class="fl">10</span>,</span>
-<span>                 display_size<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></code></pre></div>
+<span>                 n_subsets<span class="op">=</span><span class="fl">10</span>,</span>
+<span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
