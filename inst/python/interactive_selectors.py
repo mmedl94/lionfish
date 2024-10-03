@@ -724,16 +724,6 @@ class DraggableAnnotation2d:
     def blendout_update(self):
         self.ax.figure.canvas.restore_region(self.blit)
 
-        if self.alpha != 1:
-            for label_idx, label in enumerate(self.labels):
-                if label:
-                    label_pos = label.get_position()
-                    if (label_pos[0] > event.xdata-0.1) and (label_pos[0] < event.xdata+0.1) and \
-                            (label_pos[1] > event.ydata-0.1) and (label_pos[1] < event.ydata+0.1):
-                        self.labels[label_idx].set_alpha(1)
-                    else:
-                        self.labels[label_idx].set_alpha(0.1)
-
         if self.parent.blendout_projection_switch.get():
             for axis_id, feature_bool in enumerate(self.feature_selection):
                 if feature_bool == True:
@@ -746,6 +736,11 @@ class DraggableAnnotation2d:
                         self.arrs[axis_id].set_alpha(0)
                     else:
                         self.arrs[axis_id].set_alpha(1)
+        else:
+            for axis_id, feature_bool in enumerate(self.feature_selection):
+                if feature_bool == True:
+                    self.arrs[axis_id].set_alpha(1)
+                    self.labels[axis_id].set_alpha(self.alpha)
 
         for collection in self.ax.collections:
             self.ax.draw_artist(collection)

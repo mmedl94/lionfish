@@ -16,13 +16,14 @@
 #' @param hover_cutoff number of features at which the switch from intransparent
 #' to transparent labels that can be hovered over to make them intransparent occurs
 #' @param label_size size of the labels of the feature names of 1d and 2d tours
+#' @param axes_blendout_threshhold initial value of the threshold for blending
+#' out projection axes with a smaller length
 #'
 #' @return -
 #' @export
 #'
 #' @examples
 #'library(tourr)
-#'library(reticulate)
 #'library(lionfish)
 #'
 #'data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
@@ -30,28 +31,28 @@
 #'flea_subspecies <- unique(flea$species)
 #'
 #'guided_tour_history <- save_history(data,
-#'                                    tour_path = guided_tour(holes()))
+#'                                    tour_path=guided_tour(holes()))
 #'grand_tour_history_1d <- save_history(data,
-#'                                      tour_path = grand_tour(d=1))
+#'                                      tour_path=grand_tour(d=1))
 #'
-#'half_range <- max(sqrt(rowSums(f^2)))
-#'feature_names <- colnames(f)
+#'half_range <- max(sqrt(rowSums(data^2)))
+#'feature_names <- colnames(data)
 #'
 #'init_env()
 #'
-#'obj1 <- list(type = "2d_tour", obj = guided_tour_history)
-#'obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
-#'obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
-#'obj4 <- list(type = "hist", obj = "head")
+#'obj1 <- list(type="2d_tour", obj=guided_tour_history)
+#'obj2 <- list(type="1d_tour", obj=grand_tour_history_1d)
+#'obj3 <- list(type="scatter", obj=c("tars1", "tars2"))
+#'obj4 <- list(type="hist", obj="head")
 #'
 #'interactive_tour(data=data,
 #'                 plot_objects=list(obj1, obj2, obj3, obj4),
 #'                 feature_names=feature_names,
-#'                 half_range = half_range,
+#'                 half_range=half_range,
 #'                 n_plot_cols=2,
 #'                 preselection=clusters,
 #'                 preselection_names=flea_subspecies,
-#'                 n_subsets = 5,
+#'                 n_subsets=5,
 #'                 display_size=5)
 
 interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=NULL,

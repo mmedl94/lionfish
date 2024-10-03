@@ -50,7 +50,6 @@ Then you can display saved tour objects, scatterplots or histograms with interac
 
 ``` r
 library(tourr)
-library(reticulate)
 data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
@@ -65,18 +64,18 @@ feature_names <- colnames(data)
 
 init_env()
 
-obj1 <- list(type = "2d_tour", obj = guided_tour_history)
-obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
-obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
-obj4 <- list(type = "hist", obj = "head")
+obj1 <- list(type="2d_tour", obj=guided_tour_history)
+obj2 <- list(type="1d_tour", obj=grand_tour_history_1d)
+obj3 <- list(type="scatter", obj=c("tars1", "tars2"))
+obj4 <- list(type="hist", obj="head")
 
 interactive_tour(data=data,
                  plot_objects=list(obj1, obj2, obj3, obj4),
                  feature_names=feature_names,
-                 half_range = half_range,
+                 half_range=half_range,
                  n_plot_cols=2,
                  preselection=clusters,
                  preselection_names=flea_subspecies,
-                 n_subsets = 5,
+                 n_subsets=5,
                  display_size=5)
 ```

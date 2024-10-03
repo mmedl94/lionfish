@@ -21,10 +21,12 @@ elements on the frame on the left.
 
 -   Feature selection
 -   Subset selection and highlighting
--   Resetting to the original subsets
--   Updating the current display
+-   Resetting to original subsets
+-   Updating currently displayed projection frames
+-   Changing the number of bins of histograms
 -   Animating the currently loaded tours
--   Saving the projections and subsets
+-   Setting a threshold for blending projection axes with a low length out
+-   Saving and loading the state of the GUI
 -   Initiating new tours
 
 Examples for all displays can be found below.
@@ -34,7 +36,6 @@ Examples for all displays can be found below.
 ```{r setup}
 # Load required libraries
 library(tourr)
-library(reticulate)
 library(lionfish)
 
 # Initialize python backend
@@ -50,28 +51,28 @@ clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
 
 guided_tour_history <- save_history(data,
-                                    tour_path = guided_tour(holes()))
+                                    tour_path=guided_tour(holes()))
 grand_tour_history_1d <- save_history(data,
-                                      tour_path = grand_tour(d=1))
+                                      tour_path=grand_tour(d=1))
 
 half_range <- max(sqrt(rowSums(data^2)))
 feature_names <- colnames(data)
 
 init_env()
 
-obj1 <- list(type = "2d_tour", obj = guided_tour_history)
-obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
-obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
-obj4 <- list(type = "hist", obj = "head")
+obj1 <- list(type="2d_tour", obj=guided_tour_history)
+obj2 <- list(type="1d_tour", obj=grand_tour_history_1d)
+obj3 <- list(type="scatter", obj=c("tars1", "tars2"))
+obj4 <- list(type="hist", obj="head")
 
 interactive_tour(data=data,
                  plot_objects=list(obj1, obj2, obj3, obj4),
                  feature_names=feature_names,
-                 half_range = half_range,
+                 half_range=half_range,
                  n_plot_cols=2,
                  preselection=clusters,
                  preselection_names=flea_subspecies,
-                 n_subsets = 5,
+                 n_subsets=5,
                  display_size=4.5)
 ```
 
@@ -100,22 +101,31 @@ writing in the textboxes.
 ![Subset selection and highlighting
 demo](../man/figures/subset_selection_demo.gif)
 
-### Resetting to theoriginal subsets
+### Resetting to original subsets
 
 The current subset selection can easily be reset by clicking the "Reset
 original selection" button.
 
 ![Subset resetting demo](../man/figures/reset_selection_demo.gif)
 
-### Updating the current display
+### Updating currently displayed projection frames
 
-The current display can be updated by clicking the "Update frames"
-button. This can be useful if some of the plots haven't updated
-properly, one wants to reset the shown projections to the original
-projections or if one wants to jump to a specific frame that was
-selected in the texboxes above the button.
+One can jump between frames of tours by typing the desired frame one wants to
+jump to into the corresponding texboxes and clicking the "Update frames"
+button. Updating the frames can also ben useful if some of the plots haven't
+updated properly or one wants to reset the shown projections of a frame after
+manipulation of the projection axes.
 
 ![Update frames demo](../man/figures/update_frames_demo.gif)
+
+### Changing the number of bins of histograms
+
+The number of bins of histograms can be changed by typing the desired number of
+bins in the corresponding textbox. A larger number of bins results in a higher
+resolution, but it will increase the time it takes to update histograms due the
+increased computational load.
+
+![Update number of bins demo](../man/figures/n_bin_demo.gif)
 
 ### Animating the currently loaded tours
 
@@ -123,20 +133,34 @@ The currently loaded tours can be animated by checking the checkbox
 below the "Update frames" button. The interval in which the next frames
 will be loaded can be changed in the textbox next to the checkbox.
 
-![Update frames demo](../man/figures/animate_frames_demo.gif)
+![Animate tours demo](../man/figures/animate_frames_demo.gif)
 
-### Saving the projections and subsets
+### Setting a threshold for blending projection axes with a low length out
 
-The currently displayed projections and subsets can be saved as .csv by
-clicking the "Save projections and subsets" button. This will produce a
-file browser with which one can choose the directory for the files to be
-saved in. The saved files are
+If there are many projection axes displayed it can clutter the plot. To combat
+this the option to blend out projection axes of low length has been implemented.
+Therefore, a projection threshold (a float between 0 and 1) can be set and by
+checking the checkbox, projection axes that are shorter than the threshold are
+blended out.
 
--   a .png file of the figure
--   a .csv file that maps the indices of the datapoints to the subsets
--   .csv files with the projection matrices of all displayed tours
+![Projection axes blend out demo](../man/figures/blendout_threshold_demo.gif)
 
-![Save projections and subsets demo](../man/figures/save_demo.gif)
+### Saving and loading the state of the GUI
+
+The current state of the GUI can be saved by clicking the "Save projections and
+subsets" button. This will produce a file browser with which one can choose the
+directory for the files to be saved in. The saved files are
+
+-   a .png file containing the currently displayed graphics
+-   .csv files that capture the feature and subset selection as well as
+projections of the tours displayed at the time of the snapshot
+-   two .pkl files that contain state features of the GUI, allowing for complete
+recovery of the saved state
+
+Alternatively the function load_interactive_tour() can be used to load a save
+directly.
+
+![Save and load GUI state demo](../man/figures/save_demo.gif)
 
 ### Initiating new tours
 

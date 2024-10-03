@@ -92,10 +92,10 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 ```{r 1d tour}
 guided_tour_flea_1d <- save_history(flea,
-                                    tour_path = guided_tour(holes(),1))
+                                    tour_path=guided_tour(holes(),1))
 
-obj_flea_1d_tour <- list(type = "1d_tour",          # type of display
-                         obj = guided_tour_flea_1d) # 1d tour history 
+obj_flea_1d_tour <- list(type="1d_tour",          # type of display
+                         obj=guided_tour_flea_1d) # 1d tour history 
 ```
 
 #### Interactivity
@@ -126,8 +126,8 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 grand_tour_flea_2d <- save_history(flea,
                                    tour_path = grand_tour(d=2))
 
-obj_flea_2d_tour <- list(type = "2d_tour",         # type of display
-                         obj = grand_tour_flea_2d) # 2d tour history
+obj_flea_2d_tour <- list(type="2d_tour",         # type of display
+                         obj=grand_tour_flea_2d) # 2d tour history
 ```
 
 #### Interactivity
@@ -152,8 +152,8 @@ axis have to be provided in form of a two dimensional vector.
 #### Example plot object
 
 ```{r scatterplot}
-obj_flea_scatter <- list(type = "scatter",          # type of display
-                         obj = c("tars1", "tars2")) # x and y axis of plot
+obj_flea_scatter <- list(type="scatter",          # type of display
+                         obj=c("tars1", "tars2")) # x and y axis of plot
 ```
 
 #### Interactivity
@@ -173,8 +173,8 @@ be provided in form of a two dimensional vector.
 #### Example plot object
 
 ```{r histogram}
-obj_flea_histogram <- list(type = "hist", # type of display
-                           obj = "head")  # x axis of histogram
+obj_flea_histogram <- list(type="hist", # type of display
+                           obj="head")  # x axis of histogram
 ```
 
 #### Interactivity
@@ -194,8 +194,8 @@ subgroups/clusters should be on the x or y axis, either with
 #### Example plot object
 
 ```{r mosaic}
-obj_winter_mosaic <- list(type = "mosaic",   # type of display
-                  obj = c("subgroups_on_y")) # whether subgroups x or y axis
+obj_winter_mosaic <- list(type="mosaic",   # type of display
+                  obj=c("subgroups_on_y")) # whether subgroups x or y axis
 ```
 
 #### Interactivity
@@ -210,20 +210,32 @@ To display a heatmap, the metric to be calculated and plotted has to be
 selected. One can choose between "Total fraction", "Intra cluster
 fraction" and "Intra feature fraction".
 
-$\text{total fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n$
+Consider the matrix
+\[
+C = \left[ \begin{array}{cccc} c_{11} & c_{12} & \dots & c_{1p} \\
+                                              c_{21} & c_{22} & \dots & c_{2p} \\
+                                              \vdots &  \vdots & \ddots &  \vdots \\
+                                              c_{k1} & c_{k2} & \dots & c_{kp}
+                                              \end{array} \right]
+\]
 
-$\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{i}$
+where $c_{ij}, i=1, ..., k$ (number of clusters); $j=1, ..., p$ (number of
+features) are a summary of each feature in each cluster. In case of binary
+data $c_{ij}$ are the positive counts of the cluster/feature combination.
 
-$\text{intra feature fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{j}$
+Then the total fraction is calculated by $f_{ij}^{o} = \frac{c_{ij}}{n}$
 
-with $n$ being the total number of observations, $c$ the counts, $p$ the
-features and $s$ the subgroups/clusters.
+the intra cluster fraction by $f_{ij}^{c} = \frac{c_{ij}}{n_{i}}$ and
+
+the intra feature fraction by $f_{ij}^{f} = \frac{c_{ij}}{n_{j}}$,
+
+where $n_i, n_j$ are the row and column totals.
 
 #### Example plot object
 
 ```{r heatmap}
-obj_winter_heatmap <- list(type = "heatmap",          # type of display
-                           obj = c("Total fraction")) # initial metric
+obj_winter_heatmap <- list(type="heatmap",          # type of display
+                           obj=c("Total fraction")) # initial metric
 ```
 
 #### Interactivity
@@ -238,22 +250,13 @@ found above.
 
 To display a categorical cluster interface, the metric to be calculated
 and plotted has to be selected. One can choose between "Total fraction",
-"Intra cluster fraction" and "Intra feature fraction".
-
-$\text{total fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n$
-
-$\text{intra cluster fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/n_{i}$
-
-$\text{intra feature fraction}=\sum_{i = 1}^{s} \sum_{j = 1}^{p} c_{ij}/c_{j}$
-
-with $n$ being the total number of observations, $c$ the counts, $p$ the
-features and $s$ the subgroups/clusters.
+"Intra cluster fraction" and "Intra feature fraction". For details see "Heatmap"
 
 #### Example plot object
 
 ```{r categorical cluster interface}
-obj_winter_cat_clust <- list(type = "cat_clust_interface", # type of display
-                             obj = c("Total fraction"))    # initial metric
+obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
+                             obj=c("Total fraction"))    # initial metric
 ```
 
 #### Interactivity
@@ -264,7 +267,7 @@ found above.
 
 ![Categorical cluster interface of winter activities dataset](../man/figures/cat_clust_interface.gif)
 
-## Generating the display
+## Generating the displays
 
 The various plot objects can the be displayed with the
 [interactive_tour](https://mmedl94.github.io/lionfish/reference/interactive_tour.html)
@@ -275,12 +278,12 @@ function.
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
                  plot_objects=list(obj_flea_2d_tour),
-                 half_range = half_range_flea,
+                 half_range=half_range_flea,
                  n_plot_cols=2,
                  preselection=clusters_flea,
-                 n_subsets = 3,
+                 n_subsets=3,
                  preselection_names=flea_subspecies,
-                 display_size=10)
+                 display_size=5)
 ```
 
 ```{r interactive_tour winterActiv}
@@ -288,9 +291,9 @@ interactive_tour(data=flea,
 interactive_tour(data=winterActiv,
                  feature_names=feature_names_winter,
                  plot_objects=list(obj_winter_cat_clust),
-                 half_range = 3,
+                 half_range=3,
                  n_plot_cols=2,
                  preselection=clusters_winter,
-                 n_subsets = 10,
-                 display_size=10)
+                 n_subsets=10,
+                 display_size=5)
 ```

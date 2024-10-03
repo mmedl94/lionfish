@@ -521,7 +521,8 @@ class InteractiveTourInterface(ctk.CTk):
             attributes["subselection_vars_"].append(0)
             attributes["subselections"].append(np.array([], dtype=int))
         set_tk_states(attributes["subselection_vars_"], self.subselection_vars)
-        set_tk_states(attributes["metric_vars_"], self.metric_vars)
+        if "metric_vars_" in attributes:
+            set_tk_states(attributes["metric_vars_"], self.metric_vars)
 
         self.plot_dicts_ = [{} for _ in self.plot_objects]
         # restore projections

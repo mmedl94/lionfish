@@ -6,21 +6,25 @@ def launch_histogram(parent, plot_object, subplot_idx):
     if plot_object["obj"] in parent.feature_names:
         col_index = parent.feature_names.index(plot_object["obj"])
         x = parent.data[:, col_index]
+
         # clear old histogram
         parent.axs[subplot_idx].clear()
         # recolor preselected points
         x_subselections = []
+
         for subselection in parent.subselections:
             if subselection.shape[0] != 0:
                 x_subselections.append(x[subselection])
             else:
                 x_subselections.append(np.array([]))
+
         parent.axs[subplot_idx].hist(
             x_subselections,
             stacked=True,
             picker=True,
             color=parent.colors[:len(x_subselections)],
-            bins=np.linspace(-1, 1, int(parent.n_bins.get())))
+            bins=int(parent.n_bins.get()))
+
         y_lims = parent.axs[subplot_idx].get_ylim()
         parent.axs[subplot_idx].set_ylim(y_lims)
         hist_variable_name = plot_object["obj"]
@@ -28,6 +32,7 @@ def launch_histogram(parent, plot_object, subplot_idx):
         parent.axs[subplot_idx].set_title(
             f"Histogram of variable {hist_variable_name}")
         parent.axs[subplot_idx].set_xticks([])
+
         if parent.initial_loop is True:
             parent.fc = np.repeat(
                 np.array(parent.colors[0])[:, np.newaxis], parent.n_pts, axis=1).T
@@ -37,7 +42,8 @@ def launch_histogram(parent, plot_object, subplot_idx):
             plot_dict = {"type": "hist",
                          "subtype": "hist",
                          "subplot_idx": subplot_idx,
-                         "hist_feature": col_index}
+                         "hist_feature": col_index,
+                         "x": x}
             parent.plot_dicts[subplot_idx] = plot_dict
             bar_selector = BarSelect(parent=parent,
                                      subplot_idx=subplot_idx)
@@ -47,7 +53,8 @@ def launch_histogram(parent, plot_object, subplot_idx):
                          "subtype": "hist",
                          "subplot_idx": subplot_idx,
                          "hist_feature": col_index,
-                         "selector": parent.plot_dicts[subplot_idx]["selector"]}
+                         "selector": parent.plot_dicts[subplot_idx]["selector"],
+                         "x": x}
             parent.plot_dicts[subplot_idx] = plot_dict
             parent.plot_dicts[subplot_idx]["selector"].disconnect(
             )
