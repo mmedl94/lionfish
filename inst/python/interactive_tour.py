@@ -152,11 +152,11 @@ class InteractiveTourInterface(ctk.CTk):
             else:
                 cmap = plt.get_cmap("plasma")
                 values = np.linspace(0, 1, self.n_subsets)
-                colors = [cmap(value) for value in values]
+                colors = [list(cmap(value)) for value in values]
         else:
             cmap = plt.get_cmap(color_scale)
             values = np.linspace(0, 1, self.n_subsets)
-            colors = [cmap(value) for value in values]
+            colors = [list(cmap(value)) for value in values]
         return colors
 
     def initialize_subselections(self):
