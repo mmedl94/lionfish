@@ -24,7 +24,8 @@ from heatmap import launch_heatmap
 def load_interactive_tour(data, directory_to_save, feature_names, half_range=None,
                           n_plot_cols=None, preselection=None,
                           preselection_names=None, n_subsets=None, display_size=5,
-                          hover_cutoff=10, label_size=15, axes_blendout_threshhold=1):
+                          hover_cutoff=10, label_size=15, color_scale="default",
+                          axes_blendout_threshhold=1):
 
     with open(os.path.join(directory_to_save, "attributes.pkl"), "rb") as f:
         attributes = pkl.load(f)
@@ -46,11 +47,13 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
         hover_cutoff = attributes["hover_cutoff"]
     if label_size == None:
         label_size = attributes["label_size"]
+    if color_scale == None:
+        color_scale = attributes["color_scale"]
 
     interactive_tour(data, plot_objects, feature_names, half_range,
                      n_plot_cols, preselection,
                      preselection_names, n_subsets, display_size,
-                     hover_cutoff, label_size, load=True,
+                     hover_cutoff, label_size, color_scale, load=True,
                      directory_to_save=directory_to_save,
                      axes_blendout_threshhold=axes_blendout_threshhold)
 
@@ -58,7 +61,7 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
 def interactive_tour(data, plot_objects, feature_names, half_range=None,
                      n_plot_cols=None, preselection=None,
                      preselection_names=None, n_subsets=3, display_size=5,
-                     hover_cutoff=10, label_size=15, load=False,
+                     hover_cutoff=10, label_size=15, color_scale="default", load=False,
                      directory_to_save=False, axes_blendout_threshhold=1):
     """Launch InteractiveTourInterface for interactive plotting."""
 
@@ -68,7 +71,8 @@ def interactive_tour(data, plot_objects, feature_names, half_range=None,
     app = InteractiveTourInterface(data, plot_objects, feature_names, half_range,
                                    n_plot_cols, preselection, preselection_names,
                                    n_subsets, display_size, hover_cutoff, label_size,
-                                   load, directory_to_save, axes_blendout_threshhold)
+                                   load, directory_to_save, axes_blendout_threshhold,
+                                   color_scale)
     app.mainloop()
 
 
@@ -77,11 +81,14 @@ class InteractiveTourInterface(ctk.CTk):
                  n_plot_cols=None, preselection=None,
                  preselection_names=None, n_subsets=3, display_size=5,
                  hover_cutoff=10, label_size=15, load=False,
-                 directory_to_save=False, axes_blendout_threshhold=1):
+                 directory_to_save=False, axes_blendout_threshhold=1,
+                 color_scale="default"):
         super().__init__()
 
         self.title("Interactive Tour")
         self.r = r
+        if not isinstance(data, np.ndarray):
+            data = data.to_numpy()
         self.data = data
         self.n_pts = self.data.shape[0]
         self.feature_names = feature_names
@@ -99,7 +106,7 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.subselections = self.initialize_subselections()
         self.orig_subselections = self.subselections.copy()
-        self.colors = self.get_colors()
+        self.colors = self.get_colors(color_scale)
         self.n_bins = tk.StringVar(self, "26")
 
         self.setup_cleanup()
@@ -132,10 +139,25 @@ class InteractiveTourInterface(ctk.CTk):
         """Calculate the default half range based on the data."""
         return np.max(np.sqrt(np.sum(data**2, axis=1)))
 
-    def get_colors(self):
+    def get_colors(self, color_scale):
         """Get color palette for the plots."""
-        colors = matplotlib.colormaps["tab10"].colors
-        return [[r, g, b, 1.0] for [r, g, b] in colors]
+
+        if color_scale == "default":
+            if self.n_subsets < 11:
+                colors = matplotlib.colormaps["tab10"].colors
+                return [[r, g, b, 1.0] for [r, g, b] in colors]
+            elif self.n_subsets < 21:
+                colors = matplotlib.colormaps["tab20"].colors
+                return [[r, g, b, 1.0] for [r, g, b] in colors]
+            else:
+                cmap = plt.get_cmap("plasma")
+                values = np.linspace(0, 1, self.n_subsets)
+                colors = [cmap(value) for value in values]
+        else:
+            cmap = plt.get_cmap(color_scale)
+            values = np.linspace(0, 1, self.n_subsets)
+            colors = [cmap(value) for value in values]
+        return colors
 
     def initialize_subselections(self):
         """Initialize the subselections array."""

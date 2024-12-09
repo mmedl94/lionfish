@@ -17,6 +17,7 @@
 #' @param hover_cutoff number of features at which the switch from intransparent
 #' to transparent labels that can be hovered over to make them intransparent occurs
 #' @param label_size size of the labels of the feature names of 1d and 2d tours
+#' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
 #'
@@ -24,44 +25,45 @@
 #' @export
 #'
 #' @examples
-#'
 load_interactive_tour <- function(data, directory_to_save,
-                                  feature_names=NULL, half_range=NULL,
-                                  n_plot_cols=2, preselection=FALSE,
-                                  preselection_names=FALSE, n_subsets=FALSE,
-                                  display_size=5,hover_cutoff=10,
-                                  label_size=15, axes_blendout_threshhold=1){
+                                  feature_names = NULL, half_range = NULL,
+                                  n_plot_cols = 2, preselection = FALSE,
+                                  preselection_names = FALSE, n_subsets = FALSE,
+                                  display_size = 5, hover_cutoff = 10,
+                                  label_size = 15, color_scale = "default",
+                                  axes_blendout_threshhold = 1) {
+  pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
 
-  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
-
-  if (dir.exists(file.path(pytourr_dir, "/inst"))){
-    pytourr_dir <- base::paste(pytourr_dir,"/inst/python", sep = "")
+  if (dir.exists(file.path(pytourr_dir, "/inst"))) {
+    pytourr_dir <- base::paste(pytourr_dir, "/inst/python", sep = "")
   } else {
-    pytourr_dir <- base::paste(pytourr_dir,"/python", sep = "")
+    pytourr_dir <- base::paste(pytourr_dir, "/python", sep = "")
   }
   req_py_func <- "/interactive_tour.py"
 
-  if (is.null(feature_names)){
+  if (is.null(feature_names)) {
     feature_names <- paste("feature", 1:ncol(data))
   }
 
-  if (file.exists(paste0(directory_to_save,"/attributes.pkl"))){
+  if (file.exists(paste0(directory_to_save, "/attributes.pkl"))) {
     print(paste0("loading from ", directory_to_save))
-  } else if(file.exists(paste0(getwd(), directory_to_save,"/attributes.pkl"))){
+  } else if (file.exists(paste0(getwd(), directory_to_save, "/attributes.pkl"))) {
     directory_to_save <- paste0(getwd(), directory_to_save)
     print(paste0("loading from ", directory_to_save))
-  } else if(file.exists(paste0(getwd(),"/", directory_to_save,"/attributes.pkl"))){
-    directory_to_save <- paste0(getwd(),"/", directory_to_save)
+  } else if (file.exists(paste0(getwd(), "/", directory_to_save, "/attributes.pkl"))) {
+    directory_to_save <- paste0(getwd(), "/", directory_to_save)
     print(paste0("loading from ", directory_to_save))
   } else {
-    print(paste0("loading from ",getwd(), directory_to_save))
+    print(paste0("loading from ", getwd(), directory_to_save))
   }
 
-  func_loc <- base::paste(pytourr_dir,req_py_func, sep = "")
+  func_loc <- base::paste(pytourr_dir, req_py_func, sep = "")
   reticulate::source_python(func_loc)
-  reticulate::py$load_interactive_tour(data, directory_to_save, feature_names,
-                                       half_range, n_plot_cols, preselection,
-                                       preselection_names, n_subsets,
-                                       display_size,hover_cutoff, label_size,
-                                       axes_blendout_threshhold)
-  }
+  reticulate::py$load_interactive_tour(
+    data, directory_to_save, feature_names,
+    half_range, n_plot_cols, preselection,
+    preselection_names, n_subsets,
+    display_size, hover_cutoff, label_size,
+    color_scale, axes_blendout_threshhold
+  )
+}

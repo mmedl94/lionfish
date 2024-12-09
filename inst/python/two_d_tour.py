@@ -4,7 +4,6 @@ from interactive_selectors import LassoSelect, DraggableAnnotation2d
 
 
 def launch_2d_tour(parent, plot_object, subplot_idx):
-
     if parent.initial_loop is True:
         frame = 0
     else:

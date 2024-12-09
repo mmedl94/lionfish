@@ -18,67 +18,71 @@
 #' @param label_size size of the labels of the feature names of 1d and 2d tours
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
+#' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
 #'
 #' @return -
 #' @export
 #'
 #' @examples
-#'library(tourr)
-#'library(lionfish)
+#' library(tourr)
+#' library(lionfish)
 #'
-#'data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
-#'clusters <- as.numeric(flea$species)
-#'flea_subspecies <- unique(flea$species)
+#' data <- apply(flea[, 1:6], 2, function(x) (x - mean(x)) / sd(x))
+#' clusters <- as.numeric(flea$species)
+#' flea_subspecies <- unique(flea$species)
 #'
-#'guided_tour_history <- save_history(data,
-#'                                    tour_path=guided_tour(holes()))
-#'grand_tour_history_1d <- save_history(data,
-#'                                      tour_path=grand_tour(d=1))
+#' guided_tour_history <- save_history(data,
+#'   tour_path = guided_tour(holes())
+#' )
+#' grand_tour_history_1d <- save_history(data,
+#'   tour_path = grand_tour(d = 1)
+#' )
 #'
-#'half_range <- max(sqrt(rowSums(data^2)))
-#'feature_names <- colnames(data)
+#' half_range <- max(sqrt(rowSums(data^2)))
+#' feature_names <- colnames(data)
 #'
-#'init_env()
+#' init_env()
 #'
-#'obj1 <- list(type="2d_tour", obj=guided_tour_history)
-#'obj2 <- list(type="1d_tour", obj=grand_tour_history_1d)
-#'obj3 <- list(type="scatter", obj=c("tars1", "tars2"))
-#'obj4 <- list(type="hist", obj="head")
+#' obj1 <- list(type = "2d_tour", obj = guided_tour_history)
+#' obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
+#' obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
+#' obj4 <- list(type = "hist", obj = "head")
 #'
-#'interactive_tour(data=data,
-#'                 plot_objects=list(obj1, obj2, obj3, obj4),
-#'                 feature_names=feature_names,
-#'                 half_range=half_range,
-#'                 n_plot_cols=2,
-#'                 preselection=clusters,
-#'                 preselection_names=flea_subspecies,
-#'                 n_subsets=5,
-#'                 display_size=5)
+#' interactive_tour(
+#'   data = data,
+#'   plot_objects = list(obj1, obj2, obj3, obj4),
+#'   feature_names = feature_names,
+#'   half_range = half_range,
+#'   n_plot_cols = 2,
+#'   preselection = clusters,
+#'   preselection_names = flea_subspecies,
+#'   n_subsets = 5,
+#'   display_size = 5
+#' )
+interactive_tour <- function(data, plot_objects, feature_names = NULL, half_range = NULL,
+                             n_plot_cols = 2, preselection = FALSE,
+                             preselection_names = FALSE, n_subsets = 3, display_size = 5,
+                             hover_cutoff = 10, label_size = 15, color_scale = "default",
+                             axes_blendout_threshhold = 1) {
+  pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
 
-interactive_tour <- function(data, plot_objects, feature_names=NULL, half_range=NULL,
-                             n_plot_cols=2, preselection=FALSE,
-                             preselection_names=FALSE, n_subsets=3, display_size=5,
-                             hover_cutoff=10, label_size=15, axes_blendout_threshhold=1){
-
-  pytourr_dir <- find.package("lionfish", lib.loc=NULL, quiet = TRUE)
-
-  if (dir.exists(file.path(pytourr_dir, "/inst"))){
-    pytourr_dir <- base::paste(pytourr_dir,"/inst/python", sep = "")
+  if (dir.exists(file.path(pytourr_dir, "/inst"))) {
+    pytourr_dir <- base::paste(pytourr_dir, "/inst/python", sep = "")
   } else {
-    pytourr_dir <- base::paste(pytourr_dir,"/python", sep = "")
+    pytourr_dir <- base::paste(pytourr_dir, "/python", sep = "")
   }
   req_py_func <- "/interactive_tour.py"
 
-  if (is.null(feature_names)){
+  if (is.null(feature_names)) {
     feature_names <- paste("feature", 1:ncol(data))
   }
 
-  func_loc <- base::paste(pytourr_dir,req_py_func, sep = "")
+  func_loc <- base::paste(pytourr_dir, req_py_func, sep = "")
   reticulate::source_python(func_loc)
-  reticulate::py$interactive_tour(data, plot_objects, feature_names, half_range,
-                                  n_plot_cols, preselection,
-                                  preselection_names, n_subsets, display_size,
-                                  hover_cutoff, label_size, axes_blendout_threshhold)
+  reticulate::py$interactive_tour(
+    data, plot_objects, feature_names, half_range,
+    n_plot_cols, preselection,
+    preselection_names, n_subsets, display_size,
+    hover_cutoff, label_size, color_scale, axes_blendout_threshhold
+  )
 }
-
-
