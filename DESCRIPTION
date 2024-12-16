@@ -12,7 +12,10 @@ RoxygenNote: 7.3.1
 Imports: 
     reticulate,
     tourr,
-    data.table
+    data.table,
+    randomForest,
+    ggplot2,
+    viridis
 URL: https://mmedl94.github.io/lionfish/
 Config/Needs/website: rmarkdown
 Depends: 
