@@ -81,7 +81,7 @@ init_env <- function(env_name="r-lionfish", virtual_env = "virtual_env", local=F
   if (.Platform$OS.type == "windows"){
     home_dir <- gsub("\\\\", "/", Sys.getenv("USERPROFILE"))
 
-    sys <- import("sys")
+    sys <- reticulate::import("sys")
     full_python_version <- sys$version
     py_version <- strsplit(full_python_version, " ")[[1]][1]
 
