@@ -106,7 +106,8 @@ class InteractiveTourInterface(ctk.CTk):
 
         self.subselections = self.initialize_subselections()
         self.orig_subselections = self.subselections.copy()
-        self.colors = self.get_colors(color_scale)
+        self.color_scale = color_scale
+        self.colors = self.get_colors(self.color_scale)
         self.n_bins = tk.StringVar(self, "26")
 
         self.setup_cleanup()
@@ -912,7 +913,7 @@ class InteractiveTourInterface(ctk.CTk):
     def reset_selection(self, event=None):
         """Reset to the original selection of subsets."""
         self.subselections = self.orig_subselections.copy()
-        self.colors = self.get_colors()
+        self.colors = self.get_colors(self.color_scale)
         self.fc = self.original_fc.copy()
 
         for subplot_idx in range(len(self.plot_objects)):
