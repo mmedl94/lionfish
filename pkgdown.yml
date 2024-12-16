@@ -2,9 +2,11 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  articles/Biotechnological-process-optimization: Biotechnological-process-optimization.html
   articles/General-interactivity: General-interactivity.html
+  articles/Market-segementation: Market-segementation.html
   articles/Plot-objects: Plot-objects.html
-last_built: 2024-12-09T14:47Z
+last_built: 2024-12-16T21:07Z
 urls:
   reference: https://mmedl94.github.io/lionfish/reference
   article: https://mmedl94.github.io/lionfish/articles
