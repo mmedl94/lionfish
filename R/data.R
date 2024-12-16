@@ -11,7 +11,7 @@
 #' @docType data
 #' @format A 2961 x 27 array of binary responses
 #' @keywords datasets
-#' @examples
+#' @source https://statistik.boku.ac.at/nachlass_leisch/MSA/
 #'
 #' head(winterActiv)
 "winterActiv"
@@ -29,7 +29,26 @@
 #' @docType data
 #' @format A 1003 x 44 array of binary responses
 #' @keywords datasets
-#' @examples
+#' @source https://statistik.boku.ac.at/nachlass_leisch/MSA/
 #'
 #' head(ausActiv)
 "ausActiv"
+
+
+#' Chemical Manufacturing Process
+#'
+#' This data set contains information about a chemical manufacturing process, in
+#' which the goal is to understand the relationship between the process and the
+#' resulting final product yield and can be found in the in the
+#' AppliedPredictiveModeling R package. The data has been copied from
+#' http://appliedpredictivemodeling.com/data in agreement with their license.
+#'
+#' @name ChemicalManufacturingProcess
+#' @aliases ChemicalManufacturingProcess
+#' @docType data
+#' @format A 176 x 58 array of continuous variables
+#' @keywords datasets
+#' @source http://appliedpredictivemodeling.com/data
+#'
+#' head(ChemicalManufacturingProcess)
+"ChemicalManufacturingProcess"

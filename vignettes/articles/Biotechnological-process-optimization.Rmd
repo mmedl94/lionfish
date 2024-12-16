@@ -28,17 +28,16 @@ yield.
 
 ## Preparing the data
 
-At first we want to load the data from the AppliedPredictiveModeling
-package and transform it into a data.table. We also give the process
+At first we want to load the ChemicalManufacturingProcess data set (originally from the AppliedPredictiveModeling package) and transform it into a data.table. We also give the process
 variables shorter names, so that the interactive plots that will be
 generated alter are easier to read.
 
 ```{r loading data}
-library(AppliedPredictiveModeling)
+library(lionfish)
 library(data.table)
+
 data(ChemicalManufacturingProcess)
 data <- data.table(ChemicalManufacturingProcess)
-
 col_names <- names(data)
 
 mp_cols <- grep("^ManufacturingProcess", col_names, value = TRUE)
