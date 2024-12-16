@@ -25,7 +25,7 @@ Lionfish](https://github.com/mmedl94/lionfish_article) submitted to the
 
 You can install the development version of lionfish from github with:
 
-```{r setup}
+```{r setup, eval = FALSE}
 install.packages("remotes")
 remotes::install_github("mmedl94/lionfish")
 ```
@@ -46,7 +46,7 @@ binary version 33554432 (expecting version 16777225) To resolve this, we
 have to delete the erroneous virtual environment and build a new one
 with an older Python version.
 
-```{r setup}
+```{r windows troubleshooting, eval = FALSE}
 # Delete the old enironment, might require a restart of R
 reticulate::virtualenv_remove("r-lionfish")
 
