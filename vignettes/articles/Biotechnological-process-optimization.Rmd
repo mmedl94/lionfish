@@ -122,6 +122,9 @@ tour histories.
 
 ```{r, eval = FALSE}
 set.seed(42)
+# the development version of tourr is required, otherwise the 1d lda tour
+# will crash!
+remotes::install_github("ggobi/tourr")
 library(tourr)
 
 display_size <- 5 # Adjust to fit your display
@@ -331,7 +334,7 @@ interactive_tour(data=data_rf_sel,
                  n_plot_cols=2,
                  preselection=new_yield_values,
                  preselection_names=new_yield_labels,
-                 n_subsets=3,
+                 n_subsets=4,
                  display_size=5,
                  color_scale = "plasma")
 ```
