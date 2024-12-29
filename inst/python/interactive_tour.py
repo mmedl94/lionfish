@@ -19,6 +19,7 @@ from histogram import launch_histogram
 from cat_clust_interface import launch_cat_clust_interface
 from mosaic import launch_mosaic
 from heatmap import launch_heatmap
+from guided_tour_lda_regroup import open_regroup_interface
 
 
 def load_interactive_tour(data, directory_to_save, feature_names, half_range=None,
@@ -705,7 +706,8 @@ class InteractiveTourInterface(ctk.CTk):
     def setup_tour_controls(self, sidebar):
         """Setup the controls for running and resetting tours."""
         tour_types = ["Local tour", "Guided tour - holes",
-                      "Guided tour - holes - better", "Guided tour - LDA"]
+                      "Guided tour - holes - better", "Guided tour - LDA",
+                      "Guided tour - LDA - regroup"]
 
         self.selected_tour_type = ctk.StringVar(value="Local tour")
         tour_menu = ctk.CTkComboBox(
@@ -730,6 +732,12 @@ class InteractiveTourInterface(ctk.CTk):
 
     def run_tour(self):
         """Run a new tour based on the selected tour type."""
+
+        if self.selected_tour_type.get() == "Guided tour - LDA - regroup":
+            self.wait_var = tk.IntVar(self, 0)
+            open_regroup_interface(self)
+            self.wait_variable(self.wait_var)
+
         for idx, plot_object in enumerate(self.plot_objects):
             if plot_object["type"] in ["1d_tour", "2d_tour"]:
                 dimension = 1 if plot_object["type"] == "1d_tour" else 2
@@ -752,9 +760,13 @@ class InteractiveTourInterface(ctk.CTk):
                     for subselection_idx, arr in enumerate(self.subselections):
                         if arr.size:
                             subselection_idxs[arr] = subselection_idx + 1
-
                     new_proj = self.r.get_guided_lda_history(self.data[:, self.feature_selection],
                                                              subselection_idxs, dimension)
+
+                elif self.selected_tour_type.get() == "Guided tour - LDA - regroup":
+                    new_proj = self.r.get_guided_lda_history(self.data[self.regrouping_keep_obs][:, self.feature_selection],
+                                                             self.new_grouping[self.regrouping_keep_obs],
+                                                             dimension)
 
                 full_array = np.tile(
                     full_array[:, :, np.newaxis], (1, 1, new_proj.shape[2]))

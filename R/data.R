@@ -52,3 +52,22 @@
 #'
 #' head(ChemicalManufacturingProcess)
 "ChemicalManufacturingProcess"
+
+#' Risk
+#'
+#' Adult Australian residents that have undertaken at least one holiday in the
+#' last year, which involved staying away from home for at least four nights,
+#' were asked what risks they have taken in the past. The questions were about
+#' recreational, health, career, financial, safety and social risk. The response
+#' options were on the following: never (1), rarely (2), quite often (3),
+#' often (4) or very often (5)
+#'
+#' @name Risk
+#' @aliases Risk
+#' @docType data
+#' @format A 563 x 6 array of Likert scale data
+#' @keywords datasets
+#' @source https://statistik.boku.ac.at/nachlass_leisch/MSA/
+#'
+#' head(Risk)
+"Risk"

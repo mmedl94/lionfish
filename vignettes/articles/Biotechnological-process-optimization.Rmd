@@ -154,7 +154,7 @@ interactive_tour(data=data_wo_y,
                  n_plot_cols=2,
                  preselection=yield_values,
                  preselection_names=yield_labels,
-                 display_size=5,
+                 display_size=8,
                  color_scale="plasma")
 ```
 
@@ -278,8 +278,8 @@ interactive_tour(data=data_rf_sel,
                  n_plot_cols=2,
                  preselection=yield_values,
                  preselection_names=yield_labels,
-                 n_subsets=10,
-                 display_size=5,
+                 n_subsets=11,
+                 display_size=8,
                  color_scale = "plasma")
 ```
 
@@ -334,8 +334,8 @@ interactive_tour(data=data_rf_sel,
                  n_plot_cols=2,
                  preselection=new_yield_values,
                  preselection_names=new_yield_labels,
-                 n_subsets=4,
-                 display_size=5,
+                 n_subsets=3,
+                 display_size=8,
                  color_scale = "plasma")
 ```
 
