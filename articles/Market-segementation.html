@@ -76,8 +76,24 @@ Lionfish</a> submitted to the <a href="https://www.ajs.or.at/index.php/ajs" clas
 Statistics</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="installation-of-lionfish">Installation of lionfish<a class="anchor" aria-label="anchor" href="#installation-of-lionfish"></a>
+<h2 id="general-note">General note<a class="anchor" aria-label="anchor" href="#general-note"></a>
 </h2>
+<p>All scripts are designed to be run from top to bottom. If you only
+want to run parts of the scripts you will have to make sure that
+init_inv() is run before using any lionfish function!</p>
+</div>
+<div class="section level2">
+<h2 id="preparation">Preparation<a class="anchor" aria-label="anchor" href="#preparation"></a>
+</h2>
+<p>In order to run reproduce all results you will have to</p>
+<ol style="list-style-type: decimal">
+<li><p>install lionfish,</p></li>
+<li><p>install the development version of tourr,</p></li>
+<li><p>and download and unzip the repository.</p></li>
+</ol>
+<div class="section level3">
+<h3 id="installation-of-lionfish">Installation of lionfish<a class="anchor" aria-label="anchor" href="#installation-of-lionfish"></a>
+</h3>
 <p>You can install the development version of lionfish from github
 with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -110,6 +126,81 @@ with an older Python version.</p>
 <span><span class="co"># Initiate Python environment as usual</span></span>
 <span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level3">
+<h3 id="installation-of-the-development-version-of-tourr">Installation of the development version of tourr<a class="anchor" aria-label="anchor" href="#installation-of-the-development-version-of-tourr"></a>
+</h3>
+<p>Please install remotes and then install tourr from github.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ggobi/tourr"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="download-github-repository">Download github repository<a class="anchor" aria-label="anchor" href="#download-github-repository"></a>
+</h3>
+<p>You can download the repository either as .zip by clicking the green
+button that says “Code” on the top right and then click “Downlaod ZIP”.
+This will be necessary to load the lionfish snapshots.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Figures 1, 2 and 3 shown in the introduction can be reproduced by
+running /scripts/intro.R</p>
+</div>
+<div class="section level2">
+<h2 id="interactive-interface-for-partitioning">Interactive interface for partitioning<a class="anchor" aria-label="anchor" href="#interactive-interface-for-partitioning"></a>
+</h2>
+<p>Figure 4 was produced using manual graphical editing, but only aims
+to give an overview on the GUI anyways.</p>
+</div>
+<div class="section level2">
+<h2 id="austrian-vacation-activities-dataset">Austrian Vacation Activities dataset<a class="anchor" aria-label="anchor" href="#austrian-vacation-activities-dataset"></a>
+</h2>
+<p>Please don’t forget to set the working directory to the downloaded
+repo when working with /scripts/load_snapshots.R.</p>
+<p>Figure 5 can be reproduced by running /scripts/austrian_tourism.R</p>
+<p>Figures 6 and 7 can be reproduced by running
+/scripts/austrian_tourism_clustering.R</p>
+<p>Figure 8 can be reproduced by loading the contents of
+/saves/aut_saves/init as shown in /scripts/load_snapshots.R. The
+corresponding display is on the top left. Subplots 8 A-F can be
+reproduced by highlighting the respective cluster and desaturating the
+others by clicking the color boxes of the respective clusters in the
+menu on the left. The blendout threshold was set to 0.1.</p>
+<p>Figure 9 can be reproduced by loading the contents of
+/saves/aut_saves/init as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.</p>
+<p>Figure 10 can be reproduced by loading the contents of
+/saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.</p>
+<p>Figure 11 can be reproduced by loading the contents of
+/saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.</p>
+</div>
+<div class="section level2">
+<h2 id="australian-vacation-activities-dataset">Australian Vacation Activities dataset<a class="anchor" aria-label="anchor" href="#australian-vacation-activities-dataset"></a>
+</h2>
+<p>Figure 12 can be reproduced by running
+/scripts/austrian_tourism_clustering.R</p>
+<p>Figures 13 and 14 can be reproduced by loading the contents of
+/saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
+<p>Figures 15 can be reproduced by loading the contents of
+/saves/aus_saves/after as shown in /scripts/load_snapshots.R.</p>
+</div>
+<div class="section level2">
+<h2 id="tourist-risk-taking-dataset">Tourist risk taking dataset<a class="anchor" aria-label="anchor" href="#tourist-risk-taking-dataset"></a>
+</h2>
+<p>Figure 16 can be reproduced by loading the contents of
+/saves/risk_saves/final_projeciton_risk as shown in
+/scripts/load_snapshots.R.</p>
+<p>Figure 17 can be reproduced by clicking the on the dropdown menu on
+the bottom left, selecting “Guided tour - LDA - regroup” and then
+pressing the “Run tour” button below the dropdown menu.</p>
+<p>Figure 18 can be reproduced by loading the contents of
+/saves/risk_saves/regrouped_risk as shown in
+/scripts/load_snapshots.R.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
