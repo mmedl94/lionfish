@@ -21,7 +21,21 @@ Segmentation Using the R Package
 Lionfish](https://github.com/mmedl94/lionfish_article) submitted to the
 [Austrian Journal of Statistics](https://www.ajs.or.at/index.php/ajs).
 
-## Installation of lionfish
+## General note
+
+All scripts are designed to be run from top to bottom. If you only want to run parts of the scripts you will have to make sure that init_inv() is run before using any lionfish function!
+
+## Preparation
+
+In order to run reproduce all results you will have to
+
+1.  install lionfish,
+
+2.  install the development version of tourr,
+
+3.  and download and unzip the repository.
+
+### Installation of lionfish
 
 You can install the development version of lionfish from github with:
 
@@ -37,7 +51,7 @@ Complications may arise when installing and accessing the Python backend
 of this package. If you run into any, please don't refrain from opening
 an issue!
 
-#### Complications for windows users 
+#### Complications for windows users
 
 Running the example code below might result in the following error
 
@@ -59,3 +73,78 @@ reticulate::virtualenv_create(envname = "r-lionfish", version="3.8.10")
 # Initiate Python environment as usual
 init_env()
 ```
+
+### Installation of the development version of tourr
+
+Please install remotes and then install tourr from github.
+
+```{r tourr development version, eval = FALSE}
+install.packages("remotes")
+remotes::install_github("ggobi/tourr")
+```
+
+### Download github repository
+
+You can download the repository either as .zip by clicking the green
+button that says "Code" on the top right and then click "Downlaod ZIP".
+This will be necessary to load the lionfish snapshots.
+
+## Introduction
+
+Figures 1, 2 and 3 shown in the introduction can be reproduced by
+running /scripts/intro.R
+
+## Interactive interface for partitioning
+
+Figure 4 was produced using manual graphical editing, but only aims to give an overview on the GUI anyways.
+
+## Austrian Vacation Activities dataset
+
+Please don't forget to set the working directory to the downloaded repo when working with /scripts/load_snapshots.R.
+
+Figure 5 can be reproduced by running /scripts/austrian_tourism.R
+
+Figures 6 and 7 can be reproduced by running /scripts/austrian_tourism_clustering.R
+
+Figure 8 can be reproduced by loading the contents of
+/saves/aut_saves/init as shown in /scripts/load_snapshots.R. The
+corresponding display is on the top left. Subplots 8 A-F can be
+reproduced by highlighting the respective cluster and desaturating the
+others by clicking the color boxes of the respective clusters in the
+menu on the left. The blendout threshold was set to 0.1.
+
+Figure 9 can be reproduced by loading the contents of
+/saves/aut_saves/init as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.
+
+Figure 10 can be reproduced by loading the contents of
+/saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.
+
+Figure 11 can be reproduced by loading the contents of
+/saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
+blendout threshold was set to 0.1.
+
+## Australian Vacation Activities dataset
+
+Figure 12 can be reproduced by running
+/scripts/austrian_tourism_clustering.R
+
+Figures 13 and 14 can be reproduced by loading the contents of
+/saves/aus_saves/before as shown in /scripts/load_snapshots.R.
+
+Figures 15 can be reproduced by loading the contents of
+/saves/aus_saves/after as shown in /scripts/load_snapshots.R.
+
+## Tourist risk taking dataset
+
+Figure 16 can be reproduced by loading the contents of
+/saves/risk_saves/final_projeciton_risk as shown in
+/scripts/load_snapshots.R.
+
+Figure 17 can be reproduced by clicking the on the dropdown menu on the
+bottom left, selecting "Guided tour - LDA - regroup" and then pressing
+the "Run tour" button below the dropdown menu.
+
+Figure 18 can be reproduced by loading the contents of
+/saves/risk_saves/regrouped_risk as shown in /scripts/load_snapshots.R.

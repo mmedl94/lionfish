@@ -172,7 +172,6 @@ class InteractiveTourInterface(ctk.CTk):
     def setup_cleanup(self):
         """Setup cleanup method for when the window is closed."""
         def cleanup():
-            self.frame = self.n_frames
             self.destroy()
             plt.close("all")
         self.protocol("WM_DELETE_WINDOW", cleanup)
