@@ -130,21 +130,21 @@ blendout threshold was set to 0.1.
 Figure 12 can be reproduced by running
 /scripts/austrian_tourism_clustering.R
 
-Figures 13 and 14 can be reproduced by loading the contents of
+Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.
 
-Figures 15 can be reproduced by loading the contents of
+Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.
 
 ## Tourist risk taking dataset
 
-Figure 16 can be reproduced by loading the contents of
+Figure 15 can be reproduced by loading the contents of
 /saves/risk_saves/final_projeciton_risk as shown in
 /scripts/load_snapshots.R.
 
-Figure 17 can be reproduced by clicking the on the dropdown menu on the
+Figure 16 can be reproduced by clicking the on the dropdown menu on the
 bottom left, selecting "Guided tour - LDA - regroup" and then pressing
 the "Run tour" button below the dropdown menu.
 
-Figure 18 can be reproduced by loading the contents of
+Figure 17 can be reproduced by loading the contents of
 /saves/risk_saves/regrouped_risk as shown in /scripts/load_snapshots.R.

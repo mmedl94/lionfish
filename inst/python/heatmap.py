@@ -49,10 +49,16 @@ def launch_heatmap(parent, plot_object, subplot_idx):
     if parent.initial_loop == False:
         parent.axs[subplot_idx].collections[-1].colorbar.remove()
 
+    if parent.color_scale == "default":
+        cmap = sns.cm.rocket
+    else:
+        cmap = parent.color_scale
+
     sns.heatmap(data=heatmap_data,
                 ax=parent.axs[subplot_idx],
                 yticklabels=y_tick_labels,
-                xticklabels=x_tick_labels)
+                xticklabels=x_tick_labels,
+                cmap=cmap)
     parent.axs[subplot_idx].set_xticks(parent.axs[subplot_idx].get_xticks(),
                                        parent.axs[subplot_idx].get_xticklabels(),
                                        rotation=25,
