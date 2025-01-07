@@ -77,11 +77,12 @@ interactive_tour <- function(data, plot_objects, feature_names = NULL, half_rang
     feature_names <- paste("feature", 1:ncol(data))
   }
 
-  # check the data type of the data and transform factors to numerics
+  # check the data type of the data and transform factors to numerics and normalize them
   if (is.data.frame(data)) {
     data[] <- lapply(data, function(x) {
       if (is.factor(x)) {
-        as.numeric(x) - 1
+        x <- as.numeric(x)
+        (x - min(x)) / (max(x) - min(x))
       } else {
         x
       }
@@ -89,7 +90,8 @@ interactive_tour <- function(data, plot_objects, feature_names = NULL, half_rang
   } else if (data.table::is.data.table(data)) {
     data <- data[, lapply(data.table::.SD, function(x) {
       if (is.factor(x)) {
-        as.numeric(x) - 1
+        x <- as.numeric(x)
+        (x - min(x)) / (max(x) - min(x))
       } else {
         x
       }

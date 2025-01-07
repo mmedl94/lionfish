@@ -493,7 +493,7 @@ class InteractiveTourInterface(ctk.CTk):
         """Setup the save button for saving projections and subsets."""
         save_button = ctk.CTkButton(
             master=sidebar, width=100, height=32, border_width=0, corner_radius=8,
-            text="Save projections \n and subsets", command=partial(self.save_event)
+            text="Save projections \n and subsets", command=partial(self.save_selection)
         )
         save_button.grid(row=self.sidebar_row_tracker,
                          column=0, pady=(3, 3), sticky="n")
@@ -581,8 +581,58 @@ class InteractiveTourInterface(ctk.CTk):
         except (pkl.PicklingError, TypeError):  # Catch exceptions related to pickling
             return False
 
+    def save_selection(self):
+        self.png_var = ctk.IntVar(value=1)
+        self.csv_feature_var = ctk.IntVar(value=1)
+        self.csv_subset_var = ctk.IntVar(value=1)
+        self.csv_proj_var = ctk.IntVar(value=1)
+        self.pkl_var = ctk.IntVar(value=1)
+
+        self.save_selection_interface = tk.Toplevel(self)
+        self.save_selection_interface.title(
+            "Please select which files you want to save")
+
+        png_switch = ctk.CTkSwitch(self.save_selection_interface,
+                                   text="Save .png - Saves image of the display area",
+                                   variable=self.png_var,
+                                   onvalue=1,
+                                   offvalue=0)
+        csv_switch_feature = ctk.CTkSwitch(self.save_selection_interface,
+                                           text="Save feature .csv - Saves feature selection",
+                                           variable=self.csv_feature_var,
+                                           onvalue=1,
+                                           offvalue=0)
+        csv_switch_subset = ctk.CTkSwitch(self.save_selection_interface,
+                                          text="Save subset .csv - Saves the subsets",
+                                          variable=self.csv_subset_var,
+                                          onvalue=1,
+                                          offvalue=0)
+        csv_switch_proj = ctk.CTkSwitch(self.save_selection_interface,
+                                        text="Save projection .csv's - Saves projection matrices",
+                                        variable=self.csv_proj_var,
+                                        onvalue=1,
+                                        offvalue=0)
+        pkl_switch = ctk.CTkSwitch(self.save_selection_interface,
+                                   text="Save .pkl's - Saves the internal state of the GUI",
+                                   variable=self.pkl_var,
+                                   onvalue=1,
+                                   offvalue=0)
+
+        png_switch.grid(row=0, pady=5, sticky="w")
+        csv_switch_feature.grid(row=1, pady=5, sticky="w")
+        csv_switch_subset.grid(row=2, pady=5, sticky="w")
+        csv_switch_proj.grid(row=3, pady=5, sticky="w")
+        pkl_switch.grid(row=4, pady=5, sticky="w")
+
+        continue_button = ctk.CTkButton(self.save_selection_interface,
+                                        text="Continue",
+                                        command=lambda: self.save_event())
+        continue_button.grid(row=5, pady=5)
+
     def save_event(self):
         """Handle saving projections and subsets to files."""
+        self.save_selection_interface.destroy()
+
         save_dir = ctk.filedialog.askdirectory()
         now = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
         save_path = os.path.join(save_dir, now)
@@ -590,115 +640,122 @@ class InteractiveTourInterface(ctk.CTk):
         if not os.path.isdir(save_path):
             os.mkdir(save_path)
 
-        # Save the subsets
-        save_df = pd.DataFrame(self.subselections, dtype=pd.Int64Dtype()).T
-        save_df = save_df + 1
-        save_df.columns = [subset_name.get()
-                           for subset_name in self.subset_names]
-        restructured_data = []
-        for subset in save_df.columns:
-            subset_idx = subset.split(" ")[1]
-            for observation in save_df[subset].dropna():
-                restructured_data.append([subset_idx, observation])
-        save_df = pd.DataFrame(restructured_data, columns=[
-                               "subset", "observation_index"])
-        save_df.to_csv(os.path.join(
-            save_path, "subset_selection.csv"), index=False)
+        if self.csv_subset_var.get():
+            # Save the subsets
+            save_df = pd.DataFrame(self.subselections, dtype=pd.Int64Dtype()).T
+            save_df = save_df + 1
+            save_df.columns = [subset_name.get()
+                               for subset_name in self.subset_names]
+            restructured_data = []
+            for subset in save_df.columns:
+                subset_idx = subset.split(" ")[1]
+                for observation in save_df[subset].dropna():
+                    restructured_data.append([subset_idx, observation])
+            save_df = pd.DataFrame(restructured_data, columns=[
+                                   "subset", "observation_index"])
+            save_df.to_csv(os.path.join(
+                save_path, "subset_selection.csv"), index=False)
 
-        # Save attributes
-        attributes_to_save = {
-            k: v for k, v in self.__dict__.items()
-            if k != 'r' and self.is_picklable(v)
-        }
-        # Drop attributes that should not be saved
-        attributes_to_drop = ["fig",
-                              "axs",
-                              "data",
-                              "load",
-                              "_CTkAppearanceModeBaseClass__appearance_mode",
-                              "_CTkScalingBaseClass__scaling_type",
-                              "_tclCommands",
-                              "master",
-                              "_tkloaded",
-                              "_CTkScalingBaseClass__window_scaling",
-                              "_current_width",
-                              "_current_height",
-                              "_min_width",
-                              "_min_height",
-                              "_max_width",
-                              "_max_height",
-                              "_last_resizable_args",
-                              "_iconbitmap_method_called",
-                              "_state_before_windows_set_titlebar_color",
-                              "_window_exists",
-                              "_withdraw_called_before_window_exists",
-                              "_iconify_called_before_window_exists",
-                              "_block_update_dimensions_event",
-                              "focused_widget_before_widthdraw"]
+        if self.csv_feature_var.get():
+            # save feature selection
+            features = np.array(
+                [self.feature_names, self.feature_selection*1]).T
+            feature_df = pd.DataFrame(
+                features, columns=["features", "selected"])
+            feature_df.to_csv(os.path.join(save_path, "feature_selection.csv"),
+                              index=False,
+                              header=False)
 
-        for attribute in attributes_to_drop:
-            del attributes_to_save[attribute]
+        if self.csv_proj_var.get():
+            # Save projections
+            for idx, plot_dict in enumerate(self.plot_dicts):
+                if "proj" in plot_dict:
+                    proj_df = pd.DataFrame(
+                        plot_dict["proj"][self.feature_selection])
+                    proj_df["original variables"] = np.array(self.feature_names)[
+                        self.feature_selection]
+                    proj_df.set_index("original variables", inplace=True)
+                    proj_df.to_csv(os.path.join(
+                        save_path, f"projection_object_{idx + 1}.csv"))
 
-        projections = {}
-        for idx, plot_dict in enumerate(self.plot_dicts):
-            if "proj" in plot_dict:
-                projections[str(idx)] = plot_dict["proj"]
+            # prevent projections from resetting
+            for subplot_idx, plot_dict in enumerate(self.plot_dicts):
+                if plot_dict.get("subtype") in ["1d_tour", "2d_tour"]:
+                    self.plot_dicts[subplot_idx]["update_plot"] = False
 
-        def get_tk_states(var_list):
-            return [var.get() for var in var_list]
-        try:
-            attributes_to_save.update({
-                "frame_vars_": get_tk_states(self.frame_vars),
-                "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
-                "subselection_vars_": get_tk_states(self.subselection_vars),
-                "metric_vars_": get_tk_states(self.metric_vars),
-                "projections": projections
-            })
-        except AttributeError:
-            attributes_to_save.update({
-                "frame_vars_": get_tk_states(self.frame_vars),
-                "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
-                "subselection_vars_": get_tk_states(self.subselection_vars),
-                "projections": projections
-            })
+        if self.pkl_var.get():
+            # Save attributes
+            attributes_to_save = {
+                k: v for k, v in self.__dict__.items()
+                if k != 'r' and self.is_picklable(v)
+            }
+            # Drop attributes that should not be saved
+            attributes_to_drop = ["fig",
+                                  "axs",
+                                  "data",
+                                  "load",
+                                  "_CTkAppearanceModeBaseClass__appearance_mode",
+                                  "_CTkScalingBaseClass__scaling_type",
+                                  "_tclCommands",
+                                  "master",
+                                  "_tkloaded",
+                                  "_CTkScalingBaseClass__window_scaling",
+                                  "_current_width",
+                                  "_current_height",
+                                  "_min_width",
+                                  "_min_height",
+                                  "_max_width",
+                                  "_max_height",
+                                  "_last_resizable_args",
+                                  "_iconbitmap_method_called",
+                                  "_state_before_windows_set_titlebar_color",
+                                  "_window_exists",
+                                  "_withdraw_called_before_window_exists",
+                                  "_iconify_called_before_window_exists",
+                                  "_block_update_dimensions_event",
+                                  "focused_widget_before_widthdraw"]
 
-        with open(os.path.join(save_path, "attributes.pkl"), "wb") as f:
-            pkl.dump(attributes_to_save, f)
+            for attribute in attributes_to_drop:
+                del attributes_to_save[attribute]
 
-        # save additional tkinter states
-        tkinter_states = {}
-        for var_name, var in self.__dict__.items():
-            if isinstance(var, (tk.IntVar, tk.StringVar, tk.BooleanVar, tk.DoubleVar)):
-                tkinter_states[var_name] = var.get()
-        with open(os.path.join(save_path, "tkinter_states.pkl"), "wb") as f:
-            pkl.dump(tkinter_states, f)
+            projections = {}
+            for idx, plot_dict in enumerate(self.plot_dicts):
+                if "proj" in plot_dict:
+                    projections[str(idx)] = plot_dict["proj"]
 
-        # save feature selection
-        features = np.array([self.feature_names, self.feature_selection*1]).T
-        feature_df = pd.DataFrame(features, columns=["features", "selected"])
-        feature_df.to_csv(os.path.join(save_path, "feature_selection.csv"),
-                          index=False,
-                          header=False)
+            def get_tk_states(var_list):
+                return [var.get() for var in var_list]
+            try:
+                attributes_to_save.update({
+                    "frame_vars_": get_tk_states(self.frame_vars),
+                    "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
+                    "subselection_vars_": get_tk_states(self.subselection_vars),
+                    "metric_vars_": get_tk_states(self.metric_vars),
+                    "projections": projections
+                })
+            except AttributeError:
+                attributes_to_save.update({
+                    "frame_vars_": get_tk_states(self.frame_vars),
+                    "feature_selection_vars_": get_tk_states(self.feature_selection_vars),
+                    "subselection_vars_": get_tk_states(self.subselection_vars),
+                    "projections": projections
+                })
 
-        # Save the figure
-        self.fig.savefig(os.path.join(save_path, "figure.png"),
-                         dpi=300)
+            with open(os.path.join(save_path, "attributes.pkl"), "wb") as f:
+                pkl.dump(attributes_to_save, f)
 
-        # Save projections
-        for idx, plot_dict in enumerate(self.plot_dicts):
-            if "proj" in plot_dict:
-                proj_df = pd.DataFrame(
-                    plot_dict["proj"][self.feature_selection])
-                proj_df["original variables"] = np.array(self.feature_names)[
-                    self.feature_selection]
-                proj_df.set_index("original variables", inplace=True)
-                proj_df.to_csv(os.path.join(
-                    save_path, f"projection_object_{idx + 1}.csv"))
+            # save additional tkinter states
+            tkinter_states = {}
+            for var_name, var in self.__dict__.items():
+                if isinstance(var, (tk.IntVar, tk.StringVar, tk.BooleanVar, tk.DoubleVar)):
+                    tkinter_states[var_name] = var.get()
+            with open(os.path.join(save_path, "tkinter_states.pkl"), "wb") as f:
+                pkl.dump(tkinter_states, f)
 
-        # prevent projections from resetting
-        for subplot_idx, plot_dict in enumerate(self.plot_dicts):
-            if plot_dict.get("subtype") in ["1d_tour", "2d_tour"]:
-                self.plot_dicts[subplot_idx]["update_plot"] = False
+        if self.png_var.get():
+            # Save the figure
+            self.fig.savefig(os.path.join(save_path, "figure.png"),
+                             dpi=300)
 
         self.plot_loop()
 
