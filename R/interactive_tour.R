@@ -77,6 +77,25 @@ interactive_tour <- function(data, plot_objects, feature_names = NULL, half_rang
     feature_names <- paste("feature", 1:ncol(data))
   }
 
+  # check the data type of the data and transform factors to numerics
+  if (is.data.frame(data)) {
+    data[] <- lapply(data, function(x) {
+      if (is.factor(x)) {
+        as.numeric(x) - 1
+      } else {
+        x
+      }
+    })
+  } else if (data.table::is.data.table(data)) {
+    data <- data[, lapply(data.table::.SD, function(x) {
+      if (is.factor(x)) {
+        as.numeric(x) - 1
+      } else {
+        x
+      }
+    })]
+  }
+
   func_loc <- base::paste(pytourr_dir, req_py_func, sep = "")
   reticulate::source_python(func_loc)
   reticulate::py$interactive_tour(
