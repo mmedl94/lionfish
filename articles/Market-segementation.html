@@ -104,34 +104,12 @@ from <a href="https://git-scm.com/downloads" class="external-link uri">https://g
 <p>Complications may arise when installing and accessing the Python
 backend of this package. If you run into any, please don’t refrain from
 opening an issue!</p>
-<div class="section level4">
-<h4 id="complications-for-windows-users">Complications for windows users<a class="anchor" aria-label="anchor" href="#complications-for-windows-users"></a>
-</h4>
-<p>Running the example code below might result in the following
-error</p>
-<p>Error: Required version of NumPy not available: incompatible NumPy
-binary version 33554432 (expecting version 16777225) To resolve this, we
-have to delete the erroneous virtual environment and build a new one
-with an older Python version.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Delete the old enironment, might require a restart of R</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_remove</a></span><span class="op">(</span><span class="st">"r-lionfish"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Install the stable Python version</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/install_python.html" class="external-link">install_python</a></span><span class="op">(</span>version<span class="op">=</span><span class="st">"3.8.10"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Build new virtual environment</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_create</a></span><span class="op">(</span>envname <span class="op">=</span> <span class="st">"r-lionfish"</span>, version<span class="op">=</span><span class="st">"3.8.10"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Initiate Python environment as usual</span></span>
-<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level3">
 <h3 id="installation-of-the-development-version-of-tourr">Installation of the development version of tourr<a class="anchor" aria-label="anchor" href="#installation-of-the-development-version-of-tourr"></a>
 </h3>
 <p>Please install remotes and then install tourr from github.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ggobi/tourr"</span><span class="op">)</span></span></code></pre></div>
 </div>

@@ -66,35 +66,16 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mmedl94/lionfish"</span><span class="op">)</span></span></code></pre></div>
 <p>Make sure you have git installed. You can download and install git from <a href="https://git-scm.com/downloads" class="external-link uri">https://git-scm.com/downloads</a>.</p>
 <p>Complications may arise when installing and accessing the Python backend of this package. If you run into any, please don’t refrain from opening an issue!</p>
-<div class="section level3">
-<h3 id="complications-for-windows-users">Complications for windows users<a class="anchor" aria-label="anchor" href="#complications-for-windows-users"></a>
-</h3>
-<p>Running the example code below might result in the following error</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>Error<span class="sc">:</span> Required version of NumPy not available<span class="sc">:</span> incompatible NumPy binary version <span class="dv">33554432</span> (expecting version <span class="dv">16777225</span>)</span></code></pre></div>
-<p>To resolve this, we have to delete the erroneous virtual environment and build a new one with an older Python version.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Delete the old enironment, might require a restart of R</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_remove</a></span><span class="op">(</span><span class="st">"r-lionfish"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Install the stable Python version</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/install_python.html" class="external-link">install_python</a></span><span class="op">(</span>version<span class="op">=</span><span class="st">"3.8.10"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Build new virtual environment</span></span>
-<span><span class="fu">reticulate</span><span class="fu">::</span><span class="fu"><a href="https://rstudio.github.io/reticulate/reference/virtualenv-tools.html" class="external-link">virtualenv_create</a></span><span class="op">(</span>envname <span class="op">=</span> <span class="st">"r-lionfish"</span>, version<span class="op">=</span><span class="st">"3.8.10"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Initiate Python environment as usual</span></span>
-<span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>To run an interactive tour you will first have to initialize the python backend with</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Then you can display saved tour objects, scatterplots or histograms with interactive_tour()</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
