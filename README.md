@@ -15,30 +15,6 @@ Make sure you have git installed. You can download and install git from <https:/
 
 Complications may arise when installing and accessing the Python backend of this package. If you run into any, please don't refrain from opening an issue!
 
-### Complications for windows users
-
-Running the example code below might result in the following error
-
-``` r
-Error: Required version of NumPy not available: incompatible NumPy binary version 33554432 (expecting version 16777225)
-```
-
-To resolve this, we have to delete the erroneous virtual environment and build a new one with an older Python version.
-
-``` r
-# Delete the old enironment, might require a restart of R
-reticulate::virtualenv_remove("r-lionfish")
-
-# Install the stable Python version
-reticulate::install_python(version="3.8.10")
-
-# Build new virtual environment
-reticulate::virtualenv_create(envname = "r-lionfish", version="3.8.10")
-
-# Initiate Python environment as usual
-init_env()
-```
-
 ## Example
 
 To run an interactive tour you will first have to initialize the python backend with
