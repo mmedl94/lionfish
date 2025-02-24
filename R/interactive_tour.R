@@ -47,6 +47,7 @@
 #' obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 #' obj4 <- list(type = "hist", obj = "head")
 #'
+#'if (interactive()){
 #' interactive_tour(
 #'   data = data,
 #'   plot_objects = list(obj1, obj2, obj3, obj4),
@@ -58,6 +59,7 @@
 #'   n_subsets = 5,
 #'   display_size = 5
 #' )
+#' }
 interactive_tour <- function(data, plot_objects, feature_names = NULL, half_range = NULL,
                              n_plot_cols = 2, preselection = FALSE,
                              preselection_names = FALSE, n_subsets = 3, display_size = 5,
