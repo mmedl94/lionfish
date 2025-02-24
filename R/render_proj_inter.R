@@ -4,6 +4,7 @@
 #' @param data matrix, or data frame containing numeric columns,
 #'   should be standardized to have mean 0, sd 1
 #' @param prj projection matrix
+#' @param half_range for scaling in the display, by default calculated from the data
 #' @param axis_labels of the axes to be displayed
 #' @param obs_labels labels of the observations to be available for interactive mouseover
 #' @param limits value setting the lower and upper limits of

@@ -20,7 +20,3 @@ history object containing the projections of the requested tour
 \description{
 Function for python backend to receive a local tour based on current projection
 }
-\examples{
-.
-
-}

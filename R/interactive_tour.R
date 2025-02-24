@@ -20,7 +20,6 @@
 #' out projection axes with a smaller length
 #' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
 #'
-#' @return -
 #' @export
 #'
 #' @examples

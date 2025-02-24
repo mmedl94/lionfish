@@ -21,6 +21,8 @@ should be standardized to have mean 0, sd 1}
 
 \item{prj}{projection matrix}
 
+\item{half_range}{for scaling in the display, by default calculated from the data}
+
 \item{axis_labels}{of the axes to be displayed}
 
 \item{obs_labels}{labels of the observations to be available for interactive mouseover}

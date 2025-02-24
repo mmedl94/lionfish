@@ -13,14 +13,46 @@ load_interactive_tour(
   n_plot_cols = 2,
   preselection = FALSE,
   preselection_names = FALSE,
-  n_subsets = 3,
+  n_subsets = FALSE,
   display_size = 5,
   hover_cutoff = 10,
-  label_size = 15
+  label_size = 15,
+  color_scale = "default",
+  axes_blendout_threshhold = 1
 )
 }
 \arguments{
-\item{label_size}{}
+\item{data}{the dataset you want to investigate. Must be the same as the
+dataset that was loaded when the save was created!}
+
+\item{directory_to_save}{path to the location of the save folder}
+
+\item{feature_names}{names of the features of the dataset}
+
+\item{half_range}{factor that influences the scaling of the displayed tour plots.
+Small values lead to more spread out datapoints (that might not fit the plotting area),
+while large values lead to the data being more compact. If not provided a good estimate
+will be calculated and used.}
+
+\item{n_plot_cols}{specifies the number of columns of the grid of the final display.}
+
+\item{preselection}{a vector that specifies in which subset each datapoint should be put initially.}
+
+\item{preselection_names}{a vector that specifies the names of the preselection subsets}
+
+\item{n_subsets}{the total number of available subsets (up to 10).}
+
+\item{display_size}{rough size of each subplot in inches}
+
+\item{hover_cutoff}{number of features at which the switch from intransparent
+to transparent labels that can be hovered over to make them intransparent occurs}
+
+\item{label_size}{size of the labels of the feature names of 1d and 2d tours}
+
+\item{color_scale}{a matplotlib colormap to define the color scheme of the subgroups}
+
+\item{axes_blendout_threshhold}{initial value of the threshold for blending
+out projection axes with a smaller length}
 }
 \description{
 R wrapper for the load_interactive_tour function written on python

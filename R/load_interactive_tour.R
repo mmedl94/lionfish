@@ -21,10 +21,9 @@
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
 #'
-#' @return
 #' @export
 #'
-#' @examples
+
 load_interactive_tour <- function(data, directory_to_save,
                                   feature_names = NULL, half_range = NULL,
                                   n_plot_cols = 2, preselection = FALSE,

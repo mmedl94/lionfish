@@ -17,7 +17,3 @@ history object containing the projections of the requested tour
 \description{
 Function for python backend to receive a guided tour-holes
 }
-\examples{
-.
-
-}

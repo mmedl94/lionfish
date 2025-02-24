@@ -18,7 +18,3 @@ history object containing the projections of the requested tour
 Function for python backend to receive a guided tour-holes that searches for
 a better projection near the current projection.
 }
-\examples{
-.
-
-}

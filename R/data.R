@@ -62,12 +62,12 @@
 #' options were on the following: never (1), rarely (2), quite often (3),
 #' often (4) or very often (5)
 #'
-#' @name Risk
-#' @aliases Risk
+#' @name risk
+#' @aliases risk
 #' @docType data
 #' @format A 563 x 6 array of Likert scale data
 #' @keywords datasets
 #' @source https://statistik.boku.ac.at/nachlass_leisch/MSA/
 #'
-#' head(Risk)
-"Risk"
+#' head(risk)
+"risk"

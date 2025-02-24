@@ -8,8 +8,8 @@
 #' environment can be more error prone. "anaconda" installs the python
 #' environment via Anaconda, which can be more stable, but the GUI looks more
 #' dated.
+#' @param local logical
 #'
-#' @return -
 #' @export
 #'
 #' @examples init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
