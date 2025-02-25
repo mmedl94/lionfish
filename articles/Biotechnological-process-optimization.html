@@ -208,9 +208,7 @@ on the rendering time of each frame). Noticeable separation between the
 yield groups begins to occur around frame 10 and becomes even more
 pronounced from frame 30 onward. We successfully identified projections
 that explain the differences in yield</p>
-<div class="float">
-<img src="../reference/figures/biotech_intial_tours.gif" alt="Initial visualization"><div class="figcaption">Initial visualization</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif" width="75%"></p>
 <p>Let’s investigate the projections further. Projection axes that point
 towards the high yield groups have a large positive influence on them,
 whereas projection axes that point away from them have a negative
@@ -231,9 +229,7 @@ manufacturing process 09 alone is not sufficient to explain the yield.
 If it were, then changing the direction of manufacturing process 09
 would simply invert the data, and we would still see the high yield
 groups aligned with the manufacturing process 09 axis.</p>
-<div class="float">
-<img src="../reference/figures/biotech_manpr9.gif" alt="Manufacturing process 09"><div class="figcaption">Manufacturing process 09</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif" width="75%"></p>
 <p>We can now adjust some of the other axes to see if we can identify
 interactions between the parameters. For instance, when we elongate the
 axis representing manufacturing process 32, we observe a positive
@@ -245,26 +241,20 @@ quite well. But since the separation isn’t as clear as with the original
 projection and we see that the high yield groups aren’t exactly in the
 direction of the two axes, we still need more variables to fully explain
 the influence on the yield.</p>
-<div class="float">
-<img src="../reference/figures/biotech_manpr9_32.gif" alt="Manufacturing process 09&amp;32interaction"><div class="figcaption">Manufacturing process 09&amp;32interaction</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif" width="75%"></p>
 <p>Furthermore, we can vary some of the other process parameters to
 capture more interactions or potential structural patterns. For
 instance, by adjusting the axis representing manufacturing process 31,
 we observe an outlier with a low value for that parameter (the data
 point is in the opposite direction of the axis) that had a slightly
 above-average yield.</p>
-<div class="float">
-<img src="../reference/figures/biotech_outlier.gif" alt="Outlier detection"><div class="figcaption">Outlier detection</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif" width="75%"></p>
 <p>Varying manufacturing process 40 results in two clearly separated
 groups. This indicates that this variable had two discrete settings.
 There is no clear indication that the variable had a strong influence on
 the yield as we can see both high and low yield data points in both
 groups.</p>
-<div class="float">
-<img src="../reference/figures/biotech_binary.gif" alt="Binary variable detection"><div class="figcaption">Binary variable detection</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif" width="75%"></p>
 </div>
 <div class="section level2">
 <h2 id="feature-preselection-with-random-forests">Feature preselection with random forests<a class="anchor" aria-label="anchor" href="#feature-preselection-with-random-forests"></a>
@@ -323,17 +313,13 @@ with all process parameters. At the final frame, we observe that
 manufacturing processes 09 and 32, as well as biological material 12,
 have a positive influence on the yield, while manufacturing processes 17
 and 36 have a negative influence.</p>
-<div class="float">
-<img src="../reference/figures/biotech_intial_tours_top10.gif" alt="Initial tour with reduced feature set"><div class="figcaption">Initial tour with reduced feature set</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif" width="75%"></p>
 <p>We may be interested in enhancing the separation between groups with
 particularly low and high yields. A quick method to achieve this is by
 adjusting the opacity of the groups we are less interested in, and then
 initializing a local tour to search for projections that better separate
 the highlighted groups.</p>
-<div class="float">
-<img src="../reference/figures/biotech_top10_refined.gif" alt="Refinement of projection"><div class="figcaption">Refinement of projection</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif" width="75%"></p>
 <p>In the final frame, we observe that the separation between the
 extreme groups has improved slightly. Once we identify an interesting
 frame, we can save it by pressing “Save projections and subsets.” This
@@ -375,9 +361,7 @@ bins and run another guided tour.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">8</span>,</span>
 <span>                 color_scale <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="../reference/figures/biotech_top10_3gr.gif" alt="Refinement of projection"><div class="figcaption">Refinement of projection</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif" width="75%"></p>
 <p>We can see that this results in an even better separation. Again, we
 can run a local tour to see if we can further improve separation or
 observe another interesting angle. In case we still wouldn’t be happy
