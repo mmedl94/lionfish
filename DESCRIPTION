@@ -1,6 +1,6 @@
 Package: lionfish
 Title: Interactive tourrs using python
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
@@ -12,7 +12,10 @@ RoxygenNote: 7.3.1
 Imports: 
     reticulate,
     tourr,
-    data.table
+    data.table,
+    ggplot2,
+    viridis,
+    randomForest
 URL: https://mmedl94.github.io/lionfish/
 Config/Needs/website: rmarkdown
 Depends: 
