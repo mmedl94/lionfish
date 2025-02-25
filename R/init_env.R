@@ -1,4 +1,4 @@
-#' Initialize anaconda environment used for python backend
+#' Initialize environment used for python backend
 #'
 #' @param env_name a string that defines the name of the python environment reticulate uses.
 #' This can be useful if one wants to use a preinstalled python environment.
@@ -12,7 +12,12 @@
 #'
 #' @export
 #'
-#' @examples init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+#' @return initializes python environment
+#'
+#' @examples
+#' if (interactive()){
+#' init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+#' }
 #'
 init_env <- function(env_name = "r-lionfish", virtual_env = "virtual_env", local = FALSE) {
   # Check if python is available
@@ -65,7 +70,7 @@ init_env <- function(env_name = "r-lionfish", virtual_env = "virtual_env", local
     }
   }
 
-  base::cat(base::sprintf('Python environment "%s" successfully loaded', env_name), "\n")
+  base::message(base::sprintf('Python environment "%s" successfully loaded', env_name), "\n")
 
   # Check accessibility of python functions
   lionfish_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)

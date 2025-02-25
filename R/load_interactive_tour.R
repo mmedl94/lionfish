@@ -21,6 +21,8 @@
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
 #'
+#' @return opens the interactive GUI
+#'
 #' @export
 #'
 
@@ -45,15 +47,15 @@ load_interactive_tour <- function(data, directory_to_save,
   }
 
   if (file.exists(paste0(directory_to_save, "/attributes.pkl"))) {
-    print(paste0("loading from ", directory_to_save))
+    base::message(paste0("loading from ", directory_to_save))
   } else if (file.exists(paste0(getwd(), directory_to_save, "/attributes.pkl"))) {
     directory_to_save <- paste0(getwd(), directory_to_save)
-    print(paste0("loading from ", directory_to_save))
+    base::message(paste0("loading from ", directory_to_save))
   } else if (file.exists(paste0(getwd(), "/", directory_to_save, "/attributes.pkl"))) {
     directory_to_save <- paste0(getwd(), "/", directory_to_save)
-    print(paste0("loading from ", directory_to_save))
+    base::message(paste0("loading from ", directory_to_save))
   } else {
-    print(paste0("loading from ", getwd(), directory_to_save))
+    base::message(paste0("loading from ", getwd(), directory_to_save))
   }
 
   func_loc <- base::paste(pytourr_dir, req_py_func, sep = "")

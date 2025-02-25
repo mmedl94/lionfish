@@ -1,10 +1,16 @@
 Package: lionfish
-Title: Interactive Tourrs using Python
-Version: 1.0.2
+Title: Interactive 'tourr's using 'python'
+Version: 1.0.3
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
-Description: Extends the functionality of the tourr package by an interactive graphical user interface.
+Description: Extends the functionality of the 'tourr' package by an interactive
+             graphical user interface. The interactivity allows users to
+             effortlessly refine their 'tourr' results by manual intervention,
+             which allows for integration of expert knowledge and aids the
+             interpretation of results. For more information on 'tourr' see
+             Wickham et. al (2011) <doi:10.18637/jss.v040.i02> or
+             <https://github.com/ggobi/tourr>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

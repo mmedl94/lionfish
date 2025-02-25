@@ -22,6 +22,8 @@
 #'
 #' @export
 #'
+#' @return opens the interactive GUI
+#'
 #' @examples
 #' library(tourr)
 #' library(lionfish)
