@@ -12,7 +12,8 @@ RoxygenNote: 7.3.1
 Imports: 
     reticulate,
     tourr,
-    data.table,
+    data.table
+Suggests:
     ggplot2,
     viridis,
     randomForest

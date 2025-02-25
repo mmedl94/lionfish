@@ -81,6 +81,7 @@ obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
 
+if (interactive()){
 interactive_tour(
   data = data,
   plot_objects = list(obj1, obj2, obj3, obj4),
@@ -92,4 +93,5 @@ interactive_tour(
   n_subsets = 5,
   display_size = 5
 )
+}
 }

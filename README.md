@@ -2,6 +2,10 @@
 
 This package is an extension of the [tourr](https://github.com/ggobi/tourr) R-package. For a general overview of the tourr package please refer to the [tourr documentation](https://ggobi.github.io/tourr/). lionfish adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.
 
+## Documentation
+
+For an overview of the functionality of lionfish please visit the [documentation](https://mmedl94.github.io/lionfish/)!
+
 ## Installation
 
 You can install the development version of lionfish from github with:
