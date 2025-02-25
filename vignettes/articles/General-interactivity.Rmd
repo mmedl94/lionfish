@@ -84,6 +84,11 @@ A list of all features can be found on the top left. Each feature has a
 checkbox next to it. The features are selected or deselected by checking
 or unchecking the respective checkboxes.
 
+```{r}
+knitr::include_url("https://github.com/mmedl94/lionfish/blob/main/man/figures/1d_tour_demo.gif")
+knitr::include_graphics("https://github.com/mmedl94/lionfish/blob/main/man/figures/1d_tour_demo.gif")
+```
+
 ![Feature selection demo](../man/figures/feature_selection_demo.gif)
 
 ### Subset selection and highlighting
