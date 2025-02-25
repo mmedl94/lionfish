@@ -7,7 +7,6 @@ editor_options:
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  eval = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
@@ -35,7 +34,7 @@ Examples for all displays can be found below.
 
 ## Setup
 
-```{r setup}
+```{r setup,  eval = FALSE}
 # Load required libraries
 library(tourr)
 library(reticulate)
@@ -48,7 +47,7 @@ init_env()
 
 ### Dataset 1 - Flea data
 
-```{r Load and prepare flea data}
+```{r Load and prepare flea data,  eval = FALSE}
 # Load dataset
 data("flea")
 
@@ -64,7 +63,7 @@ half_range_flea <- max(sqrt(rowSums(flea^2)))
 
 ### Dataset 2 - Winter activities data
 
-```{r Load and prepare flea data winter activities data}
+```{r Load and prepare flea data winter activities data,  eval = FALSE}
 # Load dataset and set seed
 data("winterActiv")
 set.seed(42)
@@ -90,7 +89,7 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 #### Example plot object
 
-```{r 1d tour}
+```{r 1d tour,  eval = FALSE}
 guided_tour_flea_1d <- save_history(flea,
                                     tour_path=guided_tour(holes(),1))
 
@@ -109,7 +108,9 @@ the arrowheads with the right mouse-button and dragging it.
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-![1d tour with flea dataset](../man/figures/1d_tour_demo.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/1d_tour_demo.gif")
+```
 
 ### Two dimensional tour
 
@@ -122,7 +123,7 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 #### Example plot object
 
-```{r 2d tour}
+```{r 2d tour,  eval = FALSE}
 grand_tour_flea_2d <- save_history(flea,
                                    tour_path = grand_tour(d=2))
 
@@ -142,7 +143,9 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-![2d tour with flea dataset](../man/figures/2d_tour_demo.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/2d_tour_demo.gif")
+```
 
 ### Scatterplot
 
@@ -151,7 +154,7 @@ axis have to be provided in form of a two dimensional vector.
 
 #### Example plot object
 
-```{r scatterplot}
+```{r scatterplot,  eval = FALSE}
 obj_flea_scatter <- list(type="scatter",          # type of display
                          obj=c("tars1", "tars2")) # x and y axis of plot
 ```
@@ -163,7 +166,9 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-![Scatterplot with tars1 and tars2 of flea dataset](../man/figures/scatterplot_demo.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/scatterplot_demo.gif")
+```
 
 ### Histogram
 
@@ -172,7 +177,7 @@ be provided in form of a two dimensional vector.
 
 #### Example plot object
 
-```{r histogram}
+```{r histogram,  eval = FALSE}
 obj_flea_histogram <- list(type="hist", # type of display
                            obj="head")  # x axis of histogram
 ```
@@ -183,7 +188,9 @@ obj_flea_histogram <- list(type="hist", # type of display
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-![Histogram with head of flea dataset](../man/figures/histogram_demo.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/histogram_demo.gif")
+```
 
 ### Mosaic
 
@@ -193,7 +200,7 @@ subgroups/clusters should be on the x or y axis, either with
 
 #### Example plot object
 
-```{r mosaic}
+```{r mosaic,  eval = FALSE}
 obj_winter_mosaic <- list(type="mosaic",   # type of display
                   obj=c("subgroups_on_y")) # whether subgroups x or y axis
 ```
@@ -202,7 +209,9 @@ obj_winter_mosaic <- list(type="mosaic",   # type of display
 
 Currently there is no way of directly interacting with the mosaic plot.
 
-![Moisaic plot of winter activities dataset](../man/figures/mosaic_plot_demo.png)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/mosaic_plot_demo.png")
+```
 
 ### Heatmap
 
@@ -233,7 +242,7 @@ where $n_i, n_j$ are the row and column totals.
 
 #### Example plot object
 
-```{r heatmap}
+```{r heatmap,  eval = FALSE}
 obj_winter_heatmap <- list(type="heatmap",          # type of display
                            obj=c("Total fraction")) # initial metric
 ```
@@ -244,7 +253,9 @@ obj_winter_heatmap <- list(type="heatmap",          # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-![Heatmap of winter activities dataset](../man/figures/heatmap_demo.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/heatmap_demo.gif")
+```
 
 ### Categorical cluster interface
 
@@ -254,7 +265,7 @@ and plotted has to be selected. One can choose between "Total fraction",
 
 #### Example plot object
 
-```{r categorical cluster interface}
+```{r categorical cluster interface,  eval = FALSE}
 obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
                              obj=c("Total fraction"))    # initial metric
 ```
@@ -265,7 +276,9 @@ obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-![Categorical cluster interface of winter activities dataset](../man/figures/cat_clust_interface.gif)
+```{r out.width="75%", echo=FALSE}
+knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/cat_clust_interface.gif")
+```
 
 ## Generating the displays
 
@@ -273,7 +286,7 @@ The various plot objects can the be displayed with the
 [interactive_tour](https://mmedl94.github.io/lionfish/reference/interactive_tour.html)
 function.
 
-```{r interactive_tour flea}
+```{r interactive_tour flea,  eval = FALSE}
 # interactive_tour call of flea dataset. Insert plot objects of your liking.
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
@@ -286,7 +299,7 @@ interactive_tour(data=flea,
                  display_size=5)
 ```
 
-```{r interactive_tour winterActiv}
+```{r interactive_tour winterActiv,  eval = FALSE}
 # interactive_tour call of winterActiv dataset. Insert plot objects of your liking.
 interactive_tour(data=winterActiv,
                  feature_names=feature_names_winter,
