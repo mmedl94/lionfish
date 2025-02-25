@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://mmedl94.github.io/lionfish/404.html</loc></url>
+<url><loc>https://mmedl94.github.io/lionfish/LICENSE-text.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/LICENSE.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/articles/Biotechnological-process-optimization.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/articles/General-interactivity.html</loc></url>
@@ -8,6 +9,7 @@
 <url><loc>https://mmedl94.github.io/lionfish/articles/index.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/authors.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/index.html</loc></url>
+<url><loc>https://mmedl94.github.io/lionfish/reference/ChemicalManufacturingProcess.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/ausActiv.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/get_guided_holes_better_history.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/get_guided_holes_history.html</loc></url>
@@ -18,6 +20,7 @@
 <url><loc>https://mmedl94.github.io/lionfish/reference/interactive_tour.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/load_interactive_tour.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/render_proj_inter.html</loc></url>
+<url><loc>https://mmedl94.github.io/lionfish/reference/risk.html</loc></url>
 <url><loc>https://mmedl94.github.io/lionfish/reference/winterActiv.html</loc></url>
 </urlset>
 

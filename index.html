@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,10 +81,10 @@
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
 <span><span class="va">flea_subspecies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tourr/man/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tourr/man/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>

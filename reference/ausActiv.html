@@ -15,7 +15,7 @@ binary with 0 indicating that the tourist didn't partake in the activity and
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,55 +63,12 @@ binary with 0 indicating that the tourist didn't partake in the activity and
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
     <p>A 1003 x 44 array of binary responses</p>
     </div>
-
     <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Bushwalk Beach Farm Whale Gardens Camping Swimming Skiing Tennis Riding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]        0     0    1     0       0       1        0      0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]        0     0    0     0       0       0        0      0      1      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]        0     1    0     1       1       0        1      1      1      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]        0     1    0     0       0       0        0      0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]        0     0    0     0       0       0        0      0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]        0     1    0     0       0       0        1      0      0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Cycling Hiking Exercising Golf Fishing ScubaDiving Surfing FourWheel</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       0      0          0    0       0           0       0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       0      0          1    0       0           0       0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       1      0          1    0       1           1       1         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]       0      0          0    0       1           0       0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]       0      0          0    0       0           0       0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]       0      0          0    0       0           0       0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Adventure WaterSport Theatre Monuments Cultural Festivals Museum ThemePark</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]         0          0       0         0        0         0      0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]         0          0       0         0        0         0      0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]         0          1       1         1        1         0      0         1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]         0          0       0         0        0         0      0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]         0          0       0         0        0         0      0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]         0          0       0         0        0         0      0         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      CharterBoat Spa ScenicWalks Markets GuidedTours Industrial Wildlife</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]           0   0           1       0           0          0        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]           0   0           0       0           0          0        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]           0   0           1       0           0          1        1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]           0   0           0       0           0          0        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]           0   0           1       1           0          0        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]           1   0           1       1           0          0        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      ChildrenAtt Sightseeing Friends Pubs BBQ Shopping Eating EatingHigh Movies</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]           0           1       0    0   0        0      0          0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]           0           0       1    0   0        1      1          1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]           0           0       0    0   1        1      1          0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]           0           0       0    0   0        0      0          0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]           0           1       1    0   0        1      1          0      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]           0           1       0    1   0        1      1          1      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Casino Relaxing SportEvent</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]      0        0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]      0        1          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]      0        0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]      0        1          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]      0        0          0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,]      0        1          0</span>
-</code></pre></div>
+    <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
+    <p>https://statistik.boku.ac.at/nachlass_leisch/MSA/</p>
+<p>head(ausActiv)</p>
     </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
