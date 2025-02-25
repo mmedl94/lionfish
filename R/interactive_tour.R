@@ -42,14 +42,13 @@
 #' half_range <- max(sqrt(rowSums(data^2)))
 #' feature_names <- colnames(data)
 #'
+#'if (interactive()){
 #' init_env()
 #'
 #' obj1 <- list(type = "2d_tour", obj = guided_tour_history)
 #' obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 #' obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 #' obj4 <- list(type = "hist", obj = "head")
-#'
-#'if (interactive()){
 #' interactive_tour(
 #'   data = data,
 #'   plot_objects = list(obj1, obj2, obj3, obj4),
