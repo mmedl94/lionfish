@@ -16,7 +16,7 @@ head(ChemicalManufacturingProcess)
 ChemicalManufacturingProcess
 }
 \description{
-Chemical Manufacturing Process
+Chemical Manufacturing Process Dataset
 }
 \details{
 This data set contains information about a chemical manufacturing process, in

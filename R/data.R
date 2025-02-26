@@ -1,4 +1,4 @@
-#' Austrian Vacation Activities
+#' Austrian Vacation Activities Dataset
 #'
 #'The Austrian Vacation Activities dataset comprises responses from 2,961 adult
 #'tourists who spent their holiday in Austria during the 1997/98 season. The
@@ -6,8 +6,7 @@
 #'partake in the activity and 1 indicating they did.
 #'
 #' @title Austrian Vacation Activities Dataset
-#' @name WinterActiv
-#' @aliases winterActiv
+#' @name winterActiv
 #' @docType data
 #' @format A 2961 x 27 array of binary responses
 #' @keywords datasets
@@ -16,7 +15,7 @@
 #' head(winterActiv)
 "winterActiv"
 
-#' Australian Vacation Activities
+#' Australian Vacation Activities Dataset
 #'
 #' The Australian Vacation Activities dataset includes responses from 1,003
 #' adult Australians who were surveyed on their vacation activities
@@ -25,8 +24,7 @@
 #' 1 indicating they did.
 #'
 #' @title Australian Vacation Activities Dataset
-#' @name AusActiv
-#' @aliases ausActiv
+#' @name ausActiv
 #' @docType data
 #' @format A 1003 x 44 array of binary responses
 #' @keywords datasets
@@ -36,7 +34,7 @@
 "ausActiv"
 
 
-#' Chemical Manufacturing Process
+#' Chemical Manufacturing Process Dataset
 #'
 #' This data set contains information about a chemical manufacturing process, in
 #' which the goal is to understand the relationship between the process and the
@@ -46,7 +44,6 @@
 #'
 #' @title Chemical Manufacturing Process Dataset
 #' @name ChemicalManufacturingProcess
-#' @aliases ChemicalManufacturingProcess
 #' @docType data
 #' @format A 176 x 58 array of continuous variables
 #' @keywords datasets
@@ -55,7 +52,7 @@
 #' head(ChemicalManufacturingProcess)
 "ChemicalManufacturingProcess"
 
-#' Risk
+#' Risk Dataset
 #'
 #' Adult Australian residents that have undertaken at least one holiday in the
 #' last year, which involved staying away from home for at least four nights,
@@ -64,8 +61,7 @@
 #' options were on the following: never (1), rarely (2), quite often (3),
 #' often (4) or very often (5)
 #'
-#' @name Risk
-#' @aliases risk
+#' @name risk
 #' @docType data
 #' @format A 563 x 6 array of Likert scale data
 #' @keywords datasets
