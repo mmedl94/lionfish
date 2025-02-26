@@ -83,7 +83,7 @@ A list of all features can be found on the top left. Each feature has a
 checkbox next to it. The features are selected or deselected by checking
 or unchecking the respective checkboxes.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/feature_selection_demo.gif")
 ```
 
@@ -99,7 +99,7 @@ datapoints of the subsets can be changed by clicking the colored patches
 next to the subset names. The names of the subsets can be changed by
 writing in the textboxes.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/subset_selection_demo.gif")
 ```
 
@@ -108,7 +108,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figu
 The current subset selection can easily be reset by clicking the "Reset
 original selection" button.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/reset_selection_demo.gif")
 ```
 
@@ -120,7 +120,7 @@ button. Updating the frames can also ben useful if some of the plots haven't
 updated properly or one wants to reset the shown projections of a frame after
 manipulation of the projection axes.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/update_frames_demo.gif")
 ```
 
@@ -131,7 +131,7 @@ bins in the corresponding textbox. A larger number of bins results in a higher
 resolution, but it will increase the time it takes to update histograms due the
 increased computational load.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/n_bins_demo.gif")
 ```
 
@@ -141,7 +141,7 @@ The currently loaded tours can be animated by checking the checkbox
 below the "Update frames" button. The interval in which the next frames
 will be loaded can be changed in the textbox next to the checkbox.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/animate_frames_demo.gif")
 ```
 
@@ -153,7 +153,7 @@ Therefore, a projection threshold (a float between 0 and 1) can be set and by
 checking the checkbox, projection axes that are shorter than the threshold are
 blended out.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/blendout_threshold_demo.gif")
 ```
 
@@ -172,7 +172,7 @@ recovery of the saved state
 Alternatively the function load_interactive_tour() can be used to load a save
 directly.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/save_demo.gif")
 ```
 
@@ -188,7 +188,7 @@ projections. They can therefore be used to further explore projections
 similar to the displayed one. By pressing "Reset original tour" one can
 return to the originally loaded tours.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/initiate_tours_demo.gif")
 ```
 

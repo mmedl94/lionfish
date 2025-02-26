@@ -108,7 +108,7 @@ the arrowheads with the right mouse-button and dragging it.
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/1d_tour_demo.gif")
 ```
 
@@ -143,7 +143,7 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/2d_tour_demo.gif")
 ```
 
@@ -166,7 +166,7 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/scatterplot_demo.gif")
 ```
 
@@ -188,7 +188,7 @@ obj_flea_histogram <- list(type="hist", # type of display
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/histogram_demo.gif")
 ```
 
@@ -209,7 +209,7 @@ obj_winter_mosaic <- list(type="mosaic",   # type of display
 
 Currently there is no way of directly interacting with the mosaic plot.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/mosaic_plot_demo.png")
 ```
 
@@ -253,7 +253,7 @@ obj_winter_heatmap <- list(type="heatmap",          # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/heatmap_demo.gif")
 ```
 
@@ -276,7 +276,7 @@ obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/cat_clust_interface.gif")
 ```
 

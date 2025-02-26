@@ -23,6 +23,7 @@ Get Guided Tour-LDA History
 Function for python backend to receive a guided tour-lda history
 }
 \examples{
+library(tourr)
 data(flea)
 clusters <- as.numeric(factor(flea[[7]]))
 get_guided_lda_history(flea[-7], clusters, 2)

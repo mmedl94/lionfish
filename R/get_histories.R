@@ -84,6 +84,7 @@ get_guided_holes_better_history <- function(data, dimension){
 #' @return history object containing the projections of the requested tour
 #' @export
 #' @examples
+#' library(tourr)
 #' data(flea)
 #' clusters <- as.numeric(factor(flea[[7]]))
 #' get_guided_lda_history(flea[-7], clusters, 2)

@@ -61,7 +61,6 @@ R Wrapper for 'interactive_tour' Function Written in 'python'
 }
 \examples{
 library(tourr)
-library(lionfish)
 
 data <- apply(flea[, 1:6], 2, function(x) (x - mean(x)) / sd(x))
 clusters <- as.numeric(flea$species)

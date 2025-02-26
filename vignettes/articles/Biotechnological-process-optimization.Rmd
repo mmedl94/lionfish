@@ -169,7 +169,7 @@ yield groups begins to occur around frame 10 and becomes even more
 pronounced from frame 30 onward. We successfully identified projections
 that explain the differences in yield
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif")
 ```
 
@@ -196,7 +196,7 @@ If it were, then changing the direction of manufacturing process 09
 would simply invert the data, and we would still see the high yield
 groups aligned with the manufacturing process 09 axis.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif")
 ```
 
@@ -212,7 +212,7 @@ projection and we see that the high yield groups aren't exactly in the
 direction of the two axes, we still need more variables to fully explain
 the influence on the yield.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif")
 ```
 
@@ -222,7 +222,7 @@ adjusting the axis representing manufacturing process 31, we observe an
 outlier with a low value for that parameter (the data point is in the
 opposite direction of the axis) that had a slightly above-average yield.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif")
 ```
 
@@ -232,7 +232,7 @@ There is no clear indication that the variable had a strong influence on
 the yield as we can see both high and low yield data points in both
 groups.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif")
 ```
 
@@ -301,13 +301,13 @@ manufacturing processes 09 and 32, as well as biological material 12,
 have a positive influence on the yield, while manufacturing processes 17
 and 36 have a negative influence.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif")
 ```
 
 We may be interested in enhancing the separation between groups with particularly low and high yields. A quick method to achieve this is by adjusting the opacity of the groups we are less interested in, and then initializing a local tour to search for projections that better separate the highlighted groups.
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif")
 ```
 
@@ -353,7 +353,7 @@ interactive_tour(data=data_rf_sel,
                  color_scale = "plasma")
 ```
 
-```{r out.width="75%", echo=FALSE}
+```{r out.width="100%", echo=FALSE}
 knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif")
 ```
 
