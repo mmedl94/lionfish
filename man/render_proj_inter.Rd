@@ -2,8 +2,7 @@
 % Please edit documentation in R/render_proj_inter.R
 \name{render_proj_inter}
 \alias{render_proj_inter}
-\title{Modification of the render_proj() function of tourr so that the half_range is calculated by
-max(sqrt(rowSums(data^2))) or can be provided as arg}
+\title{Modification of the 'render_proj' Function of 'tourr'}
 \usage{
 render_proj_inter(
   data,
@@ -37,6 +36,9 @@ bottomleft or off}
 list containing projected data, circle and segments for axes
 }
 \description{
+Modification of the 'render_proj' Function of 'tourr'
+}
+\details{
 Modification of the render_proj() function of tourr so that the half_range is calculated by
 max(sqrt(rowSums(data^2))) or can be provided as arg
 }
@@ -45,6 +47,6 @@ library(tourr)
 data(flea)
 flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 prj <- basis_random(ncol(flea[,1:6]), 2)
-p <- render_proj(flea_std, prj)
+p <- render_proj_inter(flea_std, prj)
 
 }

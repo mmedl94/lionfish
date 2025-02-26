@@ -5,8 +5,8 @@
 #'responses are coded in binary with 0 indicating that the tourist didn't
 #'partake in the activity and 1 indicating they did.
 #'
-#'
-#' @name winterActiv
+#' @title Austrian Vacation Activities Dataset
+#' @name WinterActiv
 #' @aliases winterActiv
 #' @docType data
 #' @format A 2961 x 27 array of binary responses
@@ -24,7 +24,8 @@
 #' binary with 0 indicating that the tourist didn't partake in the activity and
 #' 1 indicating they did.
 #'
-#' @name ausActiv
+#' @title Australian Vacation Activities Dataset
+#' @name AusActiv
 #' @aliases ausActiv
 #' @docType data
 #' @format A 1003 x 44 array of binary responses
@@ -43,6 +44,7 @@
 #' AppliedPredictiveModeling R package. The data has been copied from
 #' http://appliedpredictivemodeling.com/data in agreement with their license.
 #'
+#' @title Chemical Manufacturing Process Dataset
 #' @name ChemicalManufacturingProcess
 #' @aliases ChemicalManufacturingProcess
 #' @docType data
@@ -62,7 +64,7 @@
 #' options were on the following: never (1), rarely (2), quite often (3),
 #' often (4) or very often (5)
 #'
-#' @name risk
+#' @name Risk
 #' @aliases risk
 #' @docType data
 #' @format A 563 x 6 array of Likert scale data

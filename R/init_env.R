@@ -1,4 +1,4 @@
-#' Initialize environment used for python backend
+#' @title Initialize Environment for 'python' Backend
 #'
 #' @param env_name a string that defines the name of the python environment reticulate uses.
 #' This can be useful if one wants to use a preinstalled python environment.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_histories.R
 \name{get_guided_holes_better_history}
 \alias{get_guided_holes_better_history}
-\title{get guided tour-holes-better history}
+\title{Get Guided Tour-Holes-Better History}
 \usage{
 get_guided_holes_better_history(data, dimension)
 }
@@ -15,6 +15,16 @@ get_guided_holes_better_history(data, dimension)
 history object containing the projections of the requested tour
 }
 \description{
+Get Guided Tour-Holes-Better History
+}
+\details{
 Function for python backend to receive a guided tour-holes that searches for
 a better projection near the current projection.
+}
+\examples{
+library(tourr)
+data(flea)
+flea <- flea[-7]
+get_guided_holes_better_history(flea, 2)
+
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{ChemicalManufacturingProcess}
 \alias{ChemicalManufacturingProcess}
-\title{Chemical Manufacturing Process}
+\title{Chemical Manufacturing Process Dataset}
 \format{
 A 176 x 58 array of continuous variables
 }
@@ -16,6 +16,9 @@ head(ChemicalManufacturingProcess)
 ChemicalManufacturingProcess
 }
 \description{
+Chemical Manufacturing Process
+}
+\details{
 This data set contains information about a chemical manufacturing process, in
 which the goal is to understand the relationship between the process and the
 resulting final product yield and can be found in the in the

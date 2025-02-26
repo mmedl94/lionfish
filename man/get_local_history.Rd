@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_histories.R
 \name{get_local_history}
 \alias{get_local_history}
-\title{get local history}
+\title{Get Local Tour History}
 \usage{
 get_local_history(data, starting_projection)
 }
@@ -18,5 +18,16 @@ local tour from}
 history object containing the projections of the requested tour
 }
 \description{
+Get Local Tour History
+}
+\details{
 Function for python backend to receive a local tour based on current projection
+}
+\examples{
+library(tourr)
+data(flea)
+flea <- flea[-7]
+prj <- basis_random(ncol(flea), 2)
+get_local_history(flea, prj)
+
 }

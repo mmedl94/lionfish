@@ -2,7 +2,7 @@
 % Please edit documentation in R/init_env.R
 \name{init_env}
 \alias{init_env}
-\title{Initialize anaconda environment used for python backend}
+\title{Initialize Environment for 'python' Backend}
 \usage{
 init_env(env_name = "r-lionfish", virtual_env = "virtual_env", local = FALSE)
 }
@@ -19,10 +19,15 @@ dated.}
 
 \item{local}{logical}
 }
+\value{
+initializes python environment
+}
 \description{
-Initialize anaconda environment used for python backend
+Initialize Environment for 'python' Backend
 }
 \examples{
+if (interactive()){
 init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+}
 
 }

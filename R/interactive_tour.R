@@ -1,4 +1,4 @@
-#' R wrapper for the interactive_tour function written on python
+#' @title R Wrapper for 'interactive_tour' Function Written in 'python'
 #'
 #' @param data the dataset you want to investigate
 #' @param plot_objects a named list of objects you want to be displayed. Each entry requires a definition of

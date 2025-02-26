@@ -1,6 +1,6 @@
-#'  R wrapper for the load_interactive_tour function written on python
-#'  It allows a user to load a previously saved interactive tour snapshot
-#'
+#' R Wrapper for 'load_interactive_tour' Function Written in 'python'
+#' Allows a user to load a previously saved interactive tour snapshot
+#' @title R Wrapper for 'load_interactive_tour' Function Written in 'python'
 #' @param data the dataset you want to investigate. Must be the same as the
 #' dataset that was loaded when the save was created!
 #' @param directory_to_save path to the location of the save folder

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_histories.R
 \name{get_guided_lda_history}
 \alias{get_guided_lda_history}
-\title{get guided tour-lda history}
+\title{Get Guided Tour-LDA History}
 \usage{
 get_guided_lda_history(data, clusters, dimension)
 }
@@ -17,5 +17,14 @@ get_guided_lda_history(data, clusters, dimension)
 history object containing the projections of the requested tour
 }
 \description{
+Get Guided Tour-LDA History
+}
+\details{
 Function for python backend to receive a guided tour-lda history
+}
+\examples{
+data(flea)
+clusters <- as.numeric(factor(flea[[7]]))
+get_guided_lda_history(flea[-7], clusters, 2)
+
 }

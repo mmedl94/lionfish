@@ -2,8 +2,7 @@
 % Please edit documentation in R/load_interactive_tour.R
 \name{load_interactive_tour}
 \alias{load_interactive_tour}
-\title{R wrapper for the load_interactive_tour function written on python
-It allows a user to load a previously saved interactive tour snapshot}
+\title{R Wrapper for 'load_interactive_tour' Function Written in 'python'}
 \usage{
 load_interactive_tour(
   data,
@@ -54,7 +53,10 @@ to transparent labels that can be hovered over to make them intransparent occurs
 \item{axes_blendout_threshhold}{initial value of the threshold for blending
 out projection axes with a smaller length}
 }
+\value{
+opens the interactive GUI
+}
 \description{
-R wrapper for the load_interactive_tour function written on python
-It allows a user to load a previously saved interactive tour snapshot
+R Wrapper for 'load_interactive_tour' Function Written in 'python'
+Allows a user to load a previously saved interactive tour snapshot
 }

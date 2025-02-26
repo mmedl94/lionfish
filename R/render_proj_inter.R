@@ -1,6 +1,9 @@
+#' Modification of the 'render_proj' Function of 'tourr'
+#'
 #' Modification of the render_proj() function of tourr so that the half_range is calculated by
 #' max(sqrt(rowSums(data^2))) or can be provided as arg
 #'
+#' @title Modification of the 'render_proj' Function of 'tourr'
 #' @param data matrix, or data frame containing numeric columns,
 #'   should be standardized to have mean 0, sd 1
 #' @param prj projection matrix
@@ -20,7 +23,7 @@
 #' data(flea)
 #' flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 #' prj <- basis_random(ncol(flea[,1:6]), 2)
-#' p <- render_proj(flea_std, prj)
+#' p <- render_proj_inter(flea_std, prj)
 #'
 render_proj_inter <- function(data, prj, half_range=NULL, axis_labels=NULL, obs_labels=NULL, limits=1, position="center"){
   # Check dimensions ok
