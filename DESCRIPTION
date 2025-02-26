@@ -1,6 +1,6 @@
 Package: lionfish
 Title: Interactive 'tourr's using 'python'
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
