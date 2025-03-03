@@ -1,6 +1,6 @@
 Package: lionfish
 Title: Interactive 'tourr's Using 'python'
-Version: 1.0.9
+Version: 1.0.10
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
@@ -25,6 +25,7 @@ Suggests:
     randomForest,   
     knitr,
     rmarkdown,
+    markdown
 VignetteBuilder: knitr
 URL: https://mmedl94.github.io/lionfish/
 Config/Needs/website: knitr

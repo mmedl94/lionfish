@@ -7,9 +7,6 @@ vignette: >
   %\VignetteIndexEntry{General Interactivity}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -116,8 +113,8 @@ original selection" button.
 ### Updating currently displayed projection frames
 
 One can jump between frames of tours by typing the desired frame one wants to
-jump to into the corresponding texboxes and clicking the "Update frames"
-button. Updating the frames can also ben useful if some of the plots haven't
+jump to into the corresponding textboxes and clicking the "Update frames"
+button. Updating the frames can also be useful if some of the plots haven't
 updated properly or one wants to reset the shown projections of a frame after
 manipulation of the projection axes.
 

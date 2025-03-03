@@ -5,9 +5,6 @@ vignette: >
   %\VignetteIndexEntry{Market Segmentation}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -68,7 +65,7 @@ remotes::install_github("ggobi/tourr")
 ### Download github repository
 
 You can download the repository either as .zip by clicking the green
-button that says "Code" on the top right and then click "Downlaod ZIP".
+button that says "Code" on the top right and then click "Download ZIP".
 This will be necessary to load the lionfish snapshots.
 
 ## Introduction

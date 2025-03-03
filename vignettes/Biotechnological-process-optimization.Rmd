@@ -307,7 +307,7 @@ We may be interested in enhancing the separation between groups with particularl
 
 ![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif){width=100%}
 
-In the final frame, we observe that the separation between the extreme groups has improved slightly. Once we identify an interesting frame, we can save it by pressing "Save projections and subsets." This allows us to continue our analysis later. To reload the saved data, we can use the GUI by pressing "Load projections and subsets" and selecting the appropriate folder, or we can load it programmatically using the function load_interactive_tour().
+In the final frame, we observe that the separation between the extreme groups has improved slightly. Once we identify an interesting frame, we can save it by pressing "Save projections and subsets." This allows us to continue our analysis later. To reload the saved data, we can use the GUI by pressing "Load projections and subsets" and selecting the appropriate folder, or we can load it using the function load_interactive_tour().
 
 A more elegant way of doing this would be to define only three yield bins and run another guided tour.
 

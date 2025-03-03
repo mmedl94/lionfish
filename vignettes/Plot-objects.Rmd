@@ -7,9 +7,6 @@ vignette: >
   %\VignetteIndexEntry{Plot Objects}
   %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r, include = FALSE}
@@ -106,7 +103,7 @@ obj_flea_1d_tour <- list(type="1d_tour",          # type of display
 
 #### Interactivity
 
--   Changeing frames of tour: The frames of the current tour can be changed by
+-   Changing frames of tour: The frames of the current tour can be changed by
 pressing the left arrow-key for the last frame and the right arrow-key for the
 next frame. The current frame is displayed in the frame on the left. 
 -   Projection manipulation: the projection can be manipulated clicking on one of
