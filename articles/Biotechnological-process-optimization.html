@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Biotechnological Process Optimization • lionfish</title>
+<title>Bioprocess Optimization • lionfish</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Biotechnological Process Optimization">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Bioprocess Optimization">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/Biotechnological-process-optimization.html">Biotechnological Process Optimization</a></li>
+<li><a class="dropdown-item" href="../articles/Biotechnological-process-optimization.html">Bioprocess Optimization</a></li>
     <li><a class="dropdown-item" href="../articles/General-interactivity.html">General Interactivity</a></li>
     <li><a class="dropdown-item" href="../articles/Market-segementation.html">Market Segmentation</a></li>
     <li><a class="dropdown-item" href="../articles/Plot-objects.html">Plot Objects</a></li>
@@ -57,7 +57,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Biotechnological Process Optimization</h1>
+      <h1>Bioprocess Optimization</h1>
             
       
 
@@ -124,10 +124,9 @@ for later use.</p>
 <span><span class="va">yield_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Yield "</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="st">"-"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">#&gt; Loading required package: viridisLite</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">yield_values_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">yield_values</span>, labels <span class="op">=</span> <span class="va">yield_labels</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/" class="external-link">viridis</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">yield_values_factor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">yield_values</span>, labels <span class="op">=</span> <span class="va">yield_labels</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Yield</span>, fill <span class="op">=</span> <span class="va">yield_values_factor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="op">(</span><span class="va">max_yield</span> <span class="op">-</span> <span class="va">min_yield</span><span class="op">)</span> <span class="op">/</span> <span class="fl">30</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -137,9 +136,9 @@ for later use.</p>
 <span>       x <span class="op">=</span> <span class="st">"Yield"</span>,</span>
 <span>       y <span class="op">=</span> <span class="st">"Count"</span>,</span>
 <span>       fill <span class="op">=</span> <span class="st">"Yield Intervals"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Biotechnological-process-optimization_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_yield.jpg" style="width:100.0%"></p>
 <p>Finally, we standardize the data and remove the yield.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">data_wo_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/copy.html" class="external-link">copy</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">data_wo_y</span><span class="op">[</span>, <span class="va">Yield</span> <span class="op">:=</span> <span class="cn">NULL</span><span class="op">]</span></span></code></pre></div>
@@ -164,7 +163,7 @@ lists that specify the type of the display to be shown and some display
 specific additional information. In our case we want to display a
 “1d_tour” and a “2d_tour” and give the objects our previously generated
 tour histories.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="co"># the development version of tourr is required, otherwise the 1d lda tour</span></span>
 <span><span class="co"># will crash!</span></span>
@@ -188,7 +187,7 @@ tour histories.</p>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we start an interactive tour to have a closer look at the
 data.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_wo_y</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -208,9 +207,7 @@ on the rendering time of each frame). Noticeable separation between the
 yield groups begins to occur around frame 10 and becomes even more
 pronounced from frame 30 onward. We successfully identified projections
 that explain the differences in yield</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif" style="width:100.0%" alt="biotech_intial_tours.gif"><div class="figcaption">biotech_intial_tours.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif" style="width:100.0%"></p>
 <p>Let’s investigate the projections further. Projection axes that point
 towards the high yield groups have a large positive influence on them,
 whereas projection axes that point away from them have a negative
@@ -231,9 +228,7 @@ manufacturing process 09 alone is not sufficient to explain the yield.
 If it were, then changing the direction of manufacturing process 09
 would simply invert the data, and we would still see the high yield
 groups aligned with the manufacturing process 09 axis.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif" style="width:100.0%" alt="biotech_manpr9.gif"><div class="figcaption">biotech_manpr9.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif" style="width:100.0%"></p>
 <p>We can now adjust some of the other axes to see if we can identify
 interactions between the parameters. For instance, when we elongate the
 axis representing manufacturing process 32, we observe a positive
@@ -245,26 +240,20 @@ quite well. But since the separation isn’t as clear as with the original
 projection and we see that the high yield groups aren’t exactly in the
 direction of the two axes, we still need more variables to fully explain
 the influence on the yield.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif" style="width:100.0%" alt="biotech_manpr9_32.gif"><div class="figcaption">biotech_manpr9_32.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif" style="width:100.0%"></p>
 <p>Furthermore, we can vary some of the other process parameters to
 capture more interactions or potential structural patterns. For
 instance, by adjusting the axis representing manufacturing process 31,
 we observe an outlier with a low value for that parameter (the data
 point is in the opposite direction of the axis) that had a slightly
 above-average yield.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif" style="width:100.0%" alt="biotech_manpr9_32.gif"><div class="figcaption">biotech_manpr9_32.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif" style="width:100.0%"></p>
 <p>Varying manufacturing process 40 results in two clearly separated
 groups. This indicates that this variable had two discrete settings.
 There is no clear indication that the variable had a strong influence on
 the yield as we can see both high and low yield data points in both
 groups.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif" style="width:100.0%" alt="biotech_binary.gif"><div class="figcaption">biotech_binary.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif" style="width:100.0%"></p>
 </div>
 <div class="section level2">
 <h2 id="feature-preselection-with-random-forests">Feature preselection with random forests<a class="anchor" aria-label="anchor" href="#feature-preselection-with-random-forests"></a>
@@ -274,10 +263,10 @@ visualization by fitting a random forest model, that predicts the yield
 based on the other process variables, and selecting only the the most
 important variables according to the model. For this analysis the 10
 most important have been chosen.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Yield</span><span class="op">~</span><span class="va">.</span>,<span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">importance_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">rf</span><span class="op">$</span><span class="va">importance</span><span class="op">)</span></span>
 <span><span class="va">importance_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">rf</span><span class="op">$</span><span class="va">importance</span>, keep.rownames <span class="op">=</span> <span class="st">"Feature"</span><span class="op">)</span></span>
@@ -291,7 +280,7 @@ parameters according to the random forest model are manufacturing
 processes 09, 13, 17, 31, 32, and 36, and biological materials 03, 06,
 11 and 12. As a next step we reduce the dataset to only contain these
 variables and visualize the data in the same way we did earlier.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_rf_sel</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span>, <span class="va">..top_10_features</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>,</span>
@@ -305,7 +294,7 @@ variables and visualize the data in the same way we did earlier.</p>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -323,17 +312,13 @@ with all process parameters. At the final frame, we observe that
 manufacturing processes 09 and 32, as well as biological material 12,
 have a positive influence on the yield, while manufacturing processes 17
 and 36 have a negative influence.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif" style="width:100.0%" alt="biotech_intial_tours_top10.gif"><div class="figcaption">biotech_intial_tours_top10.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif" style="width:100.0%"></p>
 <p>We may be interested in enhancing the separation between groups with
 particularly low and high yields. A quick method to achieve this is by
 adjusting the opacity of the groups we are less interested in, and then
 initializing a local tour to search for projections that better separate
 the highlighted groups.</p>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif" style="width:100.0%" alt="biotech_top10_refined.gif"><div class="figcaption">biotech_top10_refined.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif" style="width:100.0%"></p>
 <p>In the final frame, we observe that the separation between the
 extreme groups has improved slightly. Once we identify an interesting
 frame, we can save it by pressing “Save projections and subsets.” This
@@ -343,7 +328,7 @@ the appropriate folder, or we can load it programmatically using the
 function load_interactive_tour().</p>
 <p>A more elegant way of doing this would be to define only three yield
 bins and run another guided tour.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">intervals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">min_yield</span>, <span class="va">max_yield</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">new_yield_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Yield "</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="st">"-"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -352,7 +337,7 @@ bins and run another guided tour.</p>
 <span></span>
 <span><span class="va">new_intervals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">new_min_yield</span>, <span class="va">new_max_yield</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">new_yield_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/findInterval.html" class="external-link">findInterval</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Yield</span>, <span class="va">new_intervals</span>, rightmost.closed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>,</span>
 <span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">new_yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -364,7 +349,7 @@ bins and run another guided tour.</p>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -375,9 +360,7 @@ bins and run another guided tour.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">8</span>,</span>
 <span>                 color_scale <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif" style="width:100.0%" alt="biotech_top10_3gr.gif"><div class="figcaption">biotech_top10_3gr.gif</div>
-</div>
+<p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif" style="width:100.0%"></p>
 <p>We can see that this results in an even better separation. Again, we
 can run a local tour to see if we can further improve separation or
 observe another interesting angle. In case we still wouldn’t be happy
