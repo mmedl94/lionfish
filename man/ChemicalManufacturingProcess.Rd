@@ -9,8 +9,6 @@ A 176 x 58 array of continuous variables
 }
 \source{
 http://appliedpredictivemodeling.com/data
-
-head(ChemicalManufacturingProcess)
 }
 \usage{
 ChemicalManufacturingProcess
@@ -24,5 +22,9 @@ which the goal is to understand the relationship between the process and the
 resulting final product yield and can be found in the in the
 AppliedPredictiveModeling R package. The data has been copied from
 http://appliedpredictivemodeling.com/data in agreement with their license.
+}
+\examples{
+data(ChemicalManufacturingProcess)
+head(ChemicalManufacturingProcess)
 }
 \keyword{datasets}

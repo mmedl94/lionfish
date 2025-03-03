@@ -15,14 +15,12 @@ get_guided_holes_history(data, dimension)
 history object containing the projections of the requested tour
 }
 \description{
-Get Guided Tour-Holes History
-}
-\details{
-Function for python backend to receive a guided tour-holes
+Returns a guided tour with the holes index to the python' backend. This
+guided tour is generated with the 'tourr' functions 'save_history' and
+'guided_tour'.
 }
 \examples{
-library(tourr)
-data(flea)
+data("flea", package = "tourr")
 flea <- flea[-7]
 get_guided_holes_history(flea, 2)
 

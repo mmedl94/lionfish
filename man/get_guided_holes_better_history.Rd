@@ -15,15 +15,12 @@ get_guided_holes_better_history(data, dimension)
 history object containing the projections of the requested tour
 }
 \description{
-Get Guided Tour-Holes-Better History
-}
-\details{
-Function for python backend to receive a guided tour-holes that searches for
-a better projection near the current projection.
+Returns a guided tour with the holes index and the 'search_better' argument
+to the python' backend. This guided tour is generated with the 'tourr'
+functions 'save_history' and 'guided_tour'.
 }
 \examples{
-library(tourr)
-data(flea)
+data("flea", package = "tourr")
 flea <- flea[-7]
 get_guided_holes_better_history(flea, 2)
 

@@ -36,17 +36,14 @@ bottomleft or off}
 list containing projected data, circle and segments for axes
 }
 \description{
-Modification of the 'render_proj' Function of 'tourr'
-}
-\details{
-Modification of the render_proj() function of tourr so that the half_range is calculated by
-max(sqrt(rowSums(data^2))) or can be provided as arg
+Modification of the render_proj() function of tourr so that the half_range is
+calculated with max(sqrt(rowSums(data^2))) or can be provided as argument.
 }
 \examples{
 library(tourr)
-data(flea)
+data("flea", package = "tourr")
 flea_std <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
-prj <- basis_random(ncol(flea[,1:6]), 2)
+prj <- tourr::basis_random(ncol(flea[,1:6]), 2)
 p <- render_proj_inter(flea_std, prj)
 
 }

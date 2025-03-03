@@ -1,4 +1,12 @@
 #' @title R Wrapper for 'interactive_tour' Function Written in 'python'
+#' @description
+#' Launches the lionfish GUI and at minimum requires the data do be loaded and
+#' the plot_objects. The other parameters are optional. For technical reasons
+#' the parameters half_range, n_plot_cols, n_subsets, color_scale, label_size
+#' and display_size cannot be adjusted from within the GUI. The GUI has to be
+#' closed and relaunched (possibly with load_interactive_tour) if you want to
+#' change them. Please visit https://mmedl94.github.io/lionfish/index.html for a
+#' detailed description of the GUI and its features.
 #'
 #' @param data the dataset you want to investigate
 #' @param plot_objects a named list of objects you want to be displayed. Each entry requires a definition of
@@ -11,7 +19,7 @@
 #' @param n_plot_cols specifies the number of columns of the grid of the final display.
 #' @param preselection a vector that specifies in which subset each datapoint should be put initially.
 #' @param preselection_names a vector that specifies the names of the preselection subsets
-#' @param n_subsets the total number of available subsets (up to 10).
+#' @param n_subsets the total number of available subsets.
 #' @param display_size rough size of each subplot in inches
 #' @param hover_cutoff number of features at which the switch from intransparent
 #' to transparent labels that can be hovered over to make them intransparent occurs
@@ -26,7 +34,7 @@
 #'
 #' @examples
 #' library(tourr)
-#'
+#' data("flea", package = "tourr")
 #' data <- apply(flea[, 1:6], 2, function(x) (x - mean(x)) / sd(x))
 #' clusters <- as.numeric(flea$species)
 #' flea_subspecies <- unique(flea$species)

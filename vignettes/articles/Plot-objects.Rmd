@@ -1,5 +1,10 @@
 ---
-title: "Plot objects"
+title: "Plot Objects"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plot Objects}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
     wrap: 72

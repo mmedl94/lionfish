@@ -1,5 +1,10 @@
 ---
-title: "Biotechnological process optimization"
+title: "Biotechnological Process Optimization"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Biotechnological process optimization}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
     wrap: 72
@@ -169,9 +174,7 @@ yield groups begins to occur around frame 10 and becomes even more
 pronounced from frame 30 onward. We successfully identified projections
 that explain the differences in yield
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif")
-```
+![biotech_intial_tours.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours.gif){width=100%}
 
 Let's investigate the projections further. Projection axes that point
 towards the high yield groups have a large positive influence on them,
@@ -196,9 +199,7 @@ If it were, then changing the direction of manufacturing process 09
 would simply invert the data, and we would still see the high yield
 groups aligned with the manufacturing process 09 axis.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif")
-```
+![biotech_manpr9.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9.gif){width=100%}
 
 We can now adjust some of the other axes to see if we can identify
 interactions between the parameters. For instance, when we elongate the
@@ -212,9 +213,8 @@ projection and we see that the high yield groups aren't exactly in the
 direction of the two axes, we still need more variables to fully explain
 the influence on the yield.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif")
-```
+![biotech_manpr9_32.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_manpr9_32.gif){width=100%}
+
 
 Furthermore, we can vary some of the other process parameters to capture
 more interactions or potential structural patterns. For instance, by
@@ -222,9 +222,7 @@ adjusting the axis representing manufacturing process 31, we observe an
 outlier with a low value for that parameter (the data point is in the
 opposite direction of the axis) that had a slightly above-average yield.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif")
-```
+![biotech_manpr9_32.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_outlier.gif){width=100%}
 
 Varying manufacturing process 40 results in two clearly separated
 groups. This indicates that this variable had two discrete settings.
@@ -232,9 +230,7 @@ There is no clear indication that the variable had a strong influence on
 the yield as we can see both high and low yield data points in both
 groups.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif")
-```
+![biotech_binary.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_binary.gif){width=100%}
 
 ## Feature preselection with random forests
 
@@ -301,15 +297,11 @@ manufacturing processes 09 and 32, as well as biological material 12,
 have a positive influence on the yield, while manufacturing processes 17
 and 36 have a negative influence.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif")
-```
+![biotech_intial_tours_top10.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_intial_tours_top10.gif){width=100%}
 
 We may be interested in enhancing the separation between groups with particularly low and high yields. A quick method to achieve this is by adjusting the opacity of the groups we are less interested in, and then initializing a local tour to search for projections that better separate the highlighted groups.
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif")
-```
+![biotech_top10_refined.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_refined.gif){width=100%}
 
 In the final frame, we observe that the separation between the extreme groups has improved slightly. Once we identify an interesting frame, we can save it by pressing "Save projections and subsets." This allows us to continue our analysis later. To reload the saved data, we can use the GUI by pressing "Load projections and subsets" and selecting the appropriate folder, or we can load it programmatically using the function load_interactive_tour().
 
@@ -353,9 +345,7 @@ interactive_tour(data=data_rf_sel,
                  color_scale = "plasma")
 ```
 
-```{r out.width="100%", echo=FALSE}
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif")
-```
+![biotech_top10_3gr.gif](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif){width=100%}
 
 We can see that this results in an even better separation. Again, we can run a local tour to see if we can further improve separation or observe another interesting angle. In case we still wouldn't be happy with the projections, we could run another guided tour - LDA from within the interface (not shown here).
 

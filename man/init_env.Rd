@@ -23,7 +23,16 @@ dated.}
 initializes python environment
 }
 \description{
-Initialize Environment for 'python' Backend
+Initializes the 'python' backend required for the functionality of lionfish.
+At first it searches whether a 'python' environment with the provided name
+exists or not. If it does, it will be loaded and the 'python' function
+'check_backend' is run to check if it works properly. If no 'python'
+environment with the provided name exists, it will be installed and then
+loaded. This can either be done with or without Anaconda as package manager.
+Anaconda can be more robust, but the GUI will appear dated. Thus, trying
+'init_env' with virtual_env = "virtual_env" out first is recommended.
+For 'Windows' users, the path to the tk and tcl libraries will be set,
+otherwise tkinter cannot run.
 }
 \examples{
 if (interactive()){

@@ -1,6 +1,6 @@
 Package: lionfish
-Title: Interactive 'tourr's using 'python'
-Version: 1.0.7
+Title: Interactive 'tourr's Using 'python'
+Version: 1.0.8
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
@@ -22,9 +22,12 @@ Imports:
 Suggests:
     ggplot2,
     viridis,
-    randomForest
+    randomForest,   
+    knitr,
+    rmarkdown,
+VignetteBuilder: knitr
 URL: https://mmedl94.github.io/lionfish/
-Config/Needs/website: rmarkdown
+Config/Needs/website: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
 LazyData: true

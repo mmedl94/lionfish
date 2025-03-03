@@ -9,8 +9,6 @@ A 2961 x 27 array of binary responses
 }
 \source{
 https://statistik.boku.ac.at/nachlass_leisch/MSA/
-
-head(winterActiv)
 }
 \usage{
 winterActiv
@@ -23,5 +21,9 @@ The Austrian Vacation Activities dataset comprises responses from 2,961 adult
 tourists who spent their holiday in Austria during the 1997/98 season. The
 responses are coded in binary with 0 indicating that the tourist didn't
 partake in the activity and 1 indicating they did.
+}
+\examples{
+data(winterActiv)
+head(winterActiv)
 }
 \keyword{datasets}

@@ -9,8 +9,6 @@ A 1003 x 44 array of binary responses
 }
 \source{
 https://statistik.boku.ac.at/nachlass_leisch/MSA/
-
-head(ausActiv)
 }
 \usage{
 ausActiv
@@ -24,5 +22,9 @@ adult Australians who were surveyed on their vacation activities
 through a permission-based internet panel in 2007.The responses are coded in
 binary with 0 indicating that the tourist didn't partake in the activity and
 1 indicating they did.
+}
+\examples{
+data(ausActiv)
+head(ausActiv)
 }
 \keyword{datasets}

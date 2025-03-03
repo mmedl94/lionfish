@@ -1,5 +1,10 @@
 ---
-title: "Market segmentation"
+title: "Market Segmentation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Market Segmentation}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
     wrap: 72

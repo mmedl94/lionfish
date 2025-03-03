@@ -57,6 +57,18 @@ out projection axes with a smaller length}
 opens the interactive GUI
 }
 \description{
-R Wrapper for 'load_interactive_tour' Function Written in 'python'
-Allows a user to load a previously saved interactive tour snapshot
+Loads a previously saved snapshot created by pressing the "Save projections
+and subsets" within the GUI. The data that was loaded when saving a
+snapshot has to be provided to this function when loading that snapshot.
+Additionally, this function allows to adjust some parameters of the GUI when
+loading a snapshot, such as display_size or label_size.
+
+A short description...
+}
+\examples{
+if (interactive()){
+data("flea", package = "tourr")
+init_env()
+load_interactive_tour(flea, "/path/to/save")
+}
 }

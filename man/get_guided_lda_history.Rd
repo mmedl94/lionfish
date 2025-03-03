@@ -17,14 +17,12 @@ get_guided_lda_history(data, clusters, dimension)
 history object containing the projections of the requested tour
 }
 \description{
-Get Guided Tour-LDA History
-}
-\details{
-Function for python backend to receive a guided tour-lda history
+Returns a guided tour with the LDA index to the python' backend. This
+guided tour is generated with the 'tourr' functions 'save_history' and
+'guided_tour'.
 }
 \examples{
-library(tourr)
-data(flea)
+data("flea", package = "tourr")
 clusters <- as.numeric(factor(flea[[7]]))
 get_guided_lda_history(flea[-7], clusters, 2)
 

@@ -1,6 +1,10 @@
-#' R Wrapper for 'load_interactive_tour' Function Written in 'python'
-#' Allows a user to load a previously saved interactive tour snapshot
 #' @title R Wrapper for 'load_interactive_tour' Function Written in 'python'
+#' @description
+#' Loads a previously saved snapshot created by pressing the "Save projections
+#' and subsets" within the GUI. The data that was loaded when saving a
+#' snapshot has to be provided to this function when loading that snapshot.
+#' Additionally, this function allows to adjust some parameters of the GUI when
+#' loading a snapshot, such as display_size or label_size.
 #' @param data the dataset you want to investigate. Must be the same as the
 #' dataset that was loaded when the save was created!
 #' @param directory_to_save path to the location of the save folder
@@ -22,9 +26,17 @@
 #' out projection axes with a smaller length
 #'
 #' @return opens the interactive GUI
+#' @description
+#' A short description...
 #'
 #' @export
 #'
+#' @examples
+#' if (interactive()){
+#' data("flea", package = "tourr")
+#' init_env()
+#' load_interactive_tour(flea, "/path/to/save")
+#'}
 
 load_interactive_tour <- function(data, directory_to_save,
                                   feature_names = NULL, half_range = NULL,

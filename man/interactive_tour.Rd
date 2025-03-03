@@ -39,7 +39,7 @@ will be calculated and used.}
 
 \item{preselection_names}{a vector that specifies the names of the preselection subsets}
 
-\item{n_subsets}{the total number of available subsets (up to 10).}
+\item{n_subsets}{the total number of available subsets.}
 
 \item{display_size}{rough size of each subplot in inches}
 
@@ -57,11 +57,17 @@ out projection axes with a smaller length}
 opens the interactive GUI
 }
 \description{
-R Wrapper for 'interactive_tour' Function Written in 'python'
+Launches the lionfish GUI and at minimum requires the data do be loaded and
+the plot_objects. The other parameters are optional. For technical reasons
+the parameters half_range, n_plot_cols, n_subsets, color_scale, label_size
+and display_size cannot be adjusted from within the GUI. The GUI has to be
+closed and relaunched (possibly with load_interactive_tour) if you want to
+change them. Please visit https://mmedl94.github.io/lionfish/index.html for a
+detailed description of the GUI and its features.
 }
 \examples{
 library(tourr)
-
+data("flea", package = "tourr")
 data <- apply(flea[, 1:6], 2, function(x) (x - mean(x)) / sd(x))
 clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)

@@ -1,5 +1,10 @@
 ---
-title: "General interactivity"
+title: "General Interactivity"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{General Interactivity}
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteEncoding{UTF-8}
 editor_options: 
   markdown: 
     wrap: 72

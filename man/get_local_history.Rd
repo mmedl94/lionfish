@@ -18,16 +18,15 @@ local tour from}
 history object containing the projections of the requested tour
 }
 \description{
-Get Local Tour History
-}
-\details{
-Function for python backend to receive a local tour based on current projection
+Returns a local tour based on currently displayed projection(s) to the
+'python' backend. This local tour is generated with the 'tourr' functions
+'save_history' and 'local_tour'.
 }
 \examples{
 library(tourr)
-data(flea)
+data("flea", package = "tourr")
 flea <- flea[-7]
-prj <- basis_random(ncol(flea), 2)
+prj <- tourr::basis_random(ncol(flea), 2)
 get_local_history(flea, prj)
 
 }
