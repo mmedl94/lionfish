@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.12</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 </h1></div>
 <p>This package is an extension of the <a href="https://github.com/ggobi/tourr" class="external-link">tourr</a> R-package. For a general overview of the tourr package please refer to the <a href="https://ggobi.github.io/tourr/" class="external-link">tourr documentation</a>. lionfish adds interactive displays to the functionality of tourr allowing users to direct the path of the tours.</p>
 <div class="section level2">
-<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+<h2 id="lionfish-documentation">lionfish documentation<a class="anchor" aria-label="anchor" href="#lionfish-documentation"></a>
 </h2>
 <p>For an overview of the functionality of lionfish please visit the <a href="https://mmedl94.github.io/lionfish/">documentation</a>!</p>
 </div>
@@ -73,38 +73,42 @@
 <p>Complications may arise when installing and accessing the Python backend of this package. If you run into any, please don’t refrain from opening an issue!</p>
 </div>
 <div class="section level2">
+<h2 id="known-issues">Known issues<a class="anchor" aria-label="anchor" href="#known-issues"></a>
+</h2>
+<p>For an unknown reason, the GUI sometimes appears empty at the initial launch. Restarting R and launching the GUI again seems to resolve this.</p>
+</div>
+<div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>To run an interactive tour you will first have to initialize the python backend with</p>
+<p>In this introductory example we will launch the lionfish GUI with the ‘flea’ datset and a selection of interactive display types. For more information about the ‘flea’ dataset visit the <a href="https://ggobi.github.io/tourr/reference/Flea-measurements.html" class="external-link">tourr documentation</a>. In brief, the dataset contains six numeric variables with measurements of the fleas’ appendages and a factor variable with the flea species (Concinna, Heptapot. or Heikert.). For more information on how to use the GUI visit the <a href="https://mmedl94.github.io/lionfish/">lionfish documentation</a>.</p>
+<p>First, we have to load the package and initialize the ‘python’ backend with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Then you can display saved tour objects, scatterplots or histograms with interactive_tour()</p>
+<p>We first fetch the flea dataset from ‘tourr’, save the species column separately, and get the unique species names as well as the feature names of our dataset. Then we run and store a ‘guided_tour’ with the ‘holes’ index and a ‘grand_tour’.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">flea</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">flea</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
 <span><span class="va">flea_subspecies</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">flea</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
 <span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Now we have to specify which display types we want to load into the GUI. In this example, we want to display a two-dimensional tour, a one-dimensional tour, a scatterplot, and a histogram. For each display type, we have to further specify some settings. For the tours, these are the stored tour histories, and for the scatterplot and histogram, we have to define which features we want to plot. A detailed description of the plot objects can be found <a href="https://mmedl94.github.io/lionfish/articles/Plot-objects.html">here</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"scatter"</span>, obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"hist"</span>, obj<span class="op">=</span><span class="st">"head"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span>
+<span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"hist"</span>, obj<span class="op">=</span><span class="st">"head"</span><span class="op">)</span></span></code></pre></div>
+<p>Finally, we launch the GUI with the ‘interactive_tour’ function. Details on the interactive functions of the displays can be found <a href="https://mmedl94.github.io/lionfish/articles/General-interactivity.html">here</a>.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
-<span>                 half_range<span class="op">=</span><span class="va">half_range</span>,</span>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection<span class="op">=</span><span class="va">clusters</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
