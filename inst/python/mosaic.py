@@ -82,6 +82,19 @@ def launch_mosaic(parent, plot_object, subplot_idx):
 
     for text in parent.axs[subplot_idx].texts:
         text.remove()
+
+    counter = 0
+    for idx, set_exists in enumerate(non_empty_sets):
+        if set_exists:
+            color = parent.colors[idx]
+            if plot_object["obj"] == "subgroups_on_y":
+                parent.axs[subplot_idx].get_yticklabels()[
+                    counter].set_color(color)
+            else:
+                parent.axs[subplot_idx].get_xticklabels()[
+                    counter].set_color(color)
+            counter += 1
+
     plot_dict = {"type": "mosaic",
                  "subtype": "mosaic",
                  "subplot_idx": subplot_idx,

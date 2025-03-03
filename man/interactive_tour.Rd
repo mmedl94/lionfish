@@ -68,9 +68,10 @@ detailed description of the GUI and its features.
 \examples{
 library(tourr)
 data("flea", package = "tourr")
-data <- apply(flea[, 1:6], 2, function(x) (x - mean(x)) / sd(x))
+data <- flea[1:6]
 clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
+feature_names <- colnames(data)
 
 guided_tour_history <- save_history(data,
   tour_path = guided_tour(holes())
@@ -80,7 +81,6 @@ grand_tour_history_1d <- save_history(data,
 )
 
 half_range <- max(sqrt(rowSums(data^2)))
-feature_names <- colnames(data)
 
 if (interactive()){
 init_env()

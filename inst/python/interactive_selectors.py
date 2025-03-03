@@ -209,6 +209,7 @@ class DraggableAnnotation1d:
         self.ax.tick_params(axis="x", labelbottom=False)
         self.arrow_axs.set_ylim(-0.05, 1.05)
         self.arrow_axs.set_xlim(-1, 1)
+        self.arrow_axs.vlines(0, -2, 2, colors="black", linestyles="dashed")
         self.arrow_axs.set_xticks([])
         self.arrow_axs.set_yticks([])
 

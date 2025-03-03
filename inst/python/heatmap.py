@@ -64,6 +64,13 @@ def launch_heatmap(parent, plot_object, subplot_idx):
                                        rotation=25,
                                        ha="right")
 
+    counter = 0
+    for idx, set_exists in enumerate(non_empty_sets):
+        if set_exists:
+            color = parent.colors[idx]
+            parent.axs[subplot_idx].get_xticklabels()[counter].set_color(color)
+            counter += 1
+
     for label in parent.axs[subplot_idx].get_yticklabels():
         label.set_rotation(25)
         label.set_ha("right")
