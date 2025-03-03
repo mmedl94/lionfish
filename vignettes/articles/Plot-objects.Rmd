@@ -1,6 +1,8 @@
 ---
 title: "Plot Objects"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    self_contained: FALSE
 vignette: >
   %\VignetteIndexEntry{Plot Objects}
   %\VignetteEngine{knitr::knitr}
@@ -113,10 +115,7 @@ the arrowheads with the right mouse-button and dragging it.
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a one-dimensional tour using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/1d_tour_demo.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/1d_tour_demo.gif){width=100%}
 
 ### Two dimensional tour
 
@@ -149,10 +148,8 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a two-dimensional tour using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/2d_tour_demo.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/2d_tour_demo.gif){width=100%}
+
 
 ### Scatterplot
 
@@ -173,10 +170,7 @@ the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
 on the left.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a scatter plot using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/scatterplot_demo.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/scatterplot_demo.gif){width=100%}
 
 ### Histogram
 
@@ -196,10 +190,7 @@ obj_flea_histogram <- list(type="hist", # type of display
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a histogram using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/histogram_demo.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/histogram_demo.gif){width=100%}
 
 ### Mosaic
 
@@ -218,10 +209,7 @@ obj_winter_mosaic <- list(type="mosaic",   # type of display
 
 Currently there is no way of directly interacting with the mosaic plot.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a mosaic plot using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/mosaic_plot_demo.png")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/mosaic_plot_demo.png){width=100%}
 
 ### Heatmap
 
@@ -263,10 +251,8 @@ obj_winter_heatmap <- list(type="heatmap",          # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a heatmap using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/heatmap_demo.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/heatmap_demo.gif){width=100%}
+
 
 ### Categorical cluster interface
 
@@ -287,10 +273,7 @@ obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
 dropdown menu within the frame on the left. The details on the metrics can be
 found above.
 
-```{r out.width="100%", echo=FALSE}
-# Alt-text: A demonstration of a categorical cluster interface using the lionfish package.
-knitr::include_graphics("https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/cat_clust_interface.gif")
-```
+![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/cat_clust_interface.gif){width=100%}
 
 ## Generating the displays
 
