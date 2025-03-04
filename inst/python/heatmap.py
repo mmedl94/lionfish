@@ -68,6 +68,8 @@ def launch_heatmap(parent, plot_object, subplot_idx):
     for idx, set_exists in enumerate(non_empty_sets):
         if set_exists:
             color = parent.colors[idx]
+            if color[-1] != 1:
+                color[-1] = 0.6
             parent.axs[subplot_idx].get_xticklabels()[counter].set_color(color)
             counter += 1
 

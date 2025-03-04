@@ -87,6 +87,8 @@ def launch_mosaic(parent, plot_object, subplot_idx):
     for idx, set_exists in enumerate(non_empty_sets):
         if set_exists:
             color = parent.colors[idx]
+            if color[-1] != 1:
+                color[-1] = 0.6
             if plot_object["obj"] == "subgroups_on_y":
                 parent.axs[subplot_idx].get_yticklabels()[
                     counter].set_color(color)
