@@ -27,6 +27,7 @@
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
 #' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
+#' @param color_scale_heatmap a matplotlib colormap to define the color scheme of the heatmap
 #'
 #' @export
 #'
@@ -72,7 +73,7 @@ interactive_tour <- function(data, plot_objects, feature_names = NULL, half_rang
                              n_plot_cols = 2, preselection = FALSE,
                              preselection_names = FALSE, n_subsets = 3, display_size = 5,
                              hover_cutoff = 10, label_size = 15, color_scale = "default",
-                             axes_blendout_threshhold = 1) {
+                             color_scale_heatmap="default", axes_blendout_threshhold = 1) {
   pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))) {
@@ -113,6 +114,8 @@ interactive_tour <- function(data, plot_objects, feature_names = NULL, half_rang
     data, plot_objects, feature_names, half_range,
     n_plot_cols, preselection,
     preselection_names, n_subsets, display_size,
-    hover_cutoff, label_size, color_scale, axes_blendout_threshhold
+    hover_cutoff, label_size, color_scale,
+    color_scale_heatmap,
+    axes_blendout_threshhold
   )
 }

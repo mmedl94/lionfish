@@ -26,7 +26,7 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
                           n_plot_cols=None, preselection=None,
                           preselection_names=None, n_subsets=None, display_size=5,
                           hover_cutoff=10, label_size=15, color_scale="default",
-                          axes_blendout_threshhold=1):
+                          color_scale_heatmap="default", axes_blendout_threshhold=1):
 
     with open(os.path.join(directory_to_save, "attributes.pkl"), "rb") as f:
         attributes = pkl.load(f)
@@ -50,11 +50,14 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
         label_size = attributes["label_size"]
     if color_scale == None:
         color_scale = attributes["color_scale"]
+    if color_scale_heatmap == None:
+        color_scale_heatmap = attributes["color_scale_heatmap"]
 
     interactive_tour(data, plot_objects, feature_names, half_range,
                      n_plot_cols, preselection,
                      preselection_names, n_subsets, display_size,
-                     hover_cutoff, label_size, color_scale, load=True,
+                     hover_cutoff, label_size, color_scale,
+                     color_scale_heatmap, load=True,
                      directory_to_save=directory_to_save,
                      axes_blendout_threshhold=axes_blendout_threshhold)
 
@@ -62,18 +65,21 @@ def load_interactive_tour(data, directory_to_save, feature_names, half_range=Non
 def interactive_tour(data, plot_objects, feature_names, half_range=None,
                      n_plot_cols=None, preselection=None,
                      preselection_names=None, n_subsets=3, display_size=5,
-                     hover_cutoff=10, label_size=15, color_scale="default", load=False,
+                     hover_cutoff=10, label_size=15, color_scale="default",
+                     color_scale_heatmap="default", load=False,
                      directory_to_save=False, axes_blendout_threshhold=1):
     """Launch InteractiveTourInterface for interactive plotting."""
 
     if matplotlib.get_backend() != "TkAgg":
         matplotlib.use("TkAgg")
 
-    app = InteractiveTourInterface(data, plot_objects, feature_names, half_range,
-                                   n_plot_cols, preselection, preselection_names,
-                                   n_subsets, display_size, hover_cutoff, label_size,
-                                   load, directory_to_save, axes_blendout_threshhold,
-                                   color_scale)
+    app = InteractiveTourInterface(data=data, plot_objects=plot_objects, feature_names=feature_names,
+                                   half_range=half_range, n_plot_cols=n_plot_cols, preselection=preselection,
+                                   preselection_names=preselection_names, n_subsets=n_subsets, display_size=display_size,
+                                   hover_cutoff=hover_cutoff, label_size=label_size, load=load,
+                                   directory_to_save=directory_to_save, axes_blendout_threshhold=axes_blendout_threshhold,
+                                   color_scale=color_scale, color_scale_heatmap=color_scale_heatmap)
+
     app.mainloop()
 
 
@@ -83,7 +89,7 @@ class InteractiveTourInterface(ctk.CTk):
                  preselection_names=None, n_subsets=3, display_size=5,
                  hover_cutoff=10, label_size=15, load=False,
                  directory_to_save=False, axes_blendout_threshhold=1,
-                 color_scale="default"):
+                 color_scale="default", color_scale_heatmap="default"):
         super().__init__()
 
         self.title("Interactive Tour")
@@ -108,6 +114,7 @@ class InteractiveTourInterface(ctk.CTk):
         self.subselections = self.initialize_subselections()
         self.orig_subselections = self.subselections.copy()
         self.color_scale = color_scale
+        self.color_scale_heatmap = color_scale_heatmap
         self.colors = self.get_colors(self.color_scale)
         self.n_bins = tk.StringVar(self, "26")
 
