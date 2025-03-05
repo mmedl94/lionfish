@@ -134,9 +134,13 @@ set.seed(42)
 library(tourr)
 
 display_size <- 5 # Adjust to fit your display
+```
 
+```{r, eval=FALSE}
 init_env()
+```
 
+```{r, results="hide", message=FALSE}
 lda_tour_history_1d <- save_history(data_wo_y,
                                     tour_path = guided_tour(lda_pp(yield_values),d=1))
 
@@ -261,7 +265,7 @@ processes 09, 13, 17, 31, 32, and 36, and biological materials 03, 06,
 11 and 12. As a next step we reduce the dataset to only contain these
 variables and visualize the data in the same way we did earlier.
 
-```{r}
+```{r,results = 'hide', warning=FALSE, message=FALSE}
 data_rf_sel <- data[, ..top_10_features]
 
 grand_tour_history_1d <- save_history(data_rf_sel,
@@ -319,7 +323,7 @@ new_intervals <- seq(new_min_yield, new_max_yield, length.out = 4)
 new_yield_values <- findInterval(data$Yield, new_intervals, rightmost.closed = TRUE)
 ```
 
-```{r}
+```{r,results = 'hide', warning=FALSE, message=FALSE}
 grand_tour_history_1d <- save_history(data_rf_sel,
                                       tour_path = guided_tour(lda_pp(new_yield_values),d=1))
 
