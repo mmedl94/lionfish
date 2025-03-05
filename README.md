@@ -46,6 +46,7 @@ init_env()
 We first fetch the flea dataset from 'tourr', save the species column separately,
 and get the unique species names as well as the feature names of our dataset.
 Then we run and store a 'guided_tour' with the 'holes' index and a 'grand_tour'.
+More information on tours can be found [here](https://ggobi.github.io/tourr/).
 
 ``` r
 library(tourr)
@@ -64,10 +65,10 @@ grand_tour_history_1d <- save_history(data,
 Now we have to specify which display types we want to load into the GUI. In this
 example, we want to display a two-dimensional tour, a one-dimensional tour, a
 scatterplot, and a histogram. For each display type, we have to further specify
-some settings. For the tours, these are the stored tour histories, and for the
-scatterplot and histogram, we have to define which features we want to plot.
-A detailed description of the plot objects can be found
-[here](https://mmedl94.github.io/lionfish/articles/Plot-objects.html).
+some settings as part of the so called plot objects. For the tours, these are
+the stored tour histories, and for the scatterplot and histogram, we have to
+define which features we want to plot. A detailed description of the plot
+objects can be found [here](https://mmedl94.github.io/lionfish/articles/Plot-objects.html).
 
 ``` r
 obj1 <- list(type="2d_tour", obj=guided_tour_history)
