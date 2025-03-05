@@ -38,20 +38,22 @@ Examples for all displays can be found below.
 
 ## Setup
 
-```{r setup,  eval = FALSE}
-# Load required libraries
+```{r load packages}
+# Load required packages
 library(tourr)
 library(reticulate)
 library(lionfish)
 library(flexclust)
+```
 
+```{r initialize python backend,  eval = FALSE}
 # Initialize python backend
 init_env()
 ```
 
 ### Dataset 1 - Flea data
 
-```{r Load and prepare flea data,  eval = FALSE}
+```{r Load and prepare flea data}
 # Load dataset
 data("flea")
 
@@ -67,7 +69,7 @@ half_range_flea <- max(sqrt(rowSums(flea^2)))
 
 ### Dataset 2 - Winter activities data
 
-```{r Load and prepare flea data winter activities data,  eval = FALSE}
+```{r Load and prepare flea data winter activities data}
 # Load dataset and set seed
 data("winterActiv")
 set.seed(42)
@@ -93,7 +95,7 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 #### Example plot object
 
-```{r 1d tour,  eval = FALSE}
+```{r 1d tour}
 guided_tour_flea_1d <- save_history(flea,
                                     tour_path=guided_tour(holes(),1))
 
@@ -125,7 +127,7 @@ construction](https://ggobi.github.io/tourr/reference/index.html#tour-path-const
 
 #### Example plot object
 
-```{r 2d tour,  eval = FALSE}
+```{r 2d tour}
 grand_tour_flea_2d <- save_history(flea,
                                    tour_path = grand_tour(d=2))
 
@@ -176,7 +178,7 @@ be provided in form of a two dimensional vector.
 
 #### Example plot object
 
-```{r histogram,  eval = FALSE}
+```{r histogram}
 obj_flea_histogram <- list(type="hist", # type of display
                            obj="head")  # x axis of histogram
 ```
@@ -197,7 +199,7 @@ subgroups/clusters should be on the x or y axis, either with
 
 #### Example plot object
 
-```{r mosaic,  eval = FALSE}
+```{r mosaic}
 obj_winter_mosaic <- list(type="mosaic",   # type of display
                   obj=c("subgroups_on_y")) # whether subgroups x or y axis
 ```
@@ -237,7 +239,7 @@ where $n_i, n_j$ are the row and column totals.
 
 #### Example plot object
 
-```{r heatmap,  eval = FALSE}
+```{r heatmap}
 obj_winter_heatmap <- list(type="heatmap",          # type of display
                            obj=c("Total fraction")) # initial metric
 ```
@@ -259,7 +261,7 @@ and plotted has to be selected. One can choose between "Total fraction",
 
 #### Example plot object
 
-```{r categorical cluster interface,  eval = FALSE}
+```{r categorical cluster interface}
 obj_winter_cat_clust <- list(type="cat_clust_interface", # type of display
                              obj=c("Total fraction"))    # initial metric
 ```

@@ -1,6 +1,6 @@
 Package: lionfish
 Title: Interactive 'tourr's Using 'python'
-Version: 1.0.14
+Version: 1.0.15
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
@@ -17,7 +17,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports: 
     reticulate,
-    tourr,
+    tourr (>= 1.2.4),
     data.table
 Suggests:
     ggplot2,
@@ -25,7 +25,13 @@ Suggests:
     randomForest,   
     knitr,
     rmarkdown,
-    markdown
+    markdown,
+    colorspace,
+    ggbeeswarm,
+    patchwork,
+    mvtnorm,
+    tidyverse,
+    flexclust
 VignetteBuilder: knitr
 URL: https://mmedl94.github.io/lionfish/
 Config/Needs/website: knitr

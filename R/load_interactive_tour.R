@@ -21,23 +21,21 @@
 #' @param hover_cutoff number of features at which the switch from intransparent
 #' to transparent labels that can be hovered over to make them intransparent occurs
 #' @param label_size size of the labels of the feature names of 1d and 2d tours
-#' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
-#' @param color_scale_heatmap a matplotlib colormap to define the color scheme of the heatmap
+#' @param color_scale a viridis/matplotlib colormap to define the color scheme of the subgroups
+#' @param color_scale_heatmap a viridis/matplotlib colormap to define the color scheme of the heatmap
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
 #'
 #' @return opens the interactive GUI
-#' @description
-#' A short description...
 #'
 #' @export
 #'
 #' @examples
-#' if (interactive()){
+#' \dontrun{
 #' data("flea", package = "tourr")
 #' init_env()
 #' load_interactive_tour(flea, "/path/to/save")
-#'}
+#' }
 
 load_interactive_tour <- function(data, directory_to_save,
                                   feature_names = NULL, half_range = NULL,

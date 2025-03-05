@@ -129,11 +129,8 @@ specific additional information. In our case we want to display a
 "1d_tour" and a "2d_tour" and give the objects our previously generated
 tour histories.
 
-```{r, eval = FALSE}
+```{r}
 set.seed(42)
-# the development version of tourr is required, otherwise the 1d lda tour
-# will crash!
-remotes::install_github("ggobi/tourr")
 library(tourr)
 
 display_size <- 5 # Adjust to fit your display
@@ -264,7 +261,7 @@ processes 09, 13, 17, 31, 32, and 36, and biological materials 03, 06,
 11 and 12. As a next step we reduce the dataset to only contain these
 variables and visualize the data in the same way we did earlier.
 
-```{r, eval = FALSE}
+```{r}
 data_rf_sel <- data[, ..top_10_features]
 
 grand_tour_history_1d <- save_history(data_rf_sel,
@@ -322,7 +319,7 @@ new_intervals <- seq(new_min_yield, new_max_yield, length.out = 4)
 new_yield_values <- findInterval(data$Yield, new_intervals, rightmost.closed = TRUE)
 ```
 
-```{r, eval = FALSE}
+```{r}
 grand_tour_history_1d <- save_history(data_rf_sel,
                                       tour_path = guided_tour(lda_pp(new_yield_values),d=1))
 

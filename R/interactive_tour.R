@@ -26,8 +26,8 @@
 #' @param label_size size of the labels of the feature names of 1d and 2d tours
 #' @param axes_blendout_threshhold initial value of the threshold for blending
 #' out projection axes with a smaller length
-#' @param color_scale a matplotlib colormap to define the color scheme of the subgroups
-#' @param color_scale_heatmap a matplotlib colormap to define the color scheme of the heatmap
+#' @param color_scale a viridis/matplotlib colormap to define the color scheme of the subgroups
+#' @param color_scale_heatmap a viridis/matplotlib colormap to define the color scheme of the heatmap
 #'
 #' @export
 #'
