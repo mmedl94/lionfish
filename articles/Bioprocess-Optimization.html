@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -165,29 +165,283 @@ specific additional information. In our case we want to display a
 tour histories.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
-<span><span class="co"># the development version of tourr is required, otherwise the 1d lda tour</span></span>
-<span><span class="co"># will crash!</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ggobi/tourr"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">display_size</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="co"># Adjust to fit your display</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lda_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_wo_y</span>,</span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_wo_y</span>, </span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_wo_y</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Installing pyenv ...</span></span>
+<span><span class="co">#&gt; Done! pyenv has been installed to '/home/runner/.local/share/r-reticulate/pyenv/bin/pyenv'.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.local/share/r-reticulate/pyenv/bin/pyenv update</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.local/share/r-reticulate/pyenv/bin/pyenv install --skip-existing 3.12.3</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using Python: /home/runner/.pyenv/versions/3.12.3/bin/python3.12</span></span>
+<span><span class="co">#&gt; Creating virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.pyenv/versions/3.12.3/bin/python3.12 -m venv /home/runner/.virtualenvs/r-lionfish</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Done!</span></span>
+<span><span class="co">#&gt; Installing packages: pip, wheel, setuptools</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade pip wheel setuptools</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Installing packages: numpy</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user numpy</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Virtual environment 'r-lionfish' successfully created.</span></span>
+<span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user pandas</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user 'numpy&gt;=2.0'</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user matplotlib</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user customtkinter</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user statsmodels</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Using virtual environment 'r-lionfish' ...</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; + /home/runner/.virtualenvs/r-lionfish/bin/python -m pip install --upgrade --no-user seaborn</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Python environment "r-lionfish" successfully loaded</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Connection to python backend established</span></span></code></pre>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lda_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_wo_y</span>,</span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 14.560, 3394.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 42.696, 193.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 72.439, 69.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 89.867, 24.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 102.040, 13.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 102.675, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 117.160, 14.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 132.848, 13.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 137.449, 3.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 155.447, 13.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 158.034, 1.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 168.271, 6.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 183.621, 9.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 186.390, 1.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 194.587, 4.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 198.757, 2.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 202.199, 1.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 217.776, 7.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 222.758, 2.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 250.598, 12.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 258.029, 3.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 258.689, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 267.801, 3.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 271.917, 1.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 277.213, 1.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 286.290, 3.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 287.696, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 295.234, 2.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 301.203, 2.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 305.640, 1.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 311.596, 1.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 315.049, 1.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 322.074, 2.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 336.524, 4.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 345.366, 2.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 347.155, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 350.142, 0.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 353.473, 1.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 359.364, 1.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 359.973, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 361.620, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 374.389, 3.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 381.264, 1.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 386.406, 1.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 394.501, 2.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 396.943, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 398.027, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 400.740, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 402.940, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 403.521, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 406.883, 0.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 409.919, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 413.092, 0.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 415.999, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 419.465, 0.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 421.313, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 422.193, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 423.937, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 424.479, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 425.365, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 426.472, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 427.607, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 429.869, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 431.322, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 435.396, 0.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 436.788, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 438.636, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 440.521, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 442.966, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 445.062, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 445.660, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 448.998, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 449.576, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 450.812, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 453.219, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 454.916, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 458.028, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 459.494, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 461.365, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 462.018, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 464.803, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 467.218, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 467.870, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 469.272, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 470.074, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 470.650, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 471.331, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 471.875, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 472.482, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 473.096, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 473.759, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 474.303, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 475.816, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 476.533, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 477.189, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 479.796, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 480.742, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 482.024, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 482.542, 0.1% better</span></span></code></pre>
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_wo_y</span>, </span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.181, 43.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.225, 24.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.297, 32.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.349, 17.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.364, 4.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.377, 3.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.442, 17.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.451, 2.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.501, 11.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.520, 3.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.533, 2.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.547, 2.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.562, 2.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.567, 0.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.574, 1.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.598, 4.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.609, 1.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.627, 3.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.640, 2.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.641, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.654, 2.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.666, 1.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.669, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.672, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.680, 1.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.682, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.688, 0.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.692, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.694, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.695, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.696, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.699, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.700, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.702, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.710, 1.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.712, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.713, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.714, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.715, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.716, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.717, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.718, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.719, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.721, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.723, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.724, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.725, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.727, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.728, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.730, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.731, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.733, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.735, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.737, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.739, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.740, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.741, 0.1% better </span></span>
+<span><span class="co">#&gt; Target: 0.741, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.742, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.743, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.744, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.745, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.746, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.748, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.748, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.749, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.751, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.752, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.753, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.754, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.756, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.757, 0.1% better </span></span>
+<span><span class="co">#&gt; Target: 0.757, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.759, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Final projection:</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.089   0.072</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.039   0.112</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.169   0.038</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.031  -0.055</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.097  -0.030</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.014   0.100</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.069   0.020</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.069   0.215</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.150  -0.127</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.038   0.236</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.039  -0.036</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.052   0.154</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.115  -0.200</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.216  -0.179</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.154  -0.355</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.143  -0.011</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.030  -0.151</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.468  -0.158</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.073   0.294</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.123  -0.195</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.099   0.025</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.041   0.096</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.142  -0.075</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.170  -0.139</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.169  -0.021</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.027   0.003</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.082  -0.146</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.127  -0.035</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.052   0.111</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.101  -0.129</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.010   0.092</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.070   0.086</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.147   0.130</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.096   0.207</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.082   0.035</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.141  -0.089</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.082  -0.121</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.177   0.046</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.092   0.146</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.405  -0.028</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.035   0.239</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.221   0.093</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.003  -0.117</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.132  -0.029</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.242   0.121</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.076  -0.006</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.055  -0.206</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.096  -0.076</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.056   0.079</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.036  -0.032</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.099   0.006</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.004   0.205</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.112   0.223</span></span></code></pre>
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_wo_y</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data_wo_y</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we start an interactive tour to have a closer look at the
 data.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_wo_y</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -263,10 +517,10 @@ visualization by fitting a random forest model, that predicts the yield
 based on the other process variables, and selecting only the the most
 important variables according to the model. For this analysis the 10
 most important have been chosen.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/" class="external-link">randomForest</a></span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html" class="external-link">randomForest</a></span><span class="op">(</span><span class="va">Yield</span><span class="op">~</span><span class="va">.</span>,<span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">importance_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">rf</span><span class="op">$</span><span class="va">importance</span><span class="op">)</span></span>
 <span><span class="va">importance_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">rf</span><span class="op">$</span><span class="va">importance</span>, keep.rownames <span class="op">=</span> <span class="st">"Feature"</span><span class="op">)</span></span>
@@ -280,21 +534,85 @@ parameters according to the random forest model are manufacturing
 processes 09, 13, 17, 31, 32, and 36, and biological materials 03, 06,
 11 and 12. As a next step we reduce the dataset to only contain these
 variables and visualize the data in the same way we did earlier.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_rf_sel</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span>, <span class="va">..top_10_features</span><span class="op">]</span></span>
 <span></span>
 <span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>,</span>
-<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>, </span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 108.794, 31.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 206.739, 90.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 225.115, 8.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 234.718, 4.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 240.144, 2.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 246.765, 2.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 248.700, 0.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 256.526, 3.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 258.564, 0.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 263.561, 1.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 266.253, 1.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 268.010, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 269.400, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 269.765, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 270.448, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 270.903, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 271.411, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 272.160, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 272.485, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 273.161, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 273.805, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 274.414, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Final projection:</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.755</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.075</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.094</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.041</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.413</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.414</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.128</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.191</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.113</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.080</span></span></code></pre>
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>, </span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.476, 20.9% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.490, 3.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.563, 15.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.589, 4.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.602, 2.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.611, 1.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.619, 1.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.627, 1.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.630, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.632, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.633, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.634, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.636, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.637, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.638, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.639, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Final projection:</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.768   0.178</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.180   0.000</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.335   0.495</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.286  -0.212</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.149   0.612</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.287  -0.184</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.099   0.098</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.036  -0.400</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.185   0.007</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.183   0.316</span></span></code></pre>
+<div class="sourceCode" id="cb331"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb332"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -328,7 +646,7 @@ the appropriate folder, or we can load it using the function
 load_interactive_tour().</p>
 <p>A more elegant way of doing this would be to define only three yield
 bins and run another guided tour.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb333"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">intervals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">min_yield</span>, <span class="va">max_yield</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">new_yield_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Yield "</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="st">"-"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">intervals</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -337,19 +655,82 @@ bins and run another guided tour.</p>
 <span></span>
 <span><span class="va">new_intervals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">new_min_yield</span>, <span class="va">new_max_yield</span>, length.out <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">new_yield_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/findInterval.html" class="external-link">findInterval</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Yield</span>, <span class="va">new_intervals</span>, rightmost.closed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb334"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>,</span>
-<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">new_yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>, </span>
-<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">new_yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">new_yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 54.171, 120.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 94.025, 73.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 110.381, 17.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 123.451, 11.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 126.517, 2.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 129.186, 2.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 129.887, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 133.496, 2.8% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 135.204, 1.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 138.253, 2.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 139.621, 1.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 141.044, 1.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 141.718, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 142.427, 0.5% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 143.451, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 144.367, 0.6% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 145.410, 0.7% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 145.952, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 146.315, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 146.462, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 146.660, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 146.813, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 146.983, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Final projection:</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.634</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.049</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.226</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.008</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.523</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.186</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.221</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.411</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.102</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.087</span></span></code></pre>
+<div class="sourceCode" id="cb371"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">lda_tour_history_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_rf_sel</span>, </span>
+<span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">new_yield_values</span><span class="op">)</span>,d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">#&gt; Converting input data to the required matrix format.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.388, 69.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.469, 21.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.479, 2.0% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.479, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.480, 0.3% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.481, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.483, 0.4% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.484, 0.1% better </span></span>
+<span><span class="co">#&gt; Target: 0.484, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.485, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.486, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.487, 0.2% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Target: 0.488, 0.1% better </span></span>
+<span><span class="co">#&gt; Target: 0.488, 0.1% better</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Final projection:</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.490   0.561</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.158   0.319</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.353   0.538</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.089   0.075</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.462   0.145</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.357   0.362</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; -0.263   0.251</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.435   0.058</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.003  -0.225</span></span></code></pre>
+<pre><code><span><span class="co">#&gt;  0.045   0.140</span></span></code></pre>
+<div class="sourceCode" id="cb397"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data_rf_sel</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb398"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>

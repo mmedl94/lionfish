@@ -3,13 +3,11 @@
 and subsets" within the GUI. The data that was loaded when saving a
 snapshot has to be provided to this function when loading that snapshot.
 Additionally, this function allows to adjust some parameters of the GUI when
-loading a snapshot, such as display_size or label_size.
-A short description...'><meta property="og:description" content='Loads a previously saved snapshot created by pressing the "Save projections
+loading a snapshot, such as display_size or label_size.'><meta property="og:description" content='Loads a previously saved snapshot created by pressing the "Save projections
 and subsets" within the GUI. The data that was loaded when saving a
 snapshot has to be provided to this function when loading that snapshot.
 Additionally, this function allows to adjust some parameters of the GUI when
-loading a snapshot, such as display_size or label_size.
-A short description...'></head><body>
+loading a snapshot, such as display_size or label_size.'></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -17,7 +15,7 @@ A short description...'></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +52,6 @@ and subsets" within the GUI. The data that was loaded when saving a
 snapshot has to be provided to this function when loading that snapshot.
 Additionally, this function allows to adjust some parameters of the GUI when
 loading a snapshot, such as display_size or label_size.</p>
-<p>A short description...</p>
     </div>
 
     <div class="section level2">
@@ -131,11 +128,11 @@ to transparent labels that can be hovered over to make them intransparent occurs
 
 
 <dt id="arg-color-scale">color_scale<a class="anchor" aria-label="anchor" href="#arg-color-scale"></a></dt>
-<dd><p>a matplotlib colormap to define the color scheme of the subgroups</p></dd>
+<dd><p>a viridis/matplotlib colormap to define the color scheme of the subgroups</p></dd>
 
 
 <dt id="arg-color-scale-heatmap">color_scale_heatmap<a class="anchor" aria-label="anchor" href="#arg-color-scale-heatmap"></a></dt>
-<dd><p>a matplotlib colormap to define the color scheme of the heatmap</p></dd>
+<dd><p>a viridis/matplotlib colormap to define the color scheme of the heatmap</p></dd>
 
 
 <dt id="arg-axes-blendout-threshhold">axes_blendout_threshhold<a class="anchor" aria-label="anchor" href="#arg-axes-blendout-threshhold"></a></dt>
@@ -150,11 +147,11 @@ out projection axes with a smaller length</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span>, package <span class="op">=</span> <span class="st">"tourr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">load_interactive_tour</span><span class="op">(</span><span class="va">flea</span>, <span class="st">"/path/to/save"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

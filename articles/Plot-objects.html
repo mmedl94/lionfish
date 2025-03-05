@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.15</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,18 +92,18 @@ supported displays are:</p>
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Load required libraries</span></span>
+<code class="sourceCode R"><span><span class="co"># Load required packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rstudio.github.io/reticulate/" class="external-link">reticulate</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flexclust</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Initialize python backend</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flexclust</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Initialize python backend</span></span>
 <span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="dataset-1---flea-data">Dataset 1 - Flea data<a class="anchor" aria-label="anchor" href="#dataset-1---flea-data"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span><span class="op">)</span></span>
 <span></span>
@@ -119,13 +119,14 @@ supported displays are:</p>
 <div class="section level3">
 <h3 id="dataset-2---winter-activities-data">Dataset 2 - Winter activities data<a class="anchor" aria-label="anchor" href="#dataset-2---winter-activities-data"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load dataset and set seed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"winterActiv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform kmeans clustering </span></span>
-<span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="fu">stepcclust</span><span class="op">(</span><span class="va">winterActiv</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
+<span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/stepFlexclust.html" class="external-link">stepcclust</a></span><span class="op">(</span><span class="va">winterActiv</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
 <span><span class="va">clusters_winter</span> <span class="op">&lt;-</span> <span class="va">clusters_winter</span><span class="op">@</span><span class="va">cluster</span></span>
 <span></span>
 <span><span class="co"># Get the names of our features</span></span>
@@ -146,9 +147,23 @@ path construction</a>.</p>
 <div class="section level4">
 <h4 id="example-plot-object">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object"></a>
 </h4>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">guided_tour_flea_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">flea</span>,</span>
 <span>                                    tour_path<span class="op">=</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Target: 1.530, 28.9% better</span></span>
+<span><span class="co">#&gt; Target: 1.607, 5.0% better</span></span>
+<span><span class="co">#&gt; Target: 1.629, 1.4% better</span></span>
+<span><span class="co">#&gt; Target: 1.638, 0.6% better</span></span>
+<span><span class="co">#&gt; Target: 1.653, 0.9% better</span></span>
+<span><span class="co">#&gt; Target: 1.656, 0.1% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt;  0.438</span></span>
+<span><span class="co">#&gt; -0.281</span></span>
+<span><span class="co">#&gt; -0.247</span></span>
+<span><span class="co">#&gt; -0.532</span></span>
+<span><span class="co">#&gt;  0.338</span></span>
+<span><span class="co">#&gt; -0.520</span></span>
 <span></span>
 <span><span class="va">obj_flea_1d_tour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>,          <span class="co"># type of display</span></span>
 <span>                         obj<span class="op">=</span><span class="va">guided_tour_flea_1d</span><span class="op">)</span> <span class="co"># 1d tour history </span></span></code></pre></div>
@@ -182,7 +197,7 @@ path construction</a>.</p>
 <div class="section level4">
 <h4 id="example-plot-object-1">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-1"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">grand_tour_flea_2d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">flea</span>,</span>
 <span>                                   tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -216,7 +231,7 @@ y axis have to be provided in form of a two dimensional vector.</p>
 <div class="section level4">
 <h4 id="example-plot-object-2">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-2"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_flea_scatter</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"scatter"</span>,          <span class="co"># type of display</span></span>
 <span>                         obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span> <span class="co"># x and y axis of plot</span></span></code></pre></div>
 </div>
@@ -240,7 +255,7 @@ to be provided in form of a two dimensional vector.</p>
 <div class="section level4">
 <h4 id="example-plot-object-3">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-3"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_flea_histogram</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"hist"</span>, <span class="co"># type of display</span></span>
 <span>                           obj<span class="op">=</span><span class="st">"head"</span><span class="op">)</span>  <span class="co"># x axis of histogram</span></span></code></pre></div>
 </div>
@@ -264,7 +279,7 @@ subgroups/clusters should be on the x or y axis, either with
 <div class="section level4">
 <h4 id="example-plot-object-4">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-4"></a>
 </h4>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_mosaic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"mosaic"</span>,   <span class="co"># type of display</span></span>
 <span>                  obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span> <span class="co"># whether subgroups x or y axis</span></span></code></pre></div>
 </div>
@@ -311,7 +326,7 @@ are the row and column totals.</p>
 <div class="section level4">
 <h4 id="example-plot-object-5">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-5"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_heatmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"heatmap"</span>,          <span class="co"># type of display</span></span>
 <span>                           obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span> <span class="co"># initial metric</span></span></code></pre></div>
 </div>
@@ -336,7 +351,7 @@ details see “Heatmap”</p>
 <div class="section level4">
 <h4 id="example-plot-object-6">Example plot object<a class="anchor" aria-label="anchor" href="#example-plot-object-6"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj_winter_cat_clust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"cat_clust_interface"</span>, <span class="co"># type of display</span></span>
 <span>                             obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Total fraction"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># initial metric</span></span></code></pre></div>
 </div>
@@ -357,7 +372,7 @@ metrics can be found above.</li>
 </h2>
 <p>The various plot objects can the be displayed with the <a href="https://mmedl94.github.io/lionfish/reference/interactive_tour.html">interactive_tour</a>
 function.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interactive_tour call of flea dataset. Insert plot objects of your liking.</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">flea</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_flea</span>,</span>
@@ -368,7 +383,7 @@ function.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interactive_tour call of winterActiv dataset. Insert plot objects of your liking.</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_winter</span>,</span>
