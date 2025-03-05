@@ -4,9 +4,9 @@ pkgdown_sha: ~
 articles:
   Bioprocess-Optimization: Bioprocess-Optimization.html
   General-interactivity: General-interactivity.html
-  Market-segementation: Market-segementation.html
+  Market-segmentation: Market-segmentation.html
   Plot-objects: Plot-objects.html
-last_built: 2025-03-05T14:51Z
+last_built: 2025-03-05T15:04Z
 urls:
   reference: https://mmedl94.github.io/lionfish/reference
   article: https://mmedl94.github.io/lionfish/articles
