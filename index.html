@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,7 +85,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>We first fetch the flea dataset from ‘tourr’, save the species column separately, and get the unique species names as well as the feature names of our dataset. Then we run and store a ‘guided_tour’ with the ‘holes’ index and a ‘grand_tour’.</p>
+<p>We first fetch the flea dataset from ‘tourr’, save the species column separately, and get the unique species names as well as the feature names of our dataset. Then we run and store a ‘guided_tour’ with the ‘holes’ index and a ‘grand_tour’. More information on tours can be found <a href="https://ggobi.github.io/tourr/" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span><span class="op">)</span></span>
@@ -98,7 +98,7 @@
 <span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/holes.html" class="external-link">holes</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
 <span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Now we have to specify which display types we want to load into the GUI. In this example, we want to display a two-dimensional tour, a one-dimensional tour, a scatterplot, and a histogram. For each display type, we have to further specify some settings. For the tours, these are the stored tour histories, and for the scatterplot and histogram, we have to define which features we want to plot. A detailed description of the plot objects can be found <a href="https://mmedl94.github.io/lionfish/articles/Plot-objects.html">here</a>.</p>
+<p>Now we have to specify which display types we want to load into the GUI. In this example, we want to display a two-dimensional tour, a one-dimensional tour, a scatterplot, and a histogram. For each display type, we have to further specify some settings as part of the so called plot objects. For the tours, these are the stored tour histories, and for the scatterplot and histogram, we have to define which features we want to plot. A detailed description of the plot objects can be found <a href="https://mmedl94.github.io/lionfish/articles/Plot-objects.html">here</a>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
