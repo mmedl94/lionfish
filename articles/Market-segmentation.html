@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.18</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.19</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,7 +113,10 @@ button that says “Code” on the top right and then click “Download ZIP”.
 This will be necessary to load the lionfish snapshots.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"tidyverse"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: tidyverse</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.5</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">forcats  </span> 1.0.0     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">stringr  </span> 1.5.1</span></span>
@@ -121,31 +124,43 @@ This will be necessary to load the lionfish snapshots.</p>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">lubridate</span> 1.9.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">tidyr    </span> 1.3.1</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">purrr    </span> 1.0.4     </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Conflicts</span> ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span> masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>    masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">between()</span>     masks <span style="color: #0000BB;">data.table</span>::between()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">filter()</span>      masks <span style="color: #0000BB;">stats</span>::filter()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">first()</span>       masks <span style="color: #0000BB;">data.table</span>::first()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">hour()</span>    masks <span style="color: #0000BB;">data.table</span>::hour()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">isoweek()</span> masks <span style="color: #0000BB;">data.table</span>::isoweek()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">lag()</span>         masks <span style="color: #0000BB;">stats</span>::lag()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">dplyr</span>::<span style="color: #00BB00;">last()</span>        masks <span style="color: #0000BB;">data.table</span>::last()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">mday()</span>    masks <span style="color: #0000BB;">data.table</span>::mday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">minute()</span>  masks <span style="color: #0000BB;">data.table</span>::minute()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">month()</span>   masks <span style="color: #0000BB;">data.table</span>::month()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">quarter()</span> masks <span style="color: #0000BB;">data.table</span>::quarter()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">second()</span>  masks <span style="color: #0000BB;">data.table</span>::second()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">purrr</span>::<span style="color: #00BB00;">transpose()</span>   masks <span style="color: #0000BB;">data.table</span>::transpose()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">wday()</span>    masks <span style="color: #0000BB;">data.table</span>::wday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">week()</span>    masks <span style="color: #0000BB;">data.table</span>::week()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">yday()</span>    masks <span style="color: #0000BB;">data.table</span>::yday()</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> <span style="color: #0000BB;">lubridate</span>::<span style="color: #00BB00;">year()</span>    masks <span style="color: #0000BB;">data.table</span>::year()</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Use the conflicted package (<span style="color: #0000BB; font-style: italic;">&lt;http://conflicted.r-lib.org/&gt;</span>) to force all conflicts to become errors</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://colorspace.R-Forge.R-project.org/" class="external-link">colorspace</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eclarke/ggbeeswarm" class="external-link">ggbeeswarm</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"mvtnorm"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://mvtnorm.R-forge.R-project.org" class="external-link">mvtnorm</a></span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: mvtnorm</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"patchwork"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: patchwork</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"colorspace"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://colorspace.R-Forge.R-project.org/" class="external-link">colorspace</a></span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ggbeeswarm"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eclarke/ggbeeswarm" class="external-link">ggbeeswarm</a></span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: ggbeeswarm</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"flexclust"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flexclust</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: flexclust</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"gridExtra"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="co">#&gt; Loading required namespace: gridExtra</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'data.table'</span></span>
+<span><span class="co">#&gt; Attaching package: 'gridExtra'</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:lubridate':</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     hour, isoweek, mday, minute, month, quarter, second, wday, week,</span></span>
-<span><span class="co">#&gt;     yday, year</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     between, first, last</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:purrr':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     transpose</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">flexclust</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt;     combine</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"stats"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">stats</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span><span class="op">}</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -154,7 +169,12 @@ This will be necessary to load the lionfish snapshots.</p>
 <p>Figures 1, 2 and 3 shown in the introduction can be reproduced by
 running /scripts/intro.R</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
+<span>                      <span class="st">"mvtnorm"</span>,</span>
+<span>                      <span class="st">"patchwork"</span>,</span>
+<span>                      <span class="st">"colorspace"</span>,</span>
+<span>                      <span class="st">"ggbeeswarm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span> <span class="op">+</span></span>
 <span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
 <span>              aspect.ratio <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>              plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">'transparent'</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
@@ -173,12 +193,6 @@ running /scripts/intro.R</p>
 <span>                              ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">f_std</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if</span></span>
-<span><span class="co">#&gt; `.name_repair` is omitted as of tibble 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using compatibility `.name_repair`.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="va">blob2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mvtnorm/man/Mvnorm.html" class="external-link">rmvnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="fl">155</span>, mean<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, </span>
 <span>                 sigma<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.6</span>, <span class="fl">0.6</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                              ncol<span class="op">=</span><span class="fl">2</span>, byrow<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -201,10 +215,8 @@ running /scripts/intro.R</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">b1</span> <span class="op">+</span> <span class="va">b2</span> <span class="op">+</span> <span class="va">b3</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-1.png" width="700"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="va">b1</span> <span class="op">+</span> <span class="va">b2</span> <span class="op">+</span> <span class="va">b3</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">855</span><span class="op">)</span></span>
 <span><span class="va">b1_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">blob1</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -240,10 +252,8 @@ running /scripts/intro.R</p>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">b4</span> <span class="op">+</span> <span class="va">b5</span> <span class="op">+</span> <span class="va">b6</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-2.png" width="700"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="va">b4</span> <span class="op">+</span> <span class="va">b5</span> <span class="op">+</span> <span class="va">b6</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">b7</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">blob1_cl</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">V1</span>, fill<span class="op">=</span><span class="va">cl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://colorspace.R-Forge.R-project.org/reference/scale_colour_discrete_divergingx.html" class="external-link">scale_fill_discrete_divergingx</a></span><span class="op">(</span>palette<span class="op">=</span><span class="st">"Zissou 1"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -292,10 +302,8 @@ running /scripts/intro.R</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span>, </span>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">b7</span> <span class="op">+</span> <span class="va">b8</span> <span class="op">+</span> <span class="va">b9</span> <span class="op">+</span> <span class="va">b10</span> <span class="op">+</span> <span class="va">b11</span> <span class="op">+</span> <span class="va">b12</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-3.png" width="700"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="va">b7</span> <span class="op">+</span> <span class="va">b8</span> <span class="op">+</span> <span class="va">b9</span> <span class="op">+</span> <span class="va">b10</span> <span class="op">+</span> <span class="va">b11</span> <span class="op">+</span> <span class="va">b12</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Use facetting to make connection with plot 1 clearer</span></span>
 <span><span class="va">blob1_cl</span> <span class="op">&lt;-</span> <span class="va">blob1_cl</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>data <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
@@ -317,10 +325,8 @@ running /scripts/intro.R</p>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-4.png" width="700"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Generate a figure to show why linear combinations are needed, and subsetting</span></span>
 <span><span class="va">blob1_cl</span> <span class="op">&lt;-</span> <span class="va">blob1_cl</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>vars_in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">cl</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, <span class="st">"yes"</span>, <span class="st">"no"</span><span class="op">)</span><span class="op">)</span></span>
@@ -365,13 +371,6 @@ running /scripts/intro.R</p>
 <span></span>
 <span><span class="co"># Use PC1 for data C</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html" class="external-link">prcomp</a></span><span class="op">(</span><span class="va">blob3_cl</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Standard deviations (1, .., p=2):</span></span>
-<span><span class="co">#&gt; [1] 0.27192295 0.06144058</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Rotation (n x k) = (2 x 2):</span></span>
-<span><span class="co">#&gt;          PC1        PC2</span></span>
-<span><span class="co">#&gt; V1 0.6920043  0.7218934</span></span>
-<span><span class="co">#&gt; V2 0.7218934 -0.6920043</span></span>
 <span><span class="va">blob3_cl</span> <span class="op">&lt;-</span> <span class="va">blob3_cl</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>V1_V2 <span class="op">=</span> <span class="op">(</span><span class="fl">0.6920043</span><span class="op">*</span><span class="va">V1</span> <span class="op">+</span> <span class="fl">0.7218934</span><span class="op">*</span><span class="va">V2</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -387,13 +386,20 @@ running /scripts/intro.R</p>
 <span>        axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">b13</span> <span class="op">+</span> <span class="va">b14</span> <span class="op">+</span> <span class="va">b15</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if</span></span>
+<span><span class="co">#&gt; `.name_repair` is omitted as of tibble 2.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using compatibility `.name_repair`.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-5.png" width="700"></p>
+<p><img src="Market-segmentation_files/figure-html/intro-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="interactive-interface-for-partitioning">Interactive interface for partitioning<a class="anchor" aria-label="anchor" href="#interactive-interface-for-partitioning"></a>
@@ -407,8 +413,11 @@ to give an overview on the GUI anyways.</p>
 <p>Please don’t forget to set the working directory to the downloaded
 repo when working with /scripts/load_snapshots.R.</p>
 <p>Figure 5 can be reproduced by running /scripts/austrian_tourism.R</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check random projections</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gridExtra"</span>,</span>
+<span>                       <span class="st">"patchwork"</span>,</span>
+<span>                       <span class="st">"gridExtra"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="co"># Check random projections</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">630</span><span class="op">)</span></span>
 <span><span class="va">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">winterActiv</span>, max<span class="op">=</span><span class="fl">20</span><span class="op">)</span></span>
@@ -470,15 +479,20 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span>    axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span>, <span class="fl">5</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Figures 6 and 7 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># perform initial k-means clustering</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
+<span>                       <span class="st">"stats"</span>,</span>
+<span>                       <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="co"># perform initial k-means clustering</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span></span>
 <span><span class="va">clusters_full</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/stepFlexclust.html" class="external-link">stepcclust</a></span><span class="op">(</span><span class="va">winterActiv</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span>,  save.data<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="co"># Figure 6 A</span></span>
 <span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intra cluster fraction"</span><span class="op">)</span><span class="op">)</span></span>
@@ -496,20 +510,22 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span>                 feature_names<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span>,</span>
 <span>                 preselection <span class="op">=</span> <span class="va">clusters_full</span><span class="op">@</span><span class="va">cluster</span>,</span>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>                 color_scale <span class="op">=</span> <span class="st">"coolwarm"</span>,</span>
-<span>                 display_size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># perform initial k-means clustering</span></span>
+<span>                 color_scale_heatmap <span class="op">=</span> <span class="st">"coolwarm"</span>,</span>
+<span>                 display_size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">}</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
+<span>                        <span class="st">"stats"</span>,</span>
+<span>                        <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="co"># perform initial k-means clustering</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span></span>
 <span><span class="va">clusters_full</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/stepFlexclust.html" class="external-link">stepcclust</a></span><span class="op">(</span><span class="va">winterActiv</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span>,  save.data<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
 <span></span>
 <span><span class="co"># Figure 7 A</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/shadow.html" class="external-link">Silhouette</a></span><span class="op">(</span><span class="va">clusters_full</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/figure%207-1.png" width="700"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/shadow.html" class="external-link">Silhouette</a></span><span class="op">(</span><span class="va">clusters_full</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Figure 7 B</span></span>
 <span><span class="va">winterActiv_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpine.skiing"</span>, <span class="st">"going.to.a.spa"</span>, <span class="st">"using.health.facilities"</span>,</span>
 <span>                         <span class="st">"hiking"</span>, <span class="st">"going.for.walks"</span>,<span class="st">"excursions"</span>,</span>
@@ -517,11 +533,14 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span>                         <span class="st">"shopping"</span>, <span class="st">"sight.seeing"</span>, <span class="st">"museums"</span>, <span class="st">"pool.sauna"</span><span class="op">)</span></span>
 <span><span class="va">winterActiv_feat_subset</span> <span class="op">&lt;-</span> <span class="va">winterActiv</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">winterActiv_features</span><span class="op">]</span></span>
 <span><span class="va">clusters_feat_subset</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/stepFlexclust.html" class="external-link">stepcclust</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span>,  save.data<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/shadow.html" class="external-link">Silhouette</a></span><span class="op">(</span><span class="va">clusters_feat_subset</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/shadow.html" class="external-link">Silhouette</a></span><span class="op">(</span><span class="va">clusters_feat_subset</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre></div>
+<p><img src="Market-segmentation_files/figure-html/figure%207-1.png" width="700"></p>
+<pre><code><span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre>
 <p><img src="Market-segmentation_files/figure-html/figure%207-2.png" width="700"></p>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load Austrian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"winterActiv"</span><span class="op">)</span></span>
 <span><span class="va">winterActiv_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpine.skiing"</span>, <span class="st">"going.to.a.spa"</span>, <span class="st">"using.health.facilities"</span>,</span>
@@ -536,35 +555,40 @@ corresponding display is on the top left. Subplots 8 A-F can be
 reproduced by highlighting the respective cluster and desaturating the
 others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/init"</span>,</span>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/init"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Figure 10 can be reproduced by loading the contents of
 /saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/before"</span>,</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Figure 11 can be reproduced by loading the contents of
 /saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/after"</span>,</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="australian-vacation-activities-dataset">Australian Vacation Activities dataset<a class="anchor" aria-label="anchor" href="#australian-vacation-activities-dataset"></a>
 </h2>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
-<span><span class="co"># load Australian Vacation Activities dataset</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># load Australian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
 <span></span>
@@ -579,76 +603,90 @@ blendout threshold was set to 0.1.</p>
 <span><span class="va">cluster_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></code></pre></div>
 <p>Figure 12 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"flexclust"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Figure 12</span></span>
 <span><span class="va">dist_matrix_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span>
 <span><span class="va">ward_cluster_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="va">dist_matrix_f</span>, <span class="st">"ward.D2"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">clusters_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, main <span class="op">=</span> <span class="st">"Dendrogram of Australian Vacation Activities"</span>,</span>
 <span>     sub <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">"Height"</span><span class="op">)</span></span>
-<span><span class="va">rect_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/rect.hclust.html" class="external-link">rect.hclust</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span>, border <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/figure%2012-2.png" width="700"></p>
+<span><span class="va">rect_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/rect.hclust.html" class="external-link">rect.hclust</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span>, border <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"><img src="Market-segmentation_files/figure-html/figure%2012-2.png" width="700"></p>
 <p>Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/before"</span>,</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/after"</span>,</span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="tourist-risk-taking-dataset">Tourist risk taking dataset<a class="anchor" aria-label="anchor" href="#tourist-risk-taking-dataset"></a>
 </h2>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"risk"</span><span class="op">)</span></span>
 <span><span class="va">dup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span></span>
 <span><span class="va">risk</span> <span class="op">&lt;-</span> <span class="va">risk</span><span class="op">[</span><span class="op">!</span><span class="va">dup</span>,<span class="op">]</span></span></code></pre></div>
 <p>Figure 15 can be reproduced by loading the contents of
 /saves/risk_saves/final_projeciton_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/final_projeciton_risk"</span>,</span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/final_projeciton_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
 <span>                      feature_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">5.5</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">5.5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 <p>Figure 16 can be reproduced by clicking the on the dropdown menu on
 the bottom left, selecting “Guided tour - LDA - regroup” and then
 pressing the “Run tour” button below the dropdown menu.</p>
 <p>Figure 17 can be reproduced by loading the contents of
 /saves/risk_saves/regrouped_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/regrouped_risk"</span>,</span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/regrouped_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
 <span>                      feature_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
-<span>                      display_size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
+<span>                      display_size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="launch-interactive-tours-from-scratch">Launch interactive tours from scratch<a class="anchor" aria-label="anchor" href="#launch-interactive-tours-from-scratch"></a>
 </h2>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># set working directory to path/to/lionfish_article/</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">".."</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
+<span>                       <span class="st">"stats"</span>,</span>
+<span>                       <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span></span>
+<span><span class="co"># set working directory to path/to/lionfish_article/</span></span>
+<span><span class="co"># setwd("..")</span></span>
+<span>  </span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
+<span><span class="op">}</span></span>
+<span>  </span>
 <span><span class="co">######## Austrian Tourism ########</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
@@ -674,6 +712,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"1d_tour"</span>, obj <span class="op">=</span> <span class="va">lda_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"mosaic"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv_feat_subset</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">col_names</span>,</span>
@@ -681,6 +720,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection <span class="op">=</span> <span class="va">clusters_feat_subset</span><span class="op">@</span><span class="va">cluster</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">######## Australian Tourism ########</span></span>
 <span></span>
@@ -697,8 +737,8 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="co"># The subset selection might deviate slightly depending on seed</span></span>
 <span><span class="co"># The original subset selection can be loaded form saves with</span></span>
 <span></span>
-<span><span class="co">#subset_selection &lt;- read.csv("saves/aus_saves/before/subset_selection.csv", header = TRUE)</span></span>
-<span><span class="co">#subsets &lt;- subset_selection[order(subset_selection$observation_index), ]$subset</span></span>
+<span><span class="co"># subset_selection &lt;- read.csv("saves/aus_saves/before/subset_selection.csv", header = TRUE)</span></span>
+<span><span class="co"># subsets &lt;- subset_selection[order(subset_selection$observation_index), ]$subset</span></span>
 <span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/flexclust/man/stepFlexclust.html" class="external-link">stepcclust</a></span><span class="op">(</span><span class="va">ausActiv_feat_subset</span>, k<span class="op">=</span><span class="fl">6</span>, nrep<span class="op">=</span><span class="fl">20</span>,  save.data<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">subsets</span> <span class="op">&lt;-</span> <span class="va">clusters</span><span class="op">@</span><span class="va">cluster</span></span>
@@ -717,6 +757,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"mosaic"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intra cluster fraction"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">ausActiv_feat_subset</span>,</span>
 <span>                 feature_names <span class="op">=</span> <span class="va">col_names</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
@@ -726,6 +767,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>                 hover_cutoff <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span></span>
 <span><span class="co">######## Risk ########</span></span>
@@ -769,6 +811,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -777,7 +820,195 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_swapped</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">cluster_names</span>,</span>
 <span>                 n_subsets<span class="op">=</span><span class="fl">5</span>,</span>
-<span>                 display_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span></code></pre></div>
+<span>                 display_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
+<span><span class="co">#&gt; Target: 0.424, 54.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.464, 9.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.471, 1.6% better</span></span>
+<span><span class="co">#&gt; Target: 0.487, 3.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.491, 0.7% better</span></span>
+<span><span class="co">#&gt; Target: 0.550, 12.0% better</span></span>
+<span><span class="co">#&gt; Target: 0.551, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.554, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 0.562, 1.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.564, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.565, 0.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.567, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.568, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.570, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.571, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.572, 0.1% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt; -0.323  -0.625</span></span>
+<span><span class="co">#&gt; -0.026   0.576</span></span>
+<span><span class="co">#&gt;  0.117   0.135</span></span>
+<span><span class="co">#&gt;  0.057  -0.098</span></span>
+<span><span class="co">#&gt;  0.143  -0.223</span></span>
+<span><span class="co">#&gt;  0.158  -0.035</span></span>
+<span><span class="co">#&gt;  0.173   0.012</span></span>
+<span><span class="co">#&gt; -0.044   0.025</span></span>
+<span><span class="co">#&gt; -0.046  -0.108</span></span>
+<span><span class="co">#&gt;  0.273   0.032</span></span>
+<span><span class="co">#&gt;  0.324   0.271</span></span>
+<span><span class="co">#&gt; -0.787   0.333</span></span>
+<span><span class="co">#&gt; Target: 402.027, 685.1% better</span></span>
+<span><span class="co">#&gt; Target: 1070.904, 166.4% better</span></span>
+<span><span class="co">#&gt; Target: 1303.077, 21.7% better</span></span>
+<span><span class="co">#&gt; Target: 1539.991, 18.2% better</span></span>
+<span><span class="co">#&gt; Target: 1806.267, 17.3% better</span></span>
+<span><span class="co">#&gt; Target: 2967.997, 64.3% better</span></span>
+<span><span class="co">#&gt; Target: 3114.280, 4.9% better</span></span>
+<span><span class="co">#&gt; Target: 3392.523, 8.9% better</span></span>
+<span><span class="co">#&gt; Target: 3530.065, 4.1% better</span></span>
+<span><span class="co">#&gt; Target: 3555.576, 0.7% better</span></span>
+<span><span class="co">#&gt; Target: 3619.786, 1.8% better</span></span>
+<span><span class="co">#&gt; Target: 3810.492, 5.3% better</span></span>
+<span><span class="co">#&gt; Target: 3823.284, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 3880.765, 1.5% better</span></span>
+<span><span class="co">#&gt; Target: 3894.028, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 3911.649, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 3922.966, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 3927.240, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 3937.438, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 3948.599, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 3955.860, 0.2% better</span></span>
+<span><span class="co">#&gt; Target: 3959.984, 0.1% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt;  0.260</span></span>
+<span><span class="co">#&gt;  0.065</span></span>
+<span><span class="co">#&gt; -0.015</span></span>
+<span><span class="co">#&gt; -0.072</span></span>
+<span><span class="co">#&gt; -0.172</span></span>
+<span><span class="co">#&gt; -0.156</span></span>
+<span><span class="co">#&gt; -0.160</span></span>
+<span><span class="co">#&gt;  0.055</span></span>
+<span><span class="co">#&gt;  0.030</span></span>
+<span><span class="co">#&gt; -0.256</span></span>
+<span><span class="co">#&gt; -0.322</span></span>
+<span><span class="co">#&gt;  0.818</span></span>
+<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
+<span><span class="co">#&gt; Target: 0.355, 46.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.482, 36.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.498, 3.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.512, 2.8% better</span></span>
+<span><span class="co">#&gt; Target: 0.531, 3.8% better</span></span>
+<span><span class="co">#&gt; Target: 0.591, 11.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.598, 1.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.604, 1.0% better</span></span>
+<span><span class="co">#&gt; Target: 0.623, 3.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.650, 4.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.656, 0.9% better</span></span>
+<span><span class="co">#&gt; Target: 0.658, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.667, 1.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.670, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.671, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.674, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 0.676, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.677, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.680, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 0.681, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.682, 0.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.682, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.683, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.684, 0.2% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt; -0.363   0.656</span></span>
+<span><span class="co">#&gt; -0.010   0.110</span></span>
+<span><span class="co">#&gt;  0.102   0.282</span></span>
+<span><span class="co">#&gt;  0.047   0.203</span></span>
+<span><span class="co">#&gt; -0.248   0.134</span></span>
+<span><span class="co">#&gt; -0.159  -0.003</span></span>
+<span><span class="co">#&gt;  0.014   0.231</span></span>
+<span><span class="co">#&gt;  0.023   0.065</span></span>
+<span><span class="co">#&gt;  0.356   0.209</span></span>
+<span><span class="co">#&gt;  0.257   0.250</span></span>
+<span><span class="co">#&gt;  0.207   0.112</span></span>
+<span><span class="co">#&gt;  0.469   0.188</span></span>
+<span><span class="co">#&gt; -0.315  -0.244</span></span>
+<span><span class="co">#&gt; -0.216   0.192</span></span>
+<span><span class="co">#&gt; -0.155   0.267</span></span>
+<span><span class="co">#&gt;  0.377  -0.037</span></span>
+<span><span class="co">#&gt; -0.005   0.195</span></span>
+<span><span class="co">#&gt; Target: 236.374, 178.9% better</span></span>
+<span><span class="co">#&gt; Target: 610.284, 158.2% better</span></span>
+<span><span class="co">#&gt; Target: 685.051, 12.3% better</span></span>
+<span><span class="co">#&gt; Target: 872.365, 27.3% better</span></span>
+<span><span class="co">#&gt; Target: 1061.948, 21.7% better</span></span>
+<span><span class="co">#&gt; Target: 1130.912, 6.5% better</span></span>
+<span><span class="co">#&gt; Target: 1549.045, 37.0% better</span></span>
+<span><span class="co">#&gt; Target: 1674.776, 8.1% better</span></span>
+<span><span class="co">#&gt; Target: 1697.182, 1.3% better</span></span>
+<span><span class="co">#&gt; Target: 1713.415, 1.0% better</span></span>
+<span><span class="co">#&gt; Target: 1762.268, 2.9% better</span></span>
+<span><span class="co">#&gt; Target: 1852.080, 5.1% better</span></span>
+<span><span class="co">#&gt; Target: 1907.642, 3.0% better</span></span>
+<span><span class="co">#&gt; Target: 1919.223, 0.6% better</span></span>
+<span><span class="co">#&gt; Target: 1937.962, 1.0% better</span></span>
+<span><span class="co">#&gt; Target: 1945.258, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 1957.952, 0.7% better</span></span>
+<span><span class="co">#&gt; Target: 1968.542, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 1998.572, 1.5% better</span></span>
+<span><span class="co">#&gt; Target: 2019.100, 1.0% better</span></span>
+<span><span class="co">#&gt; Target: 2027.377, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 2035.354, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 2057.748, 1.1% better</span></span>
+<span><span class="co">#&gt; Target: 2063.723, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 2071.659, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 2078.827, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 2086.892, 0.4% better</span></span>
+<span><span class="co">#&gt; Target: 2089.232, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 2095.832, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 2099.341, 0.2% better</span></span>
+<span><span class="co">#&gt; Target: 2102.781, 0.2% better</span></span>
+<span><span class="co">#&gt; Target: 2105.448, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 2107.949, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 2111.495, 0.2% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt; -0.462</span></span>
+<span><span class="co">#&gt; -0.083</span></span>
+<span><span class="co">#&gt; -0.307</span></span>
+<span><span class="co">#&gt; -0.100</span></span>
+<span><span class="co">#&gt; -0.028</span></span>
+<span><span class="co">#&gt;  0.006</span></span>
+<span><span class="co">#&gt; -0.230</span></span>
+<span><span class="co">#&gt; -0.052</span></span>
+<span><span class="co">#&gt; -0.338</span></span>
+<span><span class="co">#&gt; -0.343</span></span>
+<span><span class="co">#&gt; -0.199</span></span>
+<span><span class="co">#&gt; -0.321</span></span>
+<span><span class="co">#&gt;  0.363</span></span>
+<span><span class="co">#&gt; -0.118</span></span>
+<span><span class="co">#&gt; -0.187</span></span>
+<span><span class="co">#&gt; -0.132</span></span>
+<span><span class="co">#&gt; -0.214</span></span>
+<span><span class="co">#&gt; Converting input data to the required matrix format.</span></span>
+<span><span class="co">#&gt; Target: 0.806, 38.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.837, 3.8% better</span></span>
+<span><span class="co">#&gt; Target: 0.859, 2.7% better</span></span>
+<span><span class="co">#&gt; Target: 0.863, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 0.878, 1.7% better</span></span>
+<span><span class="co">#&gt; Target: 0.888, 1.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.890, 0.3% better</span></span>
+<span><span class="co">#&gt; Target: 0.901, 1.2% better</span></span>
+<span><span class="co">#&gt; Target: 0.906, 0.5% better</span></span>
+<span><span class="co">#&gt; Target: 0.907, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.908, 0.1% better</span></span>
+<span><span class="co">#&gt; Target: 0.910, 0.2% better</span></span>
+<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
+<span><span class="co">#&gt; Final projection:</span></span>
+<span><span class="co">#&gt;  0.634  -0.359</span></span>
+<span><span class="co">#&gt; -0.666  -0.659</span></span>
+<span><span class="co">#&gt;  0.226  -0.496</span></span>
+<span><span class="co">#&gt;  0.059  -0.162</span></span>
+<span><span class="co">#&gt; -0.010  -0.281</span></span>
+<span><span class="co">#&gt;  0.317  -0.293</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
