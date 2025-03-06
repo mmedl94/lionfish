@@ -625,13 +625,14 @@ blendout threshold was set to 0.1.</p>
 <span><span class="co"># Figure 12</span></span>
 <span><span class="va">dist_matrix_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span>
 <span><span class="va">ward_cluster_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="va">dist_matrix_f</span>, <span class="st">"ward.D2"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">clusters_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, main <span class="op">=</span> <span class="st">"Dendrogram of Australian Vacation Activities"</span>,</span>
 <span>     sub <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">"Height"</span><span class="op">)</span></span>
 <span><span class="va">rect_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/rect.hclust.html" class="external-link">rect.hclust</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span>, border <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"></p>
+<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"><img src="Market-segmentation_files/figure-html/figure%2012-2.png" width="700"></p>
 <p>Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
