@@ -216,8 +216,20 @@ running /scripts/intro.R</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">b1</span> <span class="op">+</span> <span class="va">b2</span> <span class="op">+</span> <span class="va">b3</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span></span>
-<span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if</span></span>
+<span><span class="co">#&gt; `.name_repair` is omitted as of tibble 2.0.0.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using compatibility `.name_repair`.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
+<p><img src="Market-segmentation_files/figure-html/intro%20figure%201-1.png" width="700"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
+<span>                      <span class="st">"mvtnorm"</span>,</span>
+<span>                      <span class="st">"patchwork"</span>,</span>
+<span>                      <span class="st">"colorspace"</span>,</span>
+<span>                      <span class="st">"ggbeeswarm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">855</span><span class="op">)</span></span>
 <span><span class="va">b1_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">blob1</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">b2_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">blob2</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -303,7 +315,14 @@ running /scripts/intro.R</p>
 <span>        axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">b7</span> <span class="op">+</span> <span class="va">b8</span> <span class="op">+</span> <span class="va">b9</span> <span class="op">+</span> <span class="va">b10</span> <span class="op">+</span> <span class="va">b11</span> <span class="op">+</span> <span class="va">b12</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p><img src="Market-segmentation_files/figure-html/intro%20figure%202-1.png" width="700"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
+<span>                      <span class="st">"mvtnorm"</span>,</span>
+<span>                      <span class="st">"patchwork"</span>,</span>
+<span>                      <span class="st">"colorspace"</span>,</span>
+<span>                      <span class="st">"ggbeeswarm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="co"># Use facetting to make connection with plot 1 clearer</span></span>
 <span><span class="va">blob1_cl</span> <span class="op">&lt;-</span> <span class="va">blob1_cl</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>data <span class="op">=</span> <span class="st">"A"</span><span class="op">)</span></span>
@@ -387,19 +406,13 @@ running /scripts/intro.R</p>
 <span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">b13</span> <span class="op">+</span> <span class="va">b14</span> <span class="op">+</span> <span class="va">b15</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if</span></span>
-<span><span class="co">#&gt; `.name_repair` is omitted as of tibble 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Using compatibility `.name_repair`.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span>
 <span><span class="co">#&gt; Orientation inferred to be along y-axis; override with</span></span>
 <span><span class="co">#&gt; `position_quasirandom(orientation = 'x')`</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/intro-1.png" width="700"></p>
+<p><img src="Market-segmentation_files/figure-html/intro%20figure%203-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="interactive-interface-for-partitioning">Interactive interface for partitioning<a class="anchor" aria-label="anchor" href="#interactive-interface-for-partitioning"></a>
@@ -413,7 +426,7 @@ to give an overview on the GUI anyways.</p>
 <p>Please don’t forget to set the working directory to the downloaded
 repo when working with /scripts/load_snapshots.R.</p>
 <p>Figure 5 can be reproduced by running /scripts/austrian_tourism.R</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gridExtra"</span>,</span>
 <span>                       <span class="st">"patchwork"</span>,</span>
 <span>                       <span class="st">"gridExtra"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -483,7 +496,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figures 6 and 7 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                       <span class="st">"stats"</span>,</span>
 <span>                       <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -514,7 +527,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span>                 display_size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">}</span></span>
 <span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                        <span class="st">"stats"</span>,</span>
 <span>                        <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -540,7 +553,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <pre><code><span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre>
 <p><img src="Market-segmentation_files/figure-html/figure%207-2.png" width="700"></p>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load Austrian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"winterActiv"</span><span class="op">)</span></span>
 <span><span class="va">winterActiv_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpine.skiing"</span>, <span class="st">"going.to.a.spa"</span>, <span class="st">"using.health.facilities"</span>,</span>
@@ -555,7 +568,7 @@ corresponding display is on the top left. Subplots 8 A-F can be
 reproduced by highlighting the respective cluster and desaturating the
 others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/init"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -565,7 +578,7 @@ menu on the left. The blendout threshold was set to 0.1.</p>
 <p>Figure 10 can be reproduced by loading the contents of
 /saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -575,7 +588,7 @@ blendout threshold was set to 0.1.</p>
 <p>Figure 11 can be reproduced by loading the contents of
 /saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv</span>, <span class="st">"/saves/aut_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>,</span>
@@ -587,7 +600,7 @@ blendout threshold was set to 0.1.</p>
 <h2 id="australian-vacation-activities-dataset">Australian Vacation Activities dataset<a class="anchor" aria-label="anchor" href="#australian-vacation-activities-dataset"></a>
 </h2>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load Australian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
@@ -603,7 +616,7 @@ blendout threshold was set to 0.1.</p>
 <span><span class="va">cluster_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></code></pre></div>
 <p>Figure 12 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"flexclust"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
@@ -612,17 +625,16 @@ blendout threshold was set to 0.1.</p>
 <span><span class="co"># Figure 12</span></span>
 <span><span class="va">dist_matrix_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span>, method<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span>
 <span><span class="va">ward_cluster_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="va">dist_matrix_f</span>, <span class="st">"ward.D2"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">clusters_f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, main <span class="op">=</span> <span class="st">"Dendrogram of Australian Vacation Activities"</span>,</span>
 <span>     sub <span class="op">=</span> <span class="st">""</span>, xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">"Height"</span><span class="op">)</span></span>
 <span><span class="va">rect_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/rect.hclust.html" class="external-link">rect.hclust</a></span><span class="op">(</span><span class="va">ward_cluster_f</span>, k <span class="op">=</span> <span class="fl">15</span>, border <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"><img src="Market-segmentation_files/figure-html/figure%2012-2.png" width="700"></p>
+<p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"></p>
 <p>Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -631,7 +643,7 @@ blendout threshold was set to 0.1.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv</span>, <span class="st">"/saves/aus_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span>,</span>
@@ -642,14 +654,14 @@ blendout threshold was set to 0.1.</p>
 <div class="section level2">
 <h2 id="tourist-risk-taking-dataset">Tourist risk taking dataset<a class="anchor" aria-label="anchor" href="#tourist-risk-taking-dataset"></a>
 </h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"risk"</span><span class="op">)</span></span>
 <span><span class="va">dup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span></span>
 <span><span class="va">risk</span> <span class="op">&lt;-</span> <span class="va">risk</span><span class="op">[</span><span class="op">!</span><span class="va">dup</span>,<span class="op">]</span></span></code></pre></div>
 <p>Figure 15 can be reproduced by loading the contents of
 /saves/risk_saves/final_projeciton_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/final_projeciton_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
@@ -663,7 +675,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <p>Figure 17 can be reproduced by loading the contents of
 /saves/risk_saves/regrouped_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/regrouped_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
@@ -675,7 +687,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <div class="section level2">
 <h2 id="launch-interactive-tours-from-scratch">Launch interactive tours from scratch<a class="anchor" aria-label="anchor" href="#launch-interactive-tours-from-scratch"></a>
 </h2>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                       <span class="st">"stats"</span>,</span>
 <span>                       <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -822,193 +834,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">5</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="op">}</span></span>
-<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
-<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
-<span><span class="co">#&gt; Target: 0.424, 54.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.464, 9.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.471, 1.6% better</span></span>
-<span><span class="co">#&gt; Target: 0.487, 3.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.491, 0.7% better</span></span>
-<span><span class="co">#&gt; Target: 0.550, 12.0% better</span></span>
-<span><span class="co">#&gt; Target: 0.551, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.554, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 0.562, 1.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.564, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.565, 0.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.567, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.568, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.570, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.571, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.572, 0.1% better</span></span>
-<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
-<span><span class="co">#&gt; Final projection:</span></span>
-<span><span class="co">#&gt; -0.323  -0.625</span></span>
-<span><span class="co">#&gt; -0.026   0.576</span></span>
-<span><span class="co">#&gt;  0.117   0.135</span></span>
-<span><span class="co">#&gt;  0.057  -0.098</span></span>
-<span><span class="co">#&gt;  0.143  -0.223</span></span>
-<span><span class="co">#&gt;  0.158  -0.035</span></span>
-<span><span class="co">#&gt;  0.173   0.012</span></span>
-<span><span class="co">#&gt; -0.044   0.025</span></span>
-<span><span class="co">#&gt; -0.046  -0.108</span></span>
-<span><span class="co">#&gt;  0.273   0.032</span></span>
-<span><span class="co">#&gt;  0.324   0.271</span></span>
-<span><span class="co">#&gt; -0.787   0.333</span></span>
-<span><span class="co">#&gt; Target: 402.027, 685.1% better</span></span>
-<span><span class="co">#&gt; Target: 1070.904, 166.4% better</span></span>
-<span><span class="co">#&gt; Target: 1303.077, 21.7% better</span></span>
-<span><span class="co">#&gt; Target: 1539.991, 18.2% better</span></span>
-<span><span class="co">#&gt; Target: 1806.267, 17.3% better</span></span>
-<span><span class="co">#&gt; Target: 2967.997, 64.3% better</span></span>
-<span><span class="co">#&gt; Target: 3114.280, 4.9% better</span></span>
-<span><span class="co">#&gt; Target: 3392.523, 8.9% better</span></span>
-<span><span class="co">#&gt; Target: 3530.065, 4.1% better</span></span>
-<span><span class="co">#&gt; Target: 3555.576, 0.7% better</span></span>
-<span><span class="co">#&gt; Target: 3619.786, 1.8% better</span></span>
-<span><span class="co">#&gt; Target: 3810.492, 5.3% better</span></span>
-<span><span class="co">#&gt; Target: 3823.284, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 3880.765, 1.5% better</span></span>
-<span><span class="co">#&gt; Target: 3894.028, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 3911.649, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 3922.966, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 3927.240, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 3937.438, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 3948.599, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 3955.860, 0.2% better</span></span>
-<span><span class="co">#&gt; Target: 3959.984, 0.1% better</span></span>
-<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
-<span><span class="co">#&gt; Final projection:</span></span>
-<span><span class="co">#&gt;  0.260</span></span>
-<span><span class="co">#&gt;  0.065</span></span>
-<span><span class="co">#&gt; -0.015</span></span>
-<span><span class="co">#&gt; -0.072</span></span>
-<span><span class="co">#&gt; -0.172</span></span>
-<span><span class="co">#&gt; -0.156</span></span>
-<span><span class="co">#&gt; -0.160</span></span>
-<span><span class="co">#&gt;  0.055</span></span>
-<span><span class="co">#&gt;  0.030</span></span>
-<span><span class="co">#&gt; -0.256</span></span>
-<span><span class="co">#&gt; -0.322</span></span>
-<span><span class="co">#&gt;  0.818</span></span>
-<span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span>
-<span><span class="co">#&gt; Target: 0.355, 46.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.482, 36.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.498, 3.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.512, 2.8% better</span></span>
-<span><span class="co">#&gt; Target: 0.531, 3.8% better</span></span>
-<span><span class="co">#&gt; Target: 0.591, 11.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.598, 1.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.604, 1.0% better</span></span>
-<span><span class="co">#&gt; Target: 0.623, 3.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.650, 4.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.656, 0.9% better</span></span>
-<span><span class="co">#&gt; Target: 0.658, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.667, 1.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.670, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.671, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.674, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 0.676, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.677, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.680, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 0.681, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.682, 0.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.682, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.683, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.684, 0.2% better</span></span>
-<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
-<span><span class="co">#&gt; Final projection:</span></span>
-<span><span class="co">#&gt; -0.363   0.656</span></span>
-<span><span class="co">#&gt; -0.010   0.110</span></span>
-<span><span class="co">#&gt;  0.102   0.282</span></span>
-<span><span class="co">#&gt;  0.047   0.203</span></span>
-<span><span class="co">#&gt; -0.248   0.134</span></span>
-<span><span class="co">#&gt; -0.159  -0.003</span></span>
-<span><span class="co">#&gt;  0.014   0.231</span></span>
-<span><span class="co">#&gt;  0.023   0.065</span></span>
-<span><span class="co">#&gt;  0.356   0.209</span></span>
-<span><span class="co">#&gt;  0.257   0.250</span></span>
-<span><span class="co">#&gt;  0.207   0.112</span></span>
-<span><span class="co">#&gt;  0.469   0.188</span></span>
-<span><span class="co">#&gt; -0.315  -0.244</span></span>
-<span><span class="co">#&gt; -0.216   0.192</span></span>
-<span><span class="co">#&gt; -0.155   0.267</span></span>
-<span><span class="co">#&gt;  0.377  -0.037</span></span>
-<span><span class="co">#&gt; -0.005   0.195</span></span>
-<span><span class="co">#&gt; Target: 236.374, 178.9% better</span></span>
-<span><span class="co">#&gt; Target: 610.284, 158.2% better</span></span>
-<span><span class="co">#&gt; Target: 685.051, 12.3% better</span></span>
-<span><span class="co">#&gt; Target: 872.365, 27.3% better</span></span>
-<span><span class="co">#&gt; Target: 1061.948, 21.7% better</span></span>
-<span><span class="co">#&gt; Target: 1130.912, 6.5% better</span></span>
-<span><span class="co">#&gt; Target: 1549.045, 37.0% better</span></span>
-<span><span class="co">#&gt; Target: 1674.776, 8.1% better</span></span>
-<span><span class="co">#&gt; Target: 1697.182, 1.3% better</span></span>
-<span><span class="co">#&gt; Target: 1713.415, 1.0% better</span></span>
-<span><span class="co">#&gt; Target: 1762.268, 2.9% better</span></span>
-<span><span class="co">#&gt; Target: 1852.080, 5.1% better</span></span>
-<span><span class="co">#&gt; Target: 1907.642, 3.0% better</span></span>
-<span><span class="co">#&gt; Target: 1919.223, 0.6% better</span></span>
-<span><span class="co">#&gt; Target: 1937.962, 1.0% better</span></span>
-<span><span class="co">#&gt; Target: 1945.258, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 1957.952, 0.7% better</span></span>
-<span><span class="co">#&gt; Target: 1968.542, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 1998.572, 1.5% better</span></span>
-<span><span class="co">#&gt; Target: 2019.100, 1.0% better</span></span>
-<span><span class="co">#&gt; Target: 2027.377, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 2035.354, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 2057.748, 1.1% better</span></span>
-<span><span class="co">#&gt; Target: 2063.723, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 2071.659, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 2078.827, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 2086.892, 0.4% better</span></span>
-<span><span class="co">#&gt; Target: 2089.232, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 2095.832, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 2099.341, 0.2% better</span></span>
-<span><span class="co">#&gt; Target: 2102.781, 0.2% better</span></span>
-<span><span class="co">#&gt; Target: 2105.448, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 2107.949, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 2111.495, 0.2% better</span></span>
-<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
-<span><span class="co">#&gt; Final projection:</span></span>
-<span><span class="co">#&gt; -0.462</span></span>
-<span><span class="co">#&gt; -0.083</span></span>
-<span><span class="co">#&gt; -0.307</span></span>
-<span><span class="co">#&gt; -0.100</span></span>
-<span><span class="co">#&gt; -0.028</span></span>
-<span><span class="co">#&gt;  0.006</span></span>
-<span><span class="co">#&gt; -0.230</span></span>
-<span><span class="co">#&gt; -0.052</span></span>
-<span><span class="co">#&gt; -0.338</span></span>
-<span><span class="co">#&gt; -0.343</span></span>
-<span><span class="co">#&gt; -0.199</span></span>
-<span><span class="co">#&gt; -0.321</span></span>
-<span><span class="co">#&gt;  0.363</span></span>
-<span><span class="co">#&gt; -0.118</span></span>
-<span><span class="co">#&gt; -0.187</span></span>
-<span><span class="co">#&gt; -0.132</span></span>
-<span><span class="co">#&gt; -0.214</span></span>
-<span><span class="co">#&gt; Converting input data to the required matrix format.</span></span>
-<span><span class="co">#&gt; Target: 0.806, 38.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.837, 3.8% better</span></span>
-<span><span class="co">#&gt; Target: 0.859, 2.7% better</span></span>
-<span><span class="co">#&gt; Target: 0.863, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 0.878, 1.7% better</span></span>
-<span><span class="co">#&gt; Target: 0.888, 1.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.890, 0.3% better</span></span>
-<span><span class="co">#&gt; Target: 0.901, 1.2% better</span></span>
-<span><span class="co">#&gt; Target: 0.906, 0.5% better</span></span>
-<span><span class="co">#&gt; Target: 0.907, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.908, 0.1% better</span></span>
-<span><span class="co">#&gt; Target: 0.910, 0.2% better</span></span>
-<span><span class="co">#&gt; No better bases found after 25 tries.  Giving up.</span></span>
-<span><span class="co">#&gt; Final projection:</span></span>
-<span><span class="co">#&gt;  0.634  -0.359</span></span>
-<span><span class="co">#&gt; -0.666  -0.659</span></span>
-<span><span class="co">#&gt;  0.226  -0.496</span></span>
-<span><span class="co">#&gt;  0.059  -0.162</span></span>
-<span><span class="co">#&gt; -0.010  -0.281</span></span>
-<span><span class="co">#&gt;  0.317  -0.293</span></span></code></pre></div>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
