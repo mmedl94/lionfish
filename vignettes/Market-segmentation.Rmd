@@ -78,7 +78,7 @@ if (requireNamespace("dplyr")) {library(dplyr)}
 Figures 1, 2 and 3 shown in the introduction can be reproduced by
 running /scripts/intro.R
 
-```{r intro}
+```{r intro figure 1}
 if (requireNamespace(c("tidyverse",
                       "mvtnorm",
                       "patchwork",
@@ -126,8 +126,15 @@ b3 <- ggplot(blob3, aes(V1, V2)) +
   theme(axis.text = element_blank(),
         axis.title = element_blank())
 b1 + b2 + b3 + plot_layout(ncol=3)
+}
+```
 
-
+```{r intro figure 2}
+if (requireNamespace(c("tidyverse",
+                      "mvtnorm",
+                      "patchwork",
+                      "colorspace",
+                      "ggbeeswarm"))){
 set.seed(855)
 b1_km <- kmeans(blob1, 4)
 b2_km <- kmeans(blob2, 4)
@@ -213,7 +220,15 @@ b12 <- ggplot(blob3_cl, aes(V2, fill=cl)) +
         axis.text = element_blank(),
         axis.title.y = element_blank())
 b7 + b8 + b9 + b10 + b11 + b12 + plot_layout(ncol=3)
+}
+```
 
+```{r intro figure 3}
+if (requireNamespace(c("tidyverse",
+                      "mvtnorm",
+                      "patchwork",
+                      "colorspace",
+                      "ggbeeswarm"))){
 # Use facetting to make connection with plot 1 clearer
 blob1_cl <- blob1_cl |>
   mutate(data = "A")
@@ -526,7 +541,6 @@ set.seed(1234)
 # Figure 12
 dist_matrix_f <- dist(t(ausActiv), method="binary")
 ward_cluster_f <- hclust(dist_matrix_f, "ward.D2")
-plot(ward_cluster_f)
 
 clusters_f <- cutree(ward_cluster_f, k = 15)
 plot(ward_cluster_f, main = "Dendrogram of Australian Vacation Activities",
@@ -603,7 +617,7 @@ load_interactive_tour(risk, "/saves/risk_saves/regrouped_risk",
 
 ## Launch interactive tours from scratch
 
-```{r interactive tours from scratch}
+```{r interactive tours from scratch,results = 'hide', warning=FALSE, message=FALSE}
 if (requireNamespace(c("flexclust",
                        "stats",
                        "dplyr"))){
