@@ -136,8 +136,10 @@ library(tourr)
 display_size <- 5 # Adjust to fit your display
 ```
 
-```{r, eval=FALSE}
-init_env()
+```{r}
+if (check_env()){
+  init_env()
+}
 ```
 
 ```{r, results="hide", message=FALSE}
@@ -156,7 +158,8 @@ obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
 
 Finally, we start an interactive tour to have a closer look at the data.
 
-```{r, eval = FALSE}
+```{r}
+if (check_env()){
 interactive_tour(data=data_wo_y,
                  plot_objects=list(obj2),
                  feature_names=feature_names,
@@ -166,6 +169,7 @@ interactive_tour(data=data_wo_y,
                  preselection_names=yield_labels,
                  display_size=8,
                  color_scale="plasma")
+}
 ```
 
 First, we set the "Blend out projection threshold" to 0.2. This setting
@@ -246,17 +250,21 @@ important variables according to the model. For this analysis the 10
 most important have been chosen.
 
 ```{r,results = 'hide', warning=FALSE, message=FALSE}
-set.seed(42)
-library(randomForest)
+if (requireNamespace("randomForest")) {
+  set.seed(42)
+  library(randomForest)
+}
 ```
 
 ```{r}
-rf <- randomForest(Yield~.,data)
-importance_df <- data.frame(rf$importance)
-importance_df <- as.data.table(rf$importance, keep.rownames = "Feature")
-sorted_importance <- importance_df[order(-IncNodePurity)]
-top_10_features <- sorted_importance[1:10, Feature]
-print(top_10_features)
+if (requireNamespace("randomForest")) {
+  rf <- randomForest(Yield~.,data)
+  importance_df <- data.frame(rf$importance)
+  importance_df <- as.data.table(rf$importance, keep.rownames = "Feature")
+  sorted_importance <- importance_df[order(-IncNodePurity)]
+  top_10_features <- sorted_importance[1:10, Feature]
+  print(top_10_features)
+}
 ```
 
 We can take from the R output that the 10 most important process
@@ -266,22 +274,25 @@ processes 09, 13, 17, 31, 32, and 36, and biological materials 03, 06,
 variables and visualize the data in the same way we did earlier.
 
 ```{r,results = 'hide', warning=FALSE, message=FALSE}
-data_rf_sel <- data[, ..top_10_features]
+if (requireNamespace("randomForest")) {
+  data_rf_sel <- data[, ..top_10_features]
 
-grand_tour_history_1d <- save_history(data_rf_sel,
-                                      tour_path = guided_tour(lda_pp(yield_values),d=1))
+  grand_tour_history_1d <- save_history(data_rf_sel,
+                                        tour_path = guided_tour(lda_pp(yield_values),d=1))
 
-lda_tour_history_2d <- save_history(data_rf_sel, 
-                                    tour_path = guided_tour(lda_pp(yield_values),d=2))
+  lda_tour_history_2d <- save_history(data_rf_sel, 
+                                      tour_path = guided_tour(lda_pp(yield_values),d=2))
 
-half_range <- max(sqrt(rowSums(data_rf_sel^2)))
-feature_names <- colnames(data_rf_sel)
+  half_range <- max(sqrt(rowSums(data_rf_sel^2)))
+  feature_names <- colnames(data_rf_sel)
 
-obj1 <- list(type="1d_tour", obj=grand_tour_history_1d)
-obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
+  obj1 <- list(type="1d_tour", obj=grand_tour_history_1d)
+  obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
+}
 ```
 
-```{r, eval=FALSE}
+```{r}
+if (check_env()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -292,6 +303,7 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=11,
                  display_size=8,
                  color_scale = "plasma")
+}
 ```
 
 We can see that there is already some separation at the initial frame,
@@ -324,20 +336,23 @@ new_yield_values <- findInterval(data$Yield, new_intervals, rightmost.closed = T
 ```
 
 ```{r,results = 'hide', warning=FALSE, message=FALSE}
-grand_tour_history_1d <- save_history(data_rf_sel,
-                                      tour_path = guided_tour(lda_pp(new_yield_values),d=1))
+if (requireNamespace("randomForest")) {
+  grand_tour_history_1d <- save_history(data_rf_sel,
+                                        tour_path = guided_tour(lda_pp(new_yield_values),d=1))
 
-lda_tour_history_2d <- save_history(data_rf_sel, 
-                                    tour_path = guided_tour(lda_pp(new_yield_values),d=2))
+  lda_tour_history_2d <- save_history(data_rf_sel, 
+                                      tour_path = guided_tour(lda_pp(new_yield_values),d=2))
 
-half_range <- max(sqrt(rowSums(data_rf_sel^2)))
-feature_names <- colnames(data_rf_sel)
+  half_range <- max(sqrt(rowSums(data_rf_sel^2)))
+  feature_names <- colnames(data_rf_sel)
 
-obj1 <- list(type="1d_tour", obj=grand_tour_history_1d)
-obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
+  obj1 <- list(type="1d_tour", obj=grand_tour_history_1d)
+  obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
+}
 ```
 
-```{r, eval=FALSE}
+```{r}
+if (check_env()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -348,6 +363,7 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=3,
                  display_size=8,
                  color_scale = "plasma")
+}
 ```
 
 ![](https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif){width=100%}

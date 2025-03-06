@@ -41,14 +41,15 @@ Examples for all displays can be found below.
 ```{r load packages}
 # Load required packages
 library(tourr)
-library(reticulate)
 library(lionfish)
-library(flexclust)
+if (requireNamespace("flexclust")) {library(flexclust)}
 ```
 
 ```{r initialize python backend,  eval = FALSE}
 # Initialize python backend
+if (check_env()){
 init_env()
+}
 ```
 
 ### Dataset 1 - Flea data
@@ -70,6 +71,7 @@ half_range_flea <- max(sqrt(rowSums(flea^2)))
 ### Dataset 2 - Winter activities data
 
 ```{r Load and prepare flea data winter activities data}
+if (requireNamespace("flexclust")) {
 # Load dataset and set seed
 data("winterActiv")
 set.seed(42)
@@ -80,6 +82,7 @@ clusters_winter <- clusters_winter@cluster
 
 # Get the names of our features
 feature_names_winter <- colnames(winterActiv)
+}
 ```
 
 ## Currently supported display types
@@ -157,7 +160,7 @@ axis have to be provided in form of a two dimensional vector.
 
 #### Example plot object
 
-```{r scatterplot,  eval = FALSE}
+```{r scatterplot}
 obj_flea_scatter <- list(type="scatter",          # type of display
                          obj=c("tars1", "tars2")) # x and y axis of plot
 ```
@@ -280,8 +283,9 @@ The various plot objects can the be displayed with the
 [interactive_tour](https://mmedl94.github.io/lionfish/reference/interactive_tour.html)
 function.
 
-```{r interactive_tour flea,  eval = FALSE}
+```{r interactive_tour flea}
 # interactive_tour call of flea dataset. Insert plot objects of your liking.
+if (check_env()){
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
                  plot_objects=list(obj_flea_2d_tour),
@@ -291,10 +295,12 @@ interactive_tour(data=flea,
                  n_subsets=3,
                  preselection_names=flea_subspecies,
                  display_size=5)
+}
 ```
 
-```{r interactive_tour winterActiv,  eval = FALSE}
+```{r interactive_tour winterActiv}
 # interactive_tour call of winterActiv dataset. Insert plot objects of your liking.
+if (check_env()){
 interactive_tour(data=winterActiv,
                  feature_names=feature_names_winter,
                  plot_objects=list(obj_winter_cat_clust),
@@ -303,4 +309,5 @@ interactive_tour(data=winterActiv,
                  preselection=clusters_winter,
                  n_subsets=10,
                  display_size=5)
+}
 ```

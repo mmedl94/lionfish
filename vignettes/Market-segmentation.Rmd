@@ -60,14 +60,17 @@ This will be necessary to load the lionfish snapshots.
 
 ```{r load packages}
 library(lionfish)
-library(tidyverse)
-library(mvtnorm)
-library(patchwork)
-library(colorspace)
-library(ggbeeswarm)
 library(data.table)
 library(tourr)
-library(flexclust)
+if (requireNamespace("tidyverse")) {library(tidyverse)}
+if (requireNamespace("mvtnorm")) {library(mvtnorm)}
+if (requireNamespace("patchwork")) {library(patchwork)}
+if (requireNamespace("colorspace")) {library(colorspace)}
+if (requireNamespace("ggbeeswarm")) {library(ggbeeswarm)}
+if (requireNamespace("flexclust")) {library(flexclust)}
+if (requireNamespace("gridExtra")) {library(gridExtra)}
+if (requireNamespace("stats")) {library(stats)}
+if (requireNamespace("dplyr")) {library(dplyr)}
 ```
 
 ## Introduction
@@ -76,6 +79,11 @@ Figures 1, 2 and 3 shown in the introduction can be reproduced by
 running /scripts/intro.R
 
 ```{r intro}
+if (requireNamespace(c("tidyverse",
+                      "mvtnorm",
+                      "patchwork",
+                      "colorspace",
+                      "ggbeeswarm"))){
 theme_set(theme_bw(base_size = 14) +
             theme(
               aspect.ratio = 1,
@@ -288,7 +296,7 @@ b15 <- ggplot(blob3_cl, aes(x=V1_V2, y=1, colour=cl)) +
         axis.ticks = element_blank(),
         panel.grid = element_blank())
 b13 + b14 + b15 + plot_layout(ncol=3)
-
+}
 ```
 
 
@@ -302,7 +310,11 @@ Please don't forget to set the working directory to the downloaded repo when wor
 
 Figure 5 can be reproduced by running /scripts/austrian_tourism.R
 
+
 ```{r figure 5}
+if (requireNamespace(c("gridExtra",
+                       "patchwork",
+                       "gridExtra"))){
 # Check random projections
 data(winterActiv)
 set.seed(630)
@@ -366,16 +378,22 @@ combined_plot <- (plot1 | plot2 | plot3 | plot4) +
     panel.grid = element_blank(),
     plot.margin = margin(5, 5, 5, 5)
   )
+}
 ```
 
 Figures 6 and 7 can be reproduced by running /scripts/austrian_tourism_clustering.R
 
-```{r figure 6, eval=FALSE}
+
+```{r figure 6}
+if (requireNamespace(c("flexclust",
+                       "stats",
+                       "dplyr"))){
 # perform initial k-means clustering
 set.seed(1234)
 data(winterActiv)
 clusters_full = stepcclust(winterActiv, k=6, nrep=20,  save.data=TRUE)
 
+if (check_env()){
 # Figure 6 A
 init_env()
 obj1 <- list(type = "heatmap", obj = c("Intra cluster fraction"))
@@ -393,11 +411,15 @@ interactive_tour(data=winterActiv,
                  feature_names= colnames(winterActiv),
                  preselection = clusters_full@cluster,
                  n_subsets = 6,
-                 color_scale = "coolwarm",
+                 color_scale_heatmap = "coolwarm",
                  display_size = 7)
+}}
 ```
 
 ```{r figure 7}
+if (requireNamespace(c("flexclust",
+                        "stats",
+                        "dplyr"))){
 # perform initial k-means clustering
 set.seed(1234)
 data(winterActiv)
@@ -414,6 +436,7 @@ winterActiv_features <- c("alpine.skiing", "going.to.a.spa", "using.health.facil
 winterActiv_feat_subset <- winterActiv[, colnames(winterActiv) %in% winterActiv_features]
 clusters_feat_subset = stepcclust(winterActiv_feat_subset, k=6, nrep=20,  save.data=TRUE)
 plot(Silhouette(clusters_feat_subset))
+}
 ```
 
 To launch the GUI snapshots, the data has to be prepared first.
@@ -437,10 +460,12 @@ others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.
 
 ```{r figures 8 and 9, eval=FALSE}
+if (check_env()){
 load_interactive_tour(winterActiv, "/saves/aut_saves/init",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
+}
 ```
 
 Figure 10 can be reproduced by loading the contents of
@@ -448,10 +473,12 @@ Figure 10 can be reproduced by loading the contents of
 blendout threshold was set to 0.1.
 
 ```{r figure 10, eval=FALSE}
+if (check_env()){
 load_interactive_tour(winterActiv, "/saves/aut_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
+}
 ```
 
 Figure 11 can be reproduced by loading the contents of
@@ -459,10 +486,12 @@ Figure 11 can be reproduced by loading the contents of
 blendout threshold was set to 0.1.
 
 ```{r figure 11, eval=FALSE}
+if (check_env()){
 load_interactive_tour(winterActiv, "/saves/aut_saves/after",
                       preselection_names = cluster_names[1:7],
                       hover_cutoff=20,
                       display_size = 5)
+}
 ```
 
 ## Australian Vacation Activities dataset
@@ -470,7 +499,6 @@ load_interactive_tour(winterActiv, "/saves/aut_saves/after",
 To launch the GUI snapshots, the data has to be prepared first.
 
 ```{r prepare ausActiv data}
-library(lionfish)
 # load Australian Vacation Activities dataset
 data("ausActiv")
 ausActiv <- ausActiv[rowSums(ausActiv) > 0 & rowSums(ausActiv) <= 40, ]
@@ -490,6 +518,7 @@ Figure 12 can be reproduced by running
 /scripts/austrian_tourism_clustering.R
 
 ```{r figure 12}
+if (requireNamespace("flexclust")){
 data("ausActiv")
 ausActiv <- ausActiv[rowSums(ausActiv) > 0 & rowSums(ausActiv) <= 40, ]
 set.seed(1234)
@@ -503,26 +532,31 @@ clusters_f <- cutree(ward_cluster_f, k = 15)
 plot(ward_cluster_f, main = "Dendrogram of Australian Vacation Activities",
      sub = "", xlab = "", ylab = "Height")
 rect_info <- rect.hclust(ward_cluster_f, k = 15, border = 2:16)
+}
 ```
 
 Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.
 
 ```{r figure 13, eval=FALSE}
+if (check_env()){
 load_interactive_tour(ausActiv, "/saves/aus_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
+}
 ```
 
 Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.
 
 ```{r figure 14, eval=FALSE}
+if (check_env()){
 load_interactive_tour(ausActiv, "/saves/aus_saves/after",
                       preselection_names = cluster_names[1:9],
                       hover_cutoff=20,
                       display_size = 5)
+}
 ```
 
 
@@ -539,11 +573,13 @@ Figure 15 can be reproduced by loading the contents of
 /scripts/load_snapshots.R.
 
 ```{r figure 15, eval=FALSE}
+if (check_env()){
 load_interactive_tour(risk, "/saves/risk_saves/final_projeciton_risk",
                       preselection_names = cluster_names[1:5],
                       feature_names = names(risk),
                       hover_cutoff=20,
                       display_size = 5.5)
+}
 ```
 
 Figure 16 can be reproduced by clicking the on the dropdown menu on the
@@ -555,22 +591,30 @@ Figure 17 can be reproduced by loading the contents of
 
 
 ```{r figure 17, eval=FALSE}
+if (check_env()){
 load_interactive_tour(risk, "/saves/risk_saves/regrouped_risk",
                       preselection_names = cluster_names[1:5],
                       feature_names = names(risk),
                       hover_cutoff=20,
                       display_size = 6)
+}
 ```
 
 
 ## Launch interactive tours from scratch
 
-```{r interactive tours from scratch, eval=FALSE}
+```{r interactive tours from scratch}
+if (requireNamespace(c("flexclust",
+                       "stats",
+                       "dplyr"))){
+
 # set working directory to path/to/lionfish_article/
-setwd("..")
-
+# setwd("..")
+  
+if (check_env()){
 init_env()
-
+}
+  
 ######## Austrian Tourism ########
 
 set.seed(1234)
@@ -596,6 +640,7 @@ obj2 <- list(type = "heatmap", obj = c("total fraction"))
 obj3 <- list(type = "1d_tour", obj = lda_tour_history_1d)
 obj4 <- list(type = "mosaic", obj = c("subgroups_on_y"))
 
+if (check_env()){
 interactive_tour(data=winterActiv_feat_subset,
                  plot_objects = list(obj1, obj2, obj3, obj4),
                  feature_names=col_names,
@@ -603,6 +648,7 @@ interactive_tour(data=winterActiv_feat_subset,
                  n_plot_cols=2,
                  preselection = clusters_feat_subset@cluster,
                  display_size = 5)
+}
 
 ######## Australian Tourism ########
 
@@ -619,8 +665,8 @@ ausActiv_feat_subset <- ausActiv[, colnames(ausActiv) %in% ausActiv_features]
 # The subset selection might deviate slightly depending on seed
 # The original subset selection can be loaded form saves with
 
-#subset_selection <- read.csv("saves/aus_saves/before/subset_selection.csv", header = TRUE)
-#subsets <- subset_selection[order(subset_selection$observation_index), ]$subset
+# subset_selection <- read.csv("saves/aus_saves/before/subset_selection.csv", header = TRUE)
+# subsets <- subset_selection[order(subset_selection$observation_index), ]$subset
 
 clusters <- stepcclust(ausActiv_feat_subset, k=6, nrep=20,  save.data=TRUE)
 subsets <- clusters@cluster
@@ -639,6 +685,7 @@ obj2 <- list(type = "1d_tour", obj = lda_tour_history_1d)
 obj3 <- list(type = "mosaic", obj = c("subgroups_on_y"))
 obj4 <- list(type = "heatmap", obj = c("Intra cluster fraction"))
 
+if (check_env()){
 interactive_tour(data=ausActiv_feat_subset,
                  feature_names = col_names,
                  plot_objects = list(obj1, obj2, obj3, obj4),
@@ -648,6 +695,7 @@ interactive_tour(data=ausActiv_feat_subset,
                  n_subsets = 10,
                  display_size = 5,
                  hover_cutoff = 50)
+}
 
 
 ######## Risk ########
@@ -691,6 +739,7 @@ clusters_swapped[clusters_swapped == 99] <- 4
 
 obj1 <- list(type="2d_tour", obj=guided_tour_history)
 
+if (check_env()){
 interactive_tour(data=data.matrix(risk2),
                  plot_objects=list(obj1),
                  feature_names=feature_names,
@@ -700,4 +749,6 @@ interactive_tour(data=data.matrix(risk2),
                  preselection_names=cluster_names,
                  n_subsets=5,
                  display_size=6)
+}
+}
 ```

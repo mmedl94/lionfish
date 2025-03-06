@@ -36,18 +36,20 @@ Examples for all displays can be found below.
 
 ## Setup
 
-```{r setup, eval = FALSE}
+```{r setup}
 # Load required packages
 library(tourr)
 library(lionfish)
 
 # Initialize python backend
+if (check_env()){
 init_env()
+}
 ```
 
 ### Dataset - Flea data
 
-```{r Load and prepare flea data, eval = FALSE}
+```{r Load and prepare flea data}
 data("flea")
 data <- apply(flea[,1:6], 2, function(x) (x-mean(x))/sd(x))
 clusters <- as.numeric(flea$species)
@@ -61,13 +63,13 @@ grand_tour_history_1d <- save_history(data,
 half_range <- max(sqrt(rowSums(data^2)))
 feature_names <- colnames(data)
 
-init_env()
-
 obj1 <- list(type="2d_tour", obj=guided_tour_history)
 obj2 <- list(type="1d_tour", obj=grand_tour_history_1d)
 obj3 <- list(type="scatter", obj=c("tars1", "tars2"))
 obj4 <- list(type="hist", obj="head")
 
+if (check_env()){
+init_env()
 interactive_tour(data=data,
                  plot_objects=list(obj1, obj2, obj3, obj4),
                  feature_names=feature_names,
@@ -77,6 +79,7 @@ interactive_tour(data=data,
                  preselection_names=flea_subspecies,
                  n_subsets=5,
                  display_size=4.5)
+}
 ```
 
 ## Currently supported general interactivity
