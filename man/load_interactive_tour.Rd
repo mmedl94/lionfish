@@ -7,7 +7,6 @@
 load_interactive_tour(
   data,
   directory_to_save,
-  feature_names = NULL,
   half_range = NULL,
   n_plot_cols = 2,
   preselection = FALSE,
@@ -26,8 +25,6 @@ load_interactive_tour(
 dataset that was loaded when the save was created!}
 
 \item{directory_to_save}{path to the location of the save folder}
-
-\item{feature_names}{names of the features of the dataset}
 
 \item{half_range}{factor that influences the scaling of the displayed tour plots.
 Small values lead to more spread out datapoints (that might not fit the plotting area),
@@ -67,9 +64,12 @@ Additionally, this function allows to adjust some parameters of the GUI when
 loading a snapshot, such as display_size or label_size.
 }
 \examples{
-\dontrun{
 data("flea", package = "tourr")
+data <- flea[1:6]
+if (check_env()){
 init_env()
-load_interactive_tour(flea, "/path/to/save")
+pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
+pytourr_dir <- paste(pytourr_dir, "/inst/test_snapshot", sep = "")
+load_interactive_tour(data, pytourr_dir)
 }
 }

@@ -83,7 +83,9 @@ if (requireNamespace(c("tidyverse",
                       "mvtnorm",
                       "patchwork",
                       "colorspace",
-                      "ggbeeswarm"))){
+                      "ggbeeswarm",
+                      "dplyr",
+                      "gridExtra"))){
 theme_set(theme_bw(base_size = 14) +
             theme(
               aspect.ratio = 1,
@@ -134,7 +136,9 @@ if (requireNamespace(c("tidyverse",
                       "mvtnorm",
                       "patchwork",
                       "colorspace",
-                      "ggbeeswarm"))){
+                      "ggbeeswarm",
+                      "dplyr",
+                      "gridExtra"))){
 set.seed(855)
 b1_km <- kmeans(blob1, 4)
 b2_km <- kmeans(blob2, 4)
@@ -228,7 +232,9 @@ if (requireNamespace(c("tidyverse",
                       "mvtnorm",
                       "patchwork",
                       "colorspace",
-                      "ggbeeswarm"))){
+                      "ggbeeswarm",
+                      "dplyr",
+                      "gridExtra"))){
 # Use facetting to make connection with plot 1 clearer
 blob1_cl <- blob1_cl |>
   mutate(data = "A")
@@ -393,6 +399,8 @@ combined_plot <- (plot1 | plot2 | plot3 | plot4) +
     panel.grid = element_blank(),
     plot.margin = margin(5, 5, 5, 5)
   )
+
+combined_plot
 }
 ```
 
@@ -401,8 +409,7 @@ Figures 6 and 7 can be reproduced by running /scripts/austrian_tourism_clusterin
 
 ```{r figure 6}
 if (requireNamespace(c("flexclust",
-                       "stats",
-                       "dplyr"))){
+                       "stats"))){
 # perform initial k-means clustering
 set.seed(1234)
 data(winterActiv)
@@ -433,8 +440,7 @@ interactive_tour(data=winterActiv,
 
 ```{r figure 7}
 if (requireNamespace(c("flexclust",
-                        "stats",
-                        "dplyr"))){
+                        "stats"))){
 # perform initial k-means clustering
 set.seed(1234)
 data(winterActiv)
@@ -458,7 +464,7 @@ To launch the GUI snapshots, the data has to be prepared first.
 
 ```{r prepare winterActiv data}
 # load Austrian Vacation Activities dataset
-data("winterActiv")
+data(winterActiv)
 winterActiv_features <- c("alpine.skiing", "going.to.a.spa", "using.health.facilities",
                          "hiking", "going.for.walks","excursions",
                          "going.out.in.the.evening", "going.to.discos.bars",
@@ -476,7 +482,7 @@ menu on the left. The blendout threshold was set to 0.1.
 
 ```{r figures 8 and 9, eval=FALSE}
 if (check_env()){
-load_interactive_tour(winterActiv, "/saves/aut_saves/init",
+load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/init",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
@@ -489,7 +495,7 @@ blendout threshold was set to 0.1.
 
 ```{r figure 10, eval=FALSE}
 if (check_env()){
-load_interactive_tour(winterActiv, "/saves/aut_saves/before",
+load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
@@ -502,7 +508,7 @@ blendout threshold was set to 0.1.
 
 ```{r figure 11, eval=FALSE}
 if (check_env()){
-load_interactive_tour(winterActiv, "/saves/aut_saves/after",
+load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/after",
                       preselection_names = cluster_names[1:7],
                       hover_cutoff=20,
                       display_size = 5)
@@ -515,7 +521,7 @@ To launch the GUI snapshots, the data has to be prepared first.
 
 ```{r prepare ausActiv data}
 # load Australian Vacation Activities dataset
-data("ausActiv")
+data(ausActiv)
 ausActiv <- ausActiv[rowSums(ausActiv) > 0 & rowSums(ausActiv) <= 40, ]
 
 ausActiv_features <- c("Beach","Farm","Whale","Riding",
@@ -555,7 +561,7 @@ Figures 13 can be reproduced by loading the contents of
 
 ```{r figure 13, eval=FALSE}
 if (check_env()){
-load_interactive_tour(ausActiv, "/saves/aus_saves/before",
+load_interactive_tour(ausActiv_feat_subset, "/saves/aus_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
@@ -567,7 +573,7 @@ Figures 14 can be reproduced by loading the contents of
 
 ```{r figure 14, eval=FALSE}
 if (check_env()){
-load_interactive_tour(ausActiv, "/saves/aus_saves/after",
+load_interactive_tour(ausActiv_feat_subset, "/saves/aus_saves/after",
                       preselection_names = cluster_names[1:9],
                       hover_cutoff=20,
                       display_size = 5)
@@ -578,7 +584,7 @@ load_interactive_tour(ausActiv, "/saves/aus_saves/after",
 ## Tourist risk taking dataset
 
 ```{r load risk dataset}
-data("risk")
+data(risk)
 dup <- duplicated(risk)
 risk <- risk[!dup,]
 ```
@@ -591,7 +597,6 @@ Figure 15 can be reproduced by loading the contents of
 if (check_env()){
 load_interactive_tour(risk, "/saves/risk_saves/final_projeciton_risk",
                       preselection_names = cluster_names[1:5],
-                      feature_names = names(risk),
                       hover_cutoff=20,
                       display_size = 5.5)
 }
@@ -609,7 +614,6 @@ Figure 17 can be reproduced by loading the contents of
 if (check_env()){
 load_interactive_tour(risk, "/saves/risk_saves/regrouped_risk",
                       preselection_names = cluster_names[1:5],
-                      feature_names = names(risk),
                       hover_cutoff=20,
                       display_size = 6)
 }

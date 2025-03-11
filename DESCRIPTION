@@ -1,6 +1,6 @@
 Package: lionfish
 Title: Interactive 'tourr's Using 'python'
-Version: 1.0.19
+Version: 1.0.21
 Authors@R: 
     person("Matthias", "Medl", , "matthias.medl@chello.at", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-3354-4579"))
@@ -18,7 +18,8 @@ RoxygenNote: 7.3.1
 Imports: 
     reticulate,
     tourr (>= 1.2.4),
-    data.table
+    data.table,
+    utils
 Suggests:
     ggplot2,
     viridis,
@@ -31,6 +32,8 @@ Suggests:
     patchwork,
     mvtnorm,
     tidyverse,
+    dplyr,
+    gridExtra,
     flexclust
 VignetteBuilder: knitr
 URL: https://mmedl94.github.io/lionfish/

@@ -85,7 +85,7 @@ grand_tour_history_1d <- save_history(data,
 
 half_range <- max(sqrt(rowSums(data^2)))
 
-if (interactive()){
+if (check_env()){
 init_env()
 
 obj1 <- list(type = "2d_tour", obj = guided_tour_history)

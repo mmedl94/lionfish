@@ -8,7 +8,6 @@
 #' @param data the dataset you want to investigate. Must be the same as the
 #' dataset that was loaded when the save was created!
 #' @param directory_to_save path to the location of the save folder
-#' @param feature_names names of the features of the dataset
 #' @param half_range factor that influences the scaling of the displayed tour plots.
 #' Small values lead to more spread out datapoints (that might not fit the plotting area),
 #' while large values lead to the data being more compact. If not provided a good estimate
@@ -31,14 +30,16 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' data("flea", package = "tourr")
+#' data <- flea[1:6]
+#' if (check_env()){
 #' init_env()
-#' load_interactive_tour(flea, "/path/to/save")
+#' pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
+#' pytourr_dir <- paste(pytourr_dir, "/inst/test_snapshot", sep = "")
+#' load_interactive_tour(data, pytourr_dir)
 #' }
 
-load_interactive_tour <- function(data, directory_to_save,
-                                  feature_names = NULL, half_range = NULL,
+load_interactive_tour <- function(data, directory_to_save, half_range = NULL,
                                   n_plot_cols = 2, preselection = FALSE,
                                   preselection_names = FALSE, n_subsets = FALSE,
                                   display_size = 5, hover_cutoff = 10,
@@ -46,6 +47,8 @@ load_interactive_tour <- function(data, directory_to_save,
                                   color_scale_heatmap="default",
                                   axes_blendout_threshhold = 1) {
   pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
+  feature_dir <- base::paste(pytourr_dir, "/inst/test_snapshot/feature_selection.csv", sep = "")
+  feature_names <- utils::read.csv(feature_dir, header = FALSE)$V1
 
   if (dir.exists(file.path(pytourr_dir, "/inst"))) {
     pytourr_dir <- base::paste(pytourr_dir, "/inst/python", sep = "")
@@ -53,10 +56,6 @@ load_interactive_tour <- function(data, directory_to_save,
     pytourr_dir <- base::paste(pytourr_dir, "/python", sep = "")
   }
   req_py_func <- "/interactive_tour.py"
-
-  if (is.null(feature_names)) {
-    feature_names <- paste("feature", 1:ncol(data))
-  }
 
   if (file.exists(paste0(directory_to_save, "/attributes.pkl"))) {
     base::message(paste0("loading from ", directory_to_save))
