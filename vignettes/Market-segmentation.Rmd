@@ -590,12 +590,12 @@ risk <- risk[!dup,]
 ```
 
 Figure 15 can be reproduced by loading the contents of
-/saves/risk_saves/final_projeciton_risk as shown in
+/saves/risk_saves/final_projection_risk as shown in
 /scripts/load_snapshots.R.
 
 ```{r figure 15, eval=FALSE}
 if (check_env()){
-load_interactive_tour(risk, "/saves/risk_saves/final_projeciton_risk",
+load_interactive_tour(risk, "/saves/risk_saves/final_projection_risk",
                       preselection_names = cluster_names[1:5],
                       hover_cutoff=20,
                       display_size = 5.5)

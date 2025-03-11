@@ -140,7 +140,7 @@ obj_flea_2d_tour <- list(type="2d_tour",         # type of display
 
 #### Interactivity
 
--   Changeing frames of tour: The frames of the current tour can be changed by
+-   Changing frames of tour: The frames of the current tour can be changed by
 pressing the left arrow-key for the last frame and the right arrow-key for the
 next frame. The current frame is displayed in the frame on the left. 
 -   Projection manipulation: the projection can be manipulated clicking on one of
