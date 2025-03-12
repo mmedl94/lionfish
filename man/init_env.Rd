@@ -35,8 +35,9 @@ For 'Windows' users, the path to the tk and tcl libraries will be set,
 otherwise tkinter cannot run.
 }
 \examples{
-if (check_env()){
+if (check_venv()){
 init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
 }
-
 }

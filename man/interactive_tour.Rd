@@ -90,8 +90,11 @@ obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
 
-if (check_env()){
-init_env()
+if (check_venv()){
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
+}
 
 if (interactive()){
 interactive_tour(
@@ -105,6 +108,5 @@ interactive_tour(
   n_subsets = 5,
   display_size = 5
 )
-}
 }
 }

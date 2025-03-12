@@ -415,9 +415,13 @@ set.seed(1234)
 data(winterActiv)
 clusters_full = stepcclust(winterActiv, k=6, nrep=20,  save.data=TRUE)
 
-if (check_env()){
+if (check_venv()){
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
+}
+
 # Figure 6 A
-init_env()
 obj1 <- list(type = "heatmap", obj = c("Intra cluster fraction"))
 if (interactive()){
 interactive_tour(data=winterActiv,
@@ -438,7 +442,6 @@ interactive_tour(data=winterActiv,
                  n_subsets = 6,
                  color_scale_heatmap = "coolwarm",
                  display_size = 7)
-}
 }
 }
 ```
@@ -486,13 +489,11 @@ others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.
 
 ```{r figures 8 and 9}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/init",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
-  }
 }
 ```
 
@@ -501,13 +502,11 @@ Figure 10 can be reproduced by loading the contents of
 blendout threshold was set to 0.1.
 
 ```{r figure 10}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
-  }
 }
 ```
 
@@ -516,13 +515,11 @@ Figure 11 can be reproduced by loading the contents of
 blendout threshold was set to 0.1.
 
 ```{r figure 11}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 load_interactive_tour(winterActiv_feat_subset, "/saves/aut_saves/after",
                       preselection_names = cluster_names[1:7],
                       hover_cutoff=20,
                       display_size = 5)
-  }
 }
 ```
 
@@ -571,13 +568,11 @@ Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.
 
 ```{r figure 13}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 load_interactive_tour(ausActiv_feat_subset, "/saves/aus_saves/before",
                       preselection_names = cluster_names[1:6],
                       hover_cutoff=20,
                       display_size = 5)
-  }
 }
 ```
 
@@ -585,13 +580,11 @@ Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.
 
 ```{r figure 14}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 load_interactive_tour(ausActiv_feat_subset, "/saves/aus_saves/after",
                       preselection_names = cluster_names[1:9],
                       hover_cutoff=20,
                       display_size = 5)
-  }
 }
 ```
 
@@ -608,8 +601,8 @@ Figure 15 can be reproduced by loading the contents of
 /saves/risk_saves/final_projection_risk as shown in
 /scripts/load_snapshots.R.
 
-```{r figure 15, eval=FALSE}
-if (check_env()){
+```{r figure 15}
+if (interactive()){
 load_interactive_tour(risk, "/saves/risk_saves/final_projection_risk",
                       preselection_names = cluster_names[1:5],
                       hover_cutoff=20,
@@ -626,7 +619,7 @@ Figure 17 can be reproduced by loading the contents of
 
 
 ```{r figure 17, eval=FALSE}
-if (check_env()){
+if (interactive()){
 load_interactive_tour(risk, "/saves/risk_saves/regrouped_risk",
                       preselection_names = cluster_names[1:5],
                       hover_cutoff=20,
@@ -645,8 +638,10 @@ if (requireNamespace(c("flexclust",
 # set working directory to path/to/lionfish_article/
 # setwd("..")
   
-if (check_env()){
-init_env()
+if (check_venv()){
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
 }
   
 ######## Austrian Tourism ########
@@ -674,8 +669,7 @@ obj2 <- list(type = "heatmap", obj = c("total fraction"))
 obj3 <- list(type = "1d_tour", obj = lda_tour_history_1d)
 obj4 <- list(type = "mosaic", obj = c("subgroups_on_y"))
 
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=winterActiv_feat_subset,
                  plot_objects = list(obj1, obj2, obj3, obj4),
                  feature_names=col_names,
@@ -683,7 +677,6 @@ interactive_tour(data=winterActiv_feat_subset,
                  n_plot_cols=2,
                  preselection = clusters_feat_subset@cluster,
                  display_size = 5)
-  }
 }
 
 ######## Australian Tourism ########
@@ -721,8 +714,7 @@ obj2 <- list(type = "1d_tour", obj = lda_tour_history_1d)
 obj3 <- list(type = "mosaic", obj = c("subgroups_on_y"))
 obj4 <- list(type = "heatmap", obj = c("Intra cluster fraction"))
 
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=ausActiv_feat_subset,
                  feature_names = col_names,
                  plot_objects = list(obj1, obj2, obj3, obj4),
@@ -732,7 +724,6 @@ interactive_tour(data=ausActiv_feat_subset,
                  n_subsets = 10,
                  display_size = 5,
                  hover_cutoff = 50)
-  }
 }
 
 
@@ -777,8 +768,7 @@ clusters_swapped[clusters_swapped == 99] <- 4
 
 obj1 <- list(type="2d_tour", obj=guided_tour_history)
 
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=data.matrix(risk2),
                  plot_objects=list(obj1),
                  feature_names=feature_names,
@@ -789,6 +779,5 @@ interactive_tour(data=data.matrix(risk2),
                  n_subsets=5,
                  display_size=6)
   }
-}
 }
 ```

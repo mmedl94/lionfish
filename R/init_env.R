@@ -27,10 +27,11 @@
 #' @return initializes python environment
 #'
 #' @examples
-#' if (check_env()){
+#' if (check_venv()){
 #' init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+#' } else if (check_conda_env()){
+#' init_env(env_name = "r-lionfish", virtual_env = "anaconda")
 #' }
-#'
 init_env <- function(env_name = "r-lionfish", virtual_env = "virtual_env", local = FALSE) {
   # Check if python is available
   reticulate::py_available(initialize = FALSE)

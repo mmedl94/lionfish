@@ -66,12 +66,16 @@ loading a snapshot, such as display_size or label_size.
 \examples{
 data("flea", package = "tourr")
 data <- flea[1:6]
-if (check_env()){
-init_env()
+
+if (check_venv()){
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
+}
+
 pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
 pytourr_dir <- paste(pytourr_dir, "/inst/test_snapshot", sep = "")
 if (interactive()){
 load_interactive_tour(data, pytourr_dir)
-}
 }
 }

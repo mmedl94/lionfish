@@ -137,8 +137,10 @@ display_size <- 5 # Adjust to fit your display
 ```
 
 ```{r}
-if (check_env()){
-  init_env()
+if (check_venv()){
+init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
+} else if (check_conda_env()){
+init_env(env_name = "r-lionfish", virtual_env = "anaconda")
 }
 ```
 
@@ -159,8 +161,7 @@ obj2 <- list(type="2d_tour", obj=lda_tour_history_2d)
 Finally, we start an interactive tour to have a closer look at the data.
 
 ```{r}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=data_wo_y,
                  plot_objects=list(obj2),
                  feature_names=feature_names,
@@ -170,7 +171,6 @@ interactive_tour(data=data_wo_y,
                  preselection_names=yield_labels,
                  display_size=8,
                  color_scale="plasma")
-  }
 }
 ```
 
@@ -294,8 +294,7 @@ if (requireNamespace("randomForest")) {
 ```
 
 ```{r}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -306,7 +305,6 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=11,
                  display_size=8,
                  color_scale = "plasma")
-  }
 }
 ```
 
@@ -356,8 +354,7 @@ if (requireNamespace("randomForest")) {
 ```
 
 ```{r}
-if (check_env()){
-  if (interactive()){
+if (interactive()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -368,7 +365,6 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=3,
                  display_size=8,
                  color_scale = "plasma")
-  }
 }
 ```
 
