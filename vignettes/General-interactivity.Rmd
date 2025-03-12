@@ -70,6 +70,7 @@ obj4 <- list(type="hist", obj="head")
 
 if (check_env()){
 init_env()
+  if (interactive()){
 interactive_tour(data=data,
                  plot_objects=list(obj1, obj2, obj3, obj4),
                  feature_names=feature_names,
@@ -79,6 +80,7 @@ interactive_tour(data=data,
                  preselection_names=flea_subspecies,
                  n_subsets=5,
                  display_size=4.5)
+  }
 }
 ```
 

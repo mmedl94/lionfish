@@ -76,22 +76,24 @@ clusters <- as.numeric(flea$species)
 flea_subspecies <- unique(flea$species)
 feature_names <- colnames(data)
 
-guided_tour_history <- save_history(data,
-  tour_path = guided_tour(holes())
+guided_tour_history <- tourr::save_history(data,
+  tour_path = tourr::guided_tour(holes())
 )
-grand_tour_history_1d <- save_history(data,
-  tour_path = grand_tour(d = 1)
+grand_tour_history_1d <- tourr::save_history(data,
+  tour_path = tourr::grand_tour(d = 1)
 )
 
 half_range <- max(sqrt(rowSums(data^2)))
-
-if (check_env()){
-init_env()
 
 obj1 <- list(type = "2d_tour", obj = guided_tour_history)
 obj2 <- list(type = "1d_tour", obj = grand_tour_history_1d)
 obj3 <- list(type = "scatter", obj = c("tars1", "tars2"))
 obj4 <- list(type = "hist", obj = "head")
+
+if (check_env()){
+init_env()
+
+if (interactive()){
 interactive_tour(
   data = data,
   plot_objects = list(obj1, obj2, obj3, obj4),
@@ -103,5 +105,6 @@ interactive_tour(
   n_subsets = 5,
   display_size = 5
 )
+}
 }
 }

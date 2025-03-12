@@ -286,6 +286,7 @@ function.
 ```{r interactive_tour flea}
 # interactive_tour call of flea dataset. Insert plot objects of your liking.
 if (check_env()){
+  if (interactive()){
 interactive_tour(data=flea,
                  feature_names=feature_names_flea,
                  plot_objects=list(obj_flea_2d_tour),
@@ -295,12 +296,14 @@ interactive_tour(data=flea,
                  n_subsets=3,
                  preselection_names=flea_subspecies,
                  display_size=5)
+  }
 }
 ```
 
 ```{r interactive_tour winterActiv}
 # interactive_tour call of winterActiv dataset. Insert plot objects of your liking.
 if (check_env()){
+  if (interactive()){
 interactive_tour(data=winterActiv,
                  feature_names=feature_names_winter,
                  plot_objects=list(obj_winter_cat_clust),
@@ -309,5 +312,6 @@ interactive_tour(data=winterActiv,
                  preselection=clusters_winter,
                  n_subsets=10,
                  display_size=5)
+  }
 }
 ```

@@ -70,6 +70,8 @@ if (check_env()){
 init_env()
 pytourr_dir <- find.package("lionfish", lib.loc = NULL, quiet = TRUE)
 pytourr_dir <- paste(pytourr_dir, "/inst/test_snapshot", sep = "")
+if (interactive()){
 load_interactive_tour(data, pytourr_dir)
+}
 }
 }

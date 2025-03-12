@@ -160,6 +160,7 @@ Finally, we start an interactive tour to have a closer look at the data.
 
 ```{r}
 if (check_env()){
+  if (interactive()){
 interactive_tour(data=data_wo_y,
                  plot_objects=list(obj2),
                  feature_names=feature_names,
@@ -169,6 +170,7 @@ interactive_tour(data=data_wo_y,
                  preselection_names=yield_labels,
                  display_size=8,
                  color_scale="plasma")
+  }
 }
 ```
 
@@ -293,6 +295,7 @@ if (requireNamespace("randomForest")) {
 
 ```{r}
 if (check_env()){
+  if (interactive()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -303,6 +306,7 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=11,
                  display_size=8,
                  color_scale = "plasma")
+  }
 }
 ```
 
@@ -353,6 +357,7 @@ if (requireNamespace("randomForest")) {
 
 ```{r}
 if (check_env()){
+  if (interactive()){
 interactive_tour(data=data_rf_sel,
                  plot_objects=list(obj1,obj2),
                  feature_names=feature_names,
@@ -363,6 +368,7 @@ interactive_tour(data=data_rf_sel,
                  n_subsets=3,
                  display_size=8,
                  color_scale = "plasma")
+  }
 }
 ```
 
