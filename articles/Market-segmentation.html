@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.23</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -518,15 +518,18 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span><span class="co"># Figure 6 A</span></span>
 <span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intra cluster fraction"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span>,</span>
 <span>                 preselection <span class="op">=</span> <span class="va">clusters_full</span><span class="op">@</span><span class="va">cluster</span>,</span>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Figure 6 B</span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intra feature fraction"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span>,</span>
@@ -534,7 +537,9 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>                 color_scale_heatmap <span class="op">=</span> <span class="st">"coolwarm"</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
 <span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
@@ -578,30 +583,36 @@ others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/init"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
 <span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figure 10 can be reproduced by loading the contents of
 /saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
 <span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figure 11 can be reproduced by loading the contents of
 /saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
 <span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -645,19 +656,23 @@ blendout threshold was set to 0.1.</p>
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv_feat_subset</span>, <span class="st">"/saves/aus_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
 <span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv_feat_subset</span>, <span class="st">"/saves/aus_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span>,</span>
 <span>                      hover_cutoff<span class="op">=</span><span class="fl">20</span>,</span>
 <span>                      display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -732,6 +747,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"mosaic"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"subgroups_on_y"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv_feat_subset</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">col_names</span>,</span>
@@ -739,6 +755,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection <span class="op">=</span> <span class="va">clusters_feat_subset</span><span class="op">@</span><span class="va">cluster</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co">######## Australian Tourism ########</span></span>
@@ -777,6 +794,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"heatmap"</span>, obj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Intra cluster fraction"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">ausActiv_feat_subset</span>,</span>
 <span>                 feature_names <span class="op">=</span> <span class="va">col_names</span>,</span>
 <span>                 plot_objects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
@@ -786,6 +804,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 n_subsets <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>                 display_size <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>                 hover_cutoff <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span></span>
@@ -831,6 +850,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -840,6 +860,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span>                 preselection_names<span class="op">=</span><span class="va">cluster_names</span>,</span>
 <span>                 n_subsets<span class="op">=</span><span class="fl">5</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.23</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.25</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -380,6 +380,7 @@ function.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interactive_tour call of flea dataset. Insert plot objects of your liking.</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">flea</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_flea</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_flea_2d_tour</span><span class="op">)</span>,</span>
@@ -389,10 +390,12 @@ function.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">flea_subspecies</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># interactive_tour call of winterActiv dataset. Insert plot objects of your liking.</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">winterActiv</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names_winter</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj_winter_cat_clust</span><span class="op">)</span>,</span>
@@ -401,6 +404,7 @@ function.</p>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_winter</span>,</span>
 <span>                 n_subsets<span class="op">=</span><span class="fl">10</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
