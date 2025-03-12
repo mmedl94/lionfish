@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">lionfish</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.26</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.27</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -170,8 +170,10 @@ tour histories.</p>
 <span></span>
 <span><span class="va">display_size</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="co"># Adjust to fit your display</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_venv.html">check_venv</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span>env_name <span class="op">=</span> <span class="st">"r-lionfish"</span>, virtual_env <span class="op">=</span> <span class="st">"virtual_env"</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_conda_env.html">check_conda_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="fu"><a href="../reference/init_env.html">init_env</a></span><span class="op">(</span>env_name <span class="op">=</span> <span class="st">"r-lionfish"</span>, virtual_env <span class="op">=</span> <span class="st">"anaconda"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lda_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data_wo_y</span>,</span>
@@ -188,8 +190,7 @@ tour histories.</p>
 <p>Finally, we start an interactive tour to have a closer look at the
 data.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_wo_y</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -199,7 +200,6 @@ data.</p>
 <span>                 preselection_names<span class="op">=</span><span class="va">yield_labels</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">8</span>,</span>
 <span>                 color_scale<span class="op">=</span><span class="st">"plasma"</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>First, we set the “Blend out projection threshold” to 0.2. This
 setting causes projection axes with a norm of less than 0.2 to be
@@ -305,8 +305,7 @@ variables and visualize the data in the same way we did earlier.</p>
 <span>  <span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -317,7 +316,6 @@ variables and visualize the data in the same way we did earlier.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">11</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">8</span>,</span>
 <span>                 color_scale <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>We can see that there is already some separation at the initial
 frame, and we can still achieve good separation between yield groups.
@@ -366,8 +364,7 @@ bins and run another guided tour.</p>
 <span>  <span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">lda_tour_history_2d</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="../reference/check_env.html">check_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data_rf_sel</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>,<span class="va">obj2</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
@@ -378,7 +375,6 @@ bins and run another guided tour.</p>
 <span>                 n_subsets<span class="op">=</span><span class="fl">3</span>,</span>
 <span>                 display_size<span class="op">=</span><span class="fl">8</span>,</span>
 <span>                 color_scale <span class="op">=</span> <span class="st">"plasma"</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="https://raw.githubusercontent.com/mmedl94/lionfish_figures/main/figures/biotech_top10_3gr.gif" style="width:100.0%"></p>
 <p>We can see that this results in an even better separation. Again, we
