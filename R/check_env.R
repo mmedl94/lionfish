@@ -10,11 +10,16 @@
 #' @examples
 #' check_env(env_name="r-lionfish")
 check_env <- function(env_name="r-lionfish"){
-  if (env_name %in% reticulate::conda_list()$env_name){
+
+  if (env_name %in% reticulate::virtualenv_list()){
     return(TRUE)
-  } else if (env_name %in% reticulate::virtualenv_list()){
-    return(TRUE)
-  } else {
-    return(FALSE)
   }
+
+  if (!is.null(reticulate::conda_binary())){
+    if (reticulate::condaenv_exists(env_name)){
+      return(TRUE)
+    }
+  }
+
+  return(FALSE)
 }

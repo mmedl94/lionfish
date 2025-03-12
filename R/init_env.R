@@ -27,7 +27,7 @@
 #' @return initializes python environment
 #'
 #' @examples
-#' if (interactive()){
+#' if (check_env()){
 #' init_env(env_name = "r-lionfish", virtual_env = "virtual_env")
 #' }
 #'
