@@ -15,7 +15,8 @@ boolean
 }
 \description{
 Checks whether 'python' environment of a given name exists an returns TRUE
-if it does.
+if it does. Also checks if 'anaconda' is installed and catches the error
+if it isn't, but returns FALSE.
 }
 \examples{
 check_env(env_name="r-lionfish")
