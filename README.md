@@ -8,15 +8,6 @@ For an overview of the functionality of lionfish please visit the [documentation
 
 ## Installation
 
-You can install the development version of lionfish from github with:
-
-``` r
-install.packages("remotes")
-remotes::install_github("mmedl94/lionfish")
-```
-
-Make sure you have git installed. You can download and install git from <https://git-scm.com/downloads>.
-
 Complications may arise when installing and accessing the Python backend of this package. If you run into any, please don't refrain from opening an issue!
 
 ## Known issues

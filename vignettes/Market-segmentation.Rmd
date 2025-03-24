@@ -38,6 +38,12 @@ In order to run reproduce all results you will have to
 
 ### Installation of lionfish
 
+lionfish is now available on CRAN!
+
+```{r setup, eval = FALSE}
+install.packages("lionfish")
+```
+
 You can install the development version of lionfish from github with:
 
 ```{r setup, eval = FALSE}
@@ -633,7 +639,8 @@ load_interactive_tour(risk, "/saves/risk_saves/regrouped_risk",
 ```{r interactive tours from scratch,results = 'hide', warning=FALSE, message=FALSE}
 if (requireNamespace(c("flexclust",
                        "stats",
-                       "dplyr"))){
+                       "dplyr",
+                       "data.table"))){
 
 # set working directory to path/to/lionfish_article/
 # setwd("..")
@@ -730,17 +737,15 @@ interactive_tour(data=ausActiv_feat_subset,
 ######## Risk ########
 
 data("risk")
-dup <- duplicated(risk) # Best to remove duplicates
-risk2 <- risk[!dup,]
 
-data <- data.table(risk2)
+data <- data.table(risk)
 data <- apply(data, 2, function(x) (x-mean(x))/sd(x))
 
-set.seed(1032)
-r_km <- kmeans(risk2, centers=5,
+set.seed(1145)
+r_km <- kmeans(data, centers=5,
                iter.max = 500, nstart = 5)
 
-r_km_d <- as_tibble(risk2) |>
+r_km_d <- as_tibble(data) |>
   mutate(cl = factor(r_km$cluster))
 r_km_d <- as.data.table(r_km_d)
 
@@ -750,34 +755,35 @@ for (i in 1:7) {
 
 clusters <- r_km_d$cl
 
-guided_tour_history <- save_history(risk2,
+guided_tour_history <- save_history(data,
                                     tour_path = guided_tour(lda_pp(clusters)))
 
-half_range <- max(sqrt(rowSums(risk2^2)))
-feature_names <- colnames(risk2)
+half_range <- max(sqrt(rowSums(data^2)))
+feature_names <- colnames(data)
 cluster_names <- paste("Cluster", 1:5)
 
-# swap clusters to be more colorblind friendly (clusters 1 and 3 are close and
-# blue and green, now they are blue and red)
-
-clusters_swapped <- clusters
-clusters_swapped <- as.numeric(clusters_swapped)
-clusters_swapped[clusters == 3] <- 99  # Temporarily change 3s to a unique value
-clusters_swapped[clusters == 4] <- 3
-clusters_swapped[clusters_swapped == 99] <- 4
+# swap clusters to be more colorblind friendly
+clusters <- as.numeric(as.character(clusters))
+clusters_swapped <- case_when(
+  clusters == 3 ~ 5,
+  clusters == 5 ~ 3,
+  clusters == 1 ~ 2,
+  clusters == 2 ~ 1,
+  TRUE ~ clusters
+)
 
 obj1 <- list(type="2d_tour", obj=guided_tour_history)
 
 if (interactive()){
-interactive_tour(data=data.matrix(risk2),
+interactive_tour(data=data.matrix(data),
                  plot_objects=list(obj1),
                  feature_names=feature_names,
-                 half_range=half_range/2,
+                 half_range=half_range,
                  n_plot_cols=2,
                  preselection=clusters_swapped,
                  preselection_names=cluster_names,
                  n_subsets=5,
-                 display_size=6)
+                 display_size=9)
   }
 }
 ```
