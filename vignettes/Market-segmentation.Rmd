@@ -40,13 +40,13 @@ In order to run reproduce all results you will have to
 
 lionfish is now available on CRAN!
 
-```{r setup, eval = FALSE}
+```{r, eval = FALSE}
 install.packages("lionfish")
 ```
 
 You can install the development version of lionfish from github with:
 
-```{r setup, eval = FALSE}
+```{r, eval = FALSE}
 install.packages("remotes")
 remotes::install_github("mmedl94/lionfish")
 ```
