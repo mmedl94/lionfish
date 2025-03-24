@@ -66,11 +66,6 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of lionfish from github with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mmedl94/lionfish"</span><span class="op">)</span></span></code></pre></div>
-<p>Make sure you have git installed. You can download and install git from <a href="https://git-scm.com/downloads" class="external-link uri">https://git-scm.com/downloads</a>.</p>
 <p>Complications may arise when installing and accessing the Python backend of this package. If you run into any, please don’t refrain from opening an issue!</p>
 </div>
 <div class="section level2">
@@ -83,11 +78,11 @@
 </h2>
 <p>In this introductory example we will launch the lionfish GUI with the ‘flea’ datset and a selection of interactive display types. For more information about the ‘flea’ dataset visit the <a href="https://ggobi.github.io/tourr/reference/Flea-measurements.html" class="external-link">tourr documentation</a>. In brief, the dataset contains six numeric variables with measurements of the fleas’ appendages and a factor variable with the flea species (Concinna, Heptapot. or Heikert.). For more information on how to use the GUI visit the <a href="https://mmedl94.github.io/lionfish/">lionfish documentation</a>.</p>
 <p>First, we have to load the package and initialize the ‘python’ backend with:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/init_env.html">init_env</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>We first fetch the flea dataset from ‘tourr’, save the species column separately, and get the unique species names as well as the feature names of our dataset. Then we run and store a ‘guided_tour’ with the ‘holes’ index and a ‘grand_tour’. More information on tours can be found <a href="https://ggobi.github.io/tourr/" class="external-link">here</a>.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"flea"</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">flea</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span></span>
@@ -100,13 +95,13 @@
 <span><span class="va">grand_tour_history_1d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
 <span>                                      tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/grand_tour.html" class="external-link">grand_tour</a></span><span class="op">(</span>d<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now we have to specify which display types we want to load into the GUI. In this example, we want to display a two-dimensional tour, a one-dimensional tour, a scatterplot, and a histogram. For each display type, we have to further specify some settings as part of the so called plot objects. For the tours, these are the stored tour histories, and for the scatterplot and histogram, we have to define which features we want to plot. A detailed description of the plot objects can be found <a href="https://mmedl94.github.io/lionfish/articles/Plot-objects.html">here</a>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span><span class="va">obj2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"1d_tour"</span>, obj<span class="op">=</span><span class="va">grand_tour_history_1d</span><span class="op">)</span></span>
 <span><span class="va">obj3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"scatter"</span>, obj<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tars1"</span>, <span class="st">"tars2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">obj4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"hist"</span>, obj<span class="op">=</span><span class="st">"head"</span><span class="op">)</span></span></code></pre></div>
 <p>Finally, we launch the GUI with the ‘interactive_tour’ function. Details on the interactive functions of the displays can be found <a href="https://mmedl94.github.io/lionfish/articles/General-interactivity.html">here</a>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">data</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span>, <span class="va">obj2</span>, <span class="va">obj3</span>, <span class="va">obj4</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>

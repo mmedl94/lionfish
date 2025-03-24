@@ -95,9 +95,12 @@ init_inv() is run before using any lionfish function!</p>
 <div class="section level3">
 <h3 id="installation-of-lionfish">Installation of lionfish<a class="anchor" aria-label="anchor" href="#installation-of-lionfish"></a>
 </h3>
+<p>lionfish is now available on CRAN!</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"lionfish"</span><span class="op">)</span></span></code></pre></div>
 <p>You can install the development version of lionfish from github
 with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mmedl94/lionfish"</span><span class="op">)</span></span></code></pre></div>
 <p>Make sure you have git installed. You can download and install git
@@ -112,7 +115,7 @@ opening an issue!</p>
 <p>You can download the repository either as .zip by clicking the green
 button that says “Code” on the top right and then click “Download ZIP”.
 This will be necessary to load the lionfish snapshots.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mmedl94.github.io/lionfish/">lionfish</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ggobi/tourr" class="external-link">tourr</a></span><span class="op">)</span></span>
@@ -169,7 +172,7 @@ This will be necessary to load the lionfish snapshots.</p>
 </h2>
 <p>Figures 1, 2 and 3 shown in the introduction can be reproduced by
 running /scripts/intro.R</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
 <span>                      <span class="st">"mvtnorm"</span>,</span>
 <span>                      <span class="st">"patchwork"</span>,</span>
@@ -227,7 +230,7 @@ running /scripts/intro.R</p>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
 <p><img src="Market-segmentation_files/figure-html/intro%20figure%201-1.png" width="700"></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
 <span>                      <span class="st">"mvtnorm"</span>,</span>
 <span>                      <span class="st">"patchwork"</span>,</span>
@@ -322,7 +325,7 @@ running /scripts/intro.R</p>
 <span><span class="va">b7</span> <span class="op">+</span> <span class="va">b8</span> <span class="op">+</span> <span class="va">b9</span> <span class="op">+</span> <span class="va">b10</span> <span class="op">+</span> <span class="va">b11</span> <span class="op">+</span> <span class="va">b12</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p><img src="Market-segmentation_files/figure-html/intro%20figure%202-1.png" width="700"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tidyverse"</span>,</span>
 <span>                      <span class="st">"mvtnorm"</span>,</span>
 <span>                      <span class="st">"patchwork"</span>,</span>
@@ -433,7 +436,7 @@ to give an overview on the GUI anyways.</p>
 <p>Please don’t forget to set the working directory to the downloaded
 repo when working with /scripts/load_snapshots.R.</p>
 <p>Figure 5 can be reproduced by running /scripts/austrian_tourism.R</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gridExtra"</span>,</span>
 <span>                       <span class="st">"patchwork"</span>,</span>
 <span>                       <span class="st">"gridExtra"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
@@ -506,7 +509,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <p><img src="Market-segmentation_files/figure-html/figure%205-1.png" width="700"></p>
 <p>Figures 6 and 7 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                       <span class="st">"stats"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="co"># perform initial k-means clustering</span></span>
@@ -544,7 +547,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <span><span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                        <span class="st">"stats"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="co"># perform initial k-means clustering</span></span>
@@ -569,7 +572,7 @@ repo when working with /scripts/load_snapshots.R.</p>
 <pre><code><span><span class="co">#&gt; 6 : * * * * * * * * * * * * * * * * * * * *</span></span></code></pre>
 <p><img src="Market-segmentation_files/figure-html/figure%207-2.png" width="700"></p>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load Austrian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">winterActiv</span><span class="op">)</span></span>
 <span><span class="va">winterActiv_features</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alpine.skiing"</span>, <span class="st">"going.to.a.spa"</span>, <span class="st">"using.health.facilities"</span>,</span>
@@ -584,7 +587,7 @@ corresponding display is on the top left. Subplots 8 A-F can be
 reproduced by highlighting the respective cluster and desaturating the
 others by clicking the color boxes of the respective clusters in the
 menu on the left. The blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/init"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -594,7 +597,7 @@ menu on the left. The blendout threshold was set to 0.1.</p>
 <p>Figure 10 can be reproduced by loading the contents of
 /saves/aut_saves/before as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -604,7 +607,7 @@ blendout threshold was set to 0.1.</p>
 <p>Figure 11 can be reproduced by loading the contents of
 /saves/aut_saves/after as shown in /scripts/load_snapshots.R. The
 blendout threshold was set to 0.1.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">winterActiv_feat_subset</span>, <span class="st">"/saves/aut_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>,</span>
@@ -616,7 +619,7 @@ blendout threshold was set to 0.1.</p>
 <h2 id="australian-vacation-activities-dataset">Australian Vacation Activities dataset<a class="anchor" aria-label="anchor" href="#australian-vacation-activities-dataset"></a>
 </h2>
 <p>To launch the GUI snapshots, the data has to be prepared first.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load Australian Vacation Activities dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
@@ -632,7 +635,7 @@ blendout threshold was set to 0.1.</p>
 <span><span class="va">cluster_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span></span></code></pre></div>
 <p>Figure 12 can be reproduced by running
 /scripts/austrian_tourism_clustering.R</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"flexclust"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ausActiv"</span><span class="op">)</span></span>
 <span><span class="va">ausActiv</span> <span class="op">&lt;-</span> <span class="va">ausActiv</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">ausActiv</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">40</span>, <span class="op">]</span></span>
@@ -651,7 +654,7 @@ blendout threshold was set to 0.1.</p>
 <p><img src="Market-segmentation_files/figure-html/figure%2012-1.png" width="700"><img src="Market-segmentation_files/figure-html/figure%2012-2.png" width="700"></p>
 <p>Figures 13 can be reproduced by loading the contents of
 /saves/aus_saves/before as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv_feat_subset</span>, <span class="st">"/saves/aus_saves/before"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>,</span>
@@ -660,7 +663,7 @@ blendout threshold was set to 0.1.</p>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Figures 14 can be reproduced by loading the contents of
 /saves/aus_saves/after as shown in /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">ausActiv_feat_subset</span>, <span class="st">"/saves/aus_saves/after"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span>,</span>
@@ -671,14 +674,14 @@ blendout threshold was set to 0.1.</p>
 <div class="section level2">
 <h2 id="tourist-risk-taking-dataset">Tourist risk taking dataset<a class="anchor" aria-label="anchor" href="#tourist-risk-taking-dataset"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span></span>
 <span><span class="va">dup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span></span>
 <span><span class="va">risk</span> <span class="op">&lt;-</span> <span class="va">risk</span><span class="op">[</span><span class="op">!</span><span class="va">dup</span>,<span class="op">]</span></span></code></pre></div>
 <p>Figure 15 can be reproduced by loading the contents of
 /saves/risk_saves/final_projection_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/final_projection_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
@@ -691,7 +694,7 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <p>Figure 17 can be reproduced by loading the contents of
 /saves/risk_saves/regrouped_risk as shown in
 /scripts/load_snapshots.R.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span><span class="fu"><a href="../reference/load_interactive_tour.html">load_interactive_tour</a></span><span class="op">(</span><span class="va">risk</span>, <span class="st">"/saves/risk_saves/regrouped_risk"</span>,</span>
 <span>                      preselection_names <span class="op">=</span> <span class="va">cluster_names</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>,</span>
@@ -702,10 +705,11 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <div class="section level2">
 <h2 id="launch-interactive-tours-from-scratch">Launch interactive tours from scratch<a class="anchor" aria-label="anchor" href="#launch-interactive-tours-from-scratch"></a>
 </h2>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"flexclust"</span>,</span>
 <span>                       <span class="st">"stats"</span>,</span>
-<span>                       <span class="st">"dplyr"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<span>                       <span class="st">"dplyr"</span>,</span>
+<span>                       <span class="st">"data.table"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span></span>
 <span><span class="co"># set working directory to path/to/lionfish_article/</span></span>
 <span><span class="co"># setwd("..")</span></span>
@@ -802,17 +806,15 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span><span class="co">######## Risk ########</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"risk"</span><span class="op">)</span></span>
-<span><span class="va">dup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span> <span class="co"># Best to remove duplicates</span></span>
-<span><span class="va">risk2</span> <span class="op">&lt;-</span> <span class="va">risk</span><span class="op">[</span><span class="op">!</span><span class="va">dup</span>,<span class="op">]</span></span>
 <span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">data.table</a></span><span class="op">(</span><span class="va">risk</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1032</span><span class="op">)</span></span>
-<span><span class="va">r_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">risk2</span>, centers<span class="op">=</span><span class="fl">5</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1145</span><span class="op">)</span></span>
+<span><span class="va">r_km</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html" class="external-link">kmeans</a></span><span class="op">(</span><span class="va">data</span>, centers<span class="op">=</span><span class="fl">5</span>,</span>
 <span>               iter.max <span class="op">=</span> <span class="fl">500</span>, nstart <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">r_km_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">r_km_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>cl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">r_km</span><span class="op">$</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">r_km_d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">r_km_d</span><span class="op">)</span></span>
 <span></span>
@@ -822,34 +824,35 @@ pressing the “Run tour” button below the dropdown menu.</p>
 <span></span>
 <span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="va">r_km_d</span><span class="op">$</span><span class="va">cl</span></span>
 <span></span>
-<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">risk2</span>,</span>
+<span><span class="va">guided_tour_history</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/save_history.html" class="external-link">save_history</a></span><span class="op">(</span><span class="va">data</span>,</span>
 <span>                                    tour_path <span class="op">=</span> <span class="fu"><a href="https://ggobi.github.io/tourr/reference/guided_tour.html" class="external-link">guided_tour</a></span><span class="op">(</span><span class="fu"><a href="https://ggobi.github.io/tourr/reference/lda_pp.html" class="external-link">lda_pp</a></span><span class="op">(</span><span class="va">clusters</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span></span>
+<span><span class="va">half_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">data</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">cluster_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Cluster"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># swap clusters to be more colorblind friendly (clusters 1 and 3 are close and</span></span>
-<span><span class="co"># blue and green, now they are blue and red)</span></span>
-<span></span>
-<span><span class="va">clusters_swapped</span> <span class="op">&lt;-</span> <span class="va">clusters</span></span>
-<span><span class="va">clusters_swapped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">clusters_swapped</span><span class="op">)</span></span>
-<span><span class="va">clusters_swapped</span><span class="op">[</span><span class="va">clusters</span> <span class="op">==</span> <span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">99</span>  <span class="co"># Temporarily change 3s to a unique value</span></span>
-<span><span class="va">clusters_swapped</span><span class="op">[</span><span class="va">clusters</span> <span class="op">==</span> <span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">clusters_swapped</span><span class="op">[</span><span class="va">clusters_swapped</span> <span class="op">==</span> <span class="fl">99</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
+<span><span class="co"># swap clusters to be more colorblind friendly</span></span>
+<span><span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">clusters</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">clusters_swapped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>  <span class="va">clusters</span> <span class="op">==</span> <span class="fl">3</span> <span class="op">~</span> <span class="fl">5</span>,</span>
+<span>  <span class="va">clusters</span> <span class="op">==</span> <span class="fl">5</span> <span class="op">~</span> <span class="fl">3</span>,</span>
+<span>  <span class="va">clusters</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">~</span> <span class="fl">2</span>,</span>
+<span>  <span class="va">clusters</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>  <span class="cn">TRUE</span> <span class="op">~</span> <span class="va">clusters</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">obj1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type<span class="op">=</span><span class="st">"2d_tour"</span>, obj<span class="op">=</span><span class="va">guided_tour_history</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">risk2</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="../reference/interactive_tour.html">interactive_tour</a></span><span class="op">(</span>data<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/data.matrix.html" class="external-link">data.matrix</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
 <span>                 plot_objects<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">obj1</span><span class="op">)</span>,</span>
 <span>                 feature_names<span class="op">=</span><span class="va">feature_names</span>,</span>
-<span>                 half_range<span class="op">=</span><span class="va">half_range</span><span class="op">/</span><span class="fl">2</span>,</span>
+<span>                 half_range<span class="op">=</span><span class="va">half_range</span>,</span>
 <span>                 n_plot_cols<span class="op">=</span><span class="fl">2</span>,</span>
 <span>                 preselection<span class="op">=</span><span class="va">clusters_swapped</span>,</span>
 <span>                 preselection_names<span class="op">=</span><span class="va">cluster_names</span>,</span>
 <span>                 n_subsets<span class="op">=</span><span class="fl">5</span>,</span>
-<span>                 display_size<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span>
+<span>                 display_size<span class="op">=</span><span class="fl">9</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
