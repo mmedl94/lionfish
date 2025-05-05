@@ -113,8 +113,9 @@ obj_flea_1d_tour <- list(type="1d_tour",          # type of display
 -   Changing frames of tour: The frames of the current tour can be changed by
 pressing the left arrow-key for the last frame and the right arrow-key for the
 next frame. The current frame is displayed in the frame on the left. 
--   Projection manipulation: the projection can be manipulated clicking on one of
-the arrowheads with the right mouse-button and dragging it.
+-   Projection manipulation: the projection can be manipulated via drag and drop
+using the right mouse button. (Note for Mac users using trackpads: two fingers
+have to be used to right-click).
 -   Subselection: The datapoins within each subset can be changed by clicking
 on one of the bars of the histogram. The datapoints within the bar are then
 moved to the subset currently selected on the left.
@@ -145,8 +146,9 @@ obj_flea_2d_tour <- list(type="2d_tour",         # type of display
 -   Changing frames of tour: The frames of the current tour can be changed by
 pressing the left arrow-key for the last frame and the right arrow-key for the
 next frame. The current frame is displayed in the frame on the left. 
--   Projection manipulation: the projection can be manipulated clicking on one of
-the arrowheads with the right mouse-button and dragging it.
+-   Projection manipulation: the projection can be manipulated via drag and drop
+using the right mouse button. (Note for Mac users using trackpads: two fingers
+have to be used to right-click).
 -   Subselection: The datapoins within each subset can be changed by pressing
 the left mouse-button and drawing a lasso around the datapoints to be selected.
 The datapoints within the lasso are then moved to the subset currently selected
